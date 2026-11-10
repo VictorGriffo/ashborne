@@ -1,5 +1,7 @@
 import type config from '../../data/config.json';
+import type { Assets } from '../render/Assets';
 import type { Renderer } from '../render/Renderer';
+import type { Flags } from '../systems/Flags';
 import type { DebugHud } from '../ui/DebugHud';
 import type { Input } from './Input';
 import type { StateMachine } from './StateMachine';
@@ -12,6 +14,9 @@ export interface GameContext {
   readonly renderer: Renderer;
   readonly input: Input;
   readonly states: StateMachine;
+  readonly assets: Assets;
+  /** Marcadores de progresso da história. */
+  readonly flags: Flags;
   /** Camada HTML por cima do canvas, para menus e textos. */
   readonly ui: HTMLElement;
   readonly debug: DebugHud;

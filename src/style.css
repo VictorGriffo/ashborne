@@ -257,6 +257,192 @@ body {
 
 .controls-hint.hidden {
   opacity: 0;
+  visibility: hidden;
+}
+
+/* Diálogo ----------------------------------------------------------------- */
+
+.dialogue {
+  position: absolute;
+  left: 50%;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  width: min(760px, calc(100% - 32px));
+  transform: translate(-50%, 12px);
+  padding: 22px 26px 20px;
+  border: 1px solid rgba(127, 224, 208, 0.35);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(22, 50, 74, 0.94), rgba(10, 18, 30, 0.96));
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.45),
+    0 18px 50px rgba(0, 0, 0, 0.55);
+  pointer-events: auto;
+  opacity: 0;
+  z-index: 2;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.dialogue.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.dialogue-name {
+  position: absolute;
+  top: -14px;
+  left: 20px;
+  padding: 3px 12px;
+  border: 1px solid rgba(127, 224, 208, 0.45);
+  border-radius: 4px;
+  background: #0e1a2b;
+  color: var(--cyan);
+  font-family: var(--title-font);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.dialogue-text {
+  min-height: 3.2em;
+  margin: 0;
+  font-size: clamp(15px, 2.3vw, 18px);
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.dialogue-choices .menu {
+  margin-top: 10px;
+}
+
+.dialogue-choices .menu button {
+  padding: 6px 4px;
+  font-size: clamp(14px, 2.2vw, 16px);
+}
+
+.dialogue-more {
+  position: absolute;
+  right: 18px;
+  bottom: 12px;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 9px solid var(--cyan);
+  animation: nudge 0.9s ease-in-out infinite;
+}
+
+.dialogue-more[hidden] {
+  display: none;
+}
+
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+/* Aviso de interação sobre o NPC */
+
+.interact-prompt {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(8, 14, 24, 0.75);
+  border: 1px solid rgba(127, 224, 208, 0.4);
+  color: var(--text);
+  font-size: 13px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.interact-prompt.visible {
+  opacity: 1;
+}
+
+.interact-prompt kbd {
+  margin-right: 6px;
+  padding: 0 5px;
+  border: 1px solid rgba(159, 178, 200, 0.4);
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 11px;
+  color: var(--cyan);
+}
+
+/* Nome da área ao entrar */
+
+.area-title {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--title-font);
+  font-size: clamp(18px, 3.4vw, 28px);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-shadow: 0 0 18px rgba(127, 224, 208, 0.45);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.area-title.visible {
+  opacity: 1;
+}
+
+/* Fade entre áreas e carregamento */
+
+.fade {
+  position: absolute;
+  inset: 0;
+  background: #05090f;
+  pointer-events: auto;
+}
+
+.loading-screen {
+  background: var(--night);
+  gap: 18px;
+}
+
+.loading-screen .label {
+  font-family: var(--title-font);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.loading-bar {
+  width: min(280px, 70vw);
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(127, 224, 208, 0.15);
+  overflow: hidden;
+}
+
+.loading-bar > div {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--cyan), var(--lilac));
+  transition: width 0.2s ease;
+}
+
+.loading-screen .error {
+  max-width: 480px;
+  color: var(--ember);
+  text-align: center;
+  font-size: 14px;
 }
 
 /* Depuração --------------------------------------------------------------- */
@@ -283,7 +469,8 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .title-screen .prompt,
-  .title-screen .ember {
+  .title-screen .ember,
+  .dialogue-more {
     animation: none;
   }
 }

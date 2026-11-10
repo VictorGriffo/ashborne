@@ -2,13 +2,9 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { createRandom, range } from '../core/random';
 import { PART1, PROPS } from '../render/palette';
-
-/** Obstáculo circular no chão. */
-export interface Blocker {
-  x: number;
-  z: number;
-  r: number;
-}
+import type { Area, Exit, Spawn } from './Area';
+import { CollisionWorld } from './Collision';
+import type { Npc } from './Npc';
 
 /** Raio da área em que o jogador pode andar. */
 const WALK_RADIUS = 18;
@@ -26,16 +22,25 @@ const PATH: THREE.Vector2[] = [
 ];
 
 /**
- * Clareira provisória do M0: uma floresta noturna em volta de um altar de Aether.
- * Serve para testar câmera, movimento e iluminação. No M1 ela dá lugar
- * a uma sala montada com modelos de pacotes prontos.
- *
- * A colisão aqui é mínima (círculos e uma borda). A colisão de verdade
- * é um dos entregáveis do M1.
+ * Clareira do altar: floresta noturna em volta de um altar de Aether, ao norte
+ * do Salão da Guarda. O cenário é gerado no código com formas simples; a
+ * colisão usa círculos (árvores, pedras, pilares) e uma borda circular.
  */
-export class TestArea {
-  readonly spawn = new THREE.Vector2(0, 7);
-  readonly blockers: Blocker[] = [];
+export class ClearingArea implements Area {
+  readonly id = 'clareira';
+  readonly name = 'Clareira do Altar';
+  readonly root = new THREE.Group();
+  readonly collision = new CollisionWorld();
+  readonly npcs: Npc[] = [];
+  readonly spawns: Record<string, Spawn> = {
+    centro: { x: 0, z: 7, yaw: 0 },
+    'trilha-sul': { x: 0.3, z: 15.2, yaw: Math.PI },
+  };
+  readonly exits: Exit[] = [
+    { minX: -2.5, maxX: 2.5, minZ: 16.6, maxZ: 19, to: 'salao-da-guarda', spawn: 'porta-norte' },
+  ];
+  /** Ponto livre usado para afastar árvores do caminho de chegada. */
+  private readonly spawn = new THREE.Vector2(0, 7);
 
   private readonly moon: THREE.DirectionalLight;
   private readonly moonOffset = new THREE.Vector3(-7, 16, 9);
@@ -46,11 +51,11 @@ export class TestArea {
   private readonly fireflySeed: Float32Array;
   private time = 0;
 
-  constructor(scene: THREE.Scene) {
+  constructor() {
     const rand = createRandom(20261110);
-
-    scene.background = new THREE.Color(PART1.night);
-    scene.fog = new THREE.Fog(PART1.night, 20, 46);
+    const scene = this.root;
+    scene.name = this.name;
+    this.collision.addBoundary(0, 0, WALK_RADIUS);
 
     // Luz: céu noturno, lua azulada com sombra e o brilho do cristal.
     scene.add(new THREE.HemisphereLight(0x6f8fc4, PART1.night, 1.4));
@@ -76,6 +81,8 @@ export class TestArea {
     this.crystal = shrine.crystal;
     this.crystalLight = shrine.light;
 
+    scene.add(this.buildGate());
+
     const flies = this.buildFireflies(rand);
     this.fireflies = flies.points;
     this.fireflyBase = flies.base;
@@ -83,25 +90,9 @@ export class TestArea {
     scene.add(this.fireflies);
   }
 
-  /** Empurra uma posição para fora dos obstáculos e para dentro da borda. */
-  resolve(pos: THREE.Vector3, radius: number): void {
-    for (const b of this.blockers) {
-      const dx = pos.x - b.x;
-      const dz = pos.z - b.z;
-      const min = b.r + radius;
-      const d2 = dx * dx + dz * dz;
-      if (d2 < min * min && d2 > 1e-8) {
-        const d = Math.sqrt(d2);
-        pos.x = b.x + (dx / d) * min;
-        pos.z = b.z + (dz / d) * min;
-      }
-    }
-    const d = Math.hypot(pos.x, pos.z);
-    const max = WALK_RADIUS - radius;
-    if (d > max) {
-      pos.x *= max / d;
-      pos.z *= max / d;
-    }
+  applyEnvironment(scene: THREE.Scene): void {
+    scene.background = new THREE.Color(PART1.night);
+    scene.fog = new THREE.Fog(PART1.night, 20, 46);
   }
 
   /** Animações só visuais. Rodam no render, então seguem vivas mesmo com o jogo pausado. */
@@ -237,7 +228,7 @@ export class TestArea {
         foliage.push(paint(crown, color));
       }
 
-      if (p.length() < WALK_RADIUS + 1) this.blockers.push({ x: p.x, z: p.y, r: 0.32 * scale });
+      if (p.length() < WALK_RADIUS + 1) this.collision.addCircle(p.x, p.y, 0.32 * scale);
     }
 
     const group = new THREE.Group();
@@ -266,7 +257,7 @@ export class TestArea {
       rock.translate(x, this.height(x, z) + size * 0.2, z);
       const tone = new THREE.Color(PROPS.rock).lerp(new THREE.Color(PROPS.rockDark), rand());
       rocks.push(paint(rock, tone));
-      if (size > 0.35 && dist < WALK_RADIUS) this.blockers.push({ x, z, r: size * 1.2 });
+      if (size > 0.35 && dist < WALK_RADIUS) this.collision.addCircle(x, z, size * 1.2);
     }
     return merged(rocks, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true }));
   }
@@ -350,9 +341,9 @@ export class TestArea {
       rune.position.set(0, h * 0.15, 0.17);
       pillar.add(rune);
       group.add(pillar);
-      this.blockers.push({ x: SHRINE.x + x, z: SHRINE.y + z, r: 0.36 });
+      this.collision.addCircle(SHRINE.x + x, SHRINE.y + z, 0.36);
     }
-    this.blockers.push({ x: SHRINE.x, z: SHRINE.y, r: 1.4 });
+    this.collision.addCircle(SHRINE.x, SHRINE.y, 1.4);
 
     const crystal = new THREE.Mesh(
       new THREE.OctahedronGeometry(0.42, 0),
@@ -379,6 +370,32 @@ export class TestArea {
       }
     });
     return { group, crystal, light };
+  }
+
+  /** Duas pedras com lanternas na ponta sul da trilha: o caminho de volta ao salão. */
+  private buildGate(): THREE.Group {
+    const group = new THREE.Group();
+    group.name = 'Portal do salão';
+    const stone = new THREE.MeshStandardMaterial({ color: PROPS.stone, flatShading: true });
+    const glass = new THREE.MeshStandardMaterial({
+      color: 0xffc27a,
+      emissive: 0xffa25a,
+      emissiveIntensity: 2,
+      flatShading: true,
+    });
+    for (const x of [-2.4, 1.3]) {
+      const z = 16.6;
+      const post = new THREE.Mesh(new THREE.BoxGeometry(0.45, 1.5, 0.45), stone);
+      post.position.set(x, this.height(x, z) + 0.75, z);
+      post.castShadow = true;
+      const lamp = new THREE.Mesh(new THREE.OctahedronGeometry(0.18, 0), glass);
+      lamp.position.set(x, post.position.y + 0.95, z);
+      const light = new THREE.PointLight(0xffa25a, 6, 6, 1.6);
+      light.position.copy(lamp.position);
+      group.add(post, lamp, light);
+      this.collision.addCircle(x, z, 0.35);
+    }
+    return group;
   }
 
   private buildFireflies(rand: () => number) {

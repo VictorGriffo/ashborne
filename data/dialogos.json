@@ -1,0 +1,54 @@
+{
+  "orin-primeiro-dia": {
+    "inicio": [
+      { "se": "conversou-com-orin", "no": "de-novo" },
+      { "no": "chegada" }
+    ],
+    "nos": {
+      "chegada": {
+        "quem": "mestre-orin",
+        "falas": [
+          "Ah, Ryben. Pontual como o sol... Bem, o sol não costuma chegar correndo e sem fôlego, mas quase.",
+          "Bem-vindo ao seu primeiro dia na Guarda de Aetheria."
+        ],
+        "escolhas": [
+          { "texto": "Estou pronto para treinar!", "ir": "pronto" },
+          { "texto": "Por que o senhor me aceitou?", "ir": "por-que" }
+        ]
+      },
+      "pronto": {
+        "quem": "mestre-orin",
+        "falas": [
+          "Pronto? Que bom. Coragem é o primeiro passo.",
+          "Mas aqui a lição mais difícil não é aprender a golpear. É aprender quando parar."
+        ],
+        "ir": "licao"
+      },
+      "por-que": {
+        "quem": "mestre-orin",
+        "falas": [
+          "...",
+          "Você tem os olhos de alguém que eu conheci. Teimoso como você, e de bom coração.",
+          "Mas isso é conversa para outro dia. Sua mãe me arrancaria a barba se eu falasse demais."
+        ],
+        "ir": "licao"
+      },
+      "licao": {
+        "quem": "mestre-orin",
+        "falas": [
+          "Lembre-se: uma lâmina que sabe parar vale mais do que uma que só sabe cortar.",
+          "Nem todo inimigo quer lutar. Às vezes, poupar é a maior das vitórias.",
+          "Agora vá tomar um ar lá fora, pela porta do norte. O altar de Aether da clareira acalma até o Kael."
+        ],
+        "marcar": ["conversou-com-orin"]
+      },
+      "de-novo": {
+        "quem": "mestre-orin",
+        "falas": [
+          "A porta do norte leva à clareira do altar.",
+          "E se o Kael propuser apostar Brasas no treino, finja que não ouviu."
+        ]
+      }
+    }
+  }
+}

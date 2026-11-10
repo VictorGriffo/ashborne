@@ -1,0 +1,28 @@
+{
+  "ryben": {
+    "nome": "Ryben",
+    "modelo": "kaykit-adventurers/Rogue",
+    "escala": 0.7,
+    "acessorios": ["Rogue_Cape"],
+    "itens": [{ "modelo": "kaykit-adventurers/Knight", "malha": "1H_Sword", "osso": "handslotr" }],
+    "animacoes": {
+      "parado": "Idle",
+      "andando": "Walking_A",
+      "correndo": "Running_A"
+    },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "mestre-orin": {
+    "nome": "Mestre Orin",
+    "modelo": "kaykit-adventurers/Knight",
+    "escala": 0.78,
+    "acessorios": ["Knight_Cape", "1H_Sword", "Badge_Shield"],
+    "animacoes": {
+      "parado": "Idle",
+      "andando": "Walking_A",
+      "correndo": "Running_A",
+      "falando": "Interact"
+    },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  }
+}

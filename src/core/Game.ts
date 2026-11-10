@@ -1,22 +1,25 @@
 import config from '../../data/config.json';
+import { Assets } from '../render/Assets';
 import { Renderer } from '../render/Renderer';
+import { Flags } from '../systems/Flags';
 import { DebugHud } from '../ui/DebugHud';
 import type { GameConfig, GameContext } from './GameContext';
 import { GameLoop } from './GameLoop';
 import { Input } from './Input';
 import { StateMachine } from './StateMachine';
-import { ExploreState } from './states/ExploreState';
-import { TitleState } from './states/TitleState';
+import { BootState } from './states/BootState';
 
 /**
  * Junta as peças: renderizador, entrada, máquina de estados e loop.
- * A pilha começa com a exploração embaixo e o título por cima.
+ * A pilha começa no carregamento, que depois abre a exploração com o título por cima.
  */
 export class Game implements GameContext {
   readonly config: GameConfig = config;
   readonly renderer: Renderer;
   readonly input = new Input();
   readonly states = new StateMachine();
+  readonly assets = new Assets();
+  readonly flags = new Flags();
   readonly debug: DebugHud;
   private readonly loop: GameLoop;
 
@@ -39,8 +42,7 @@ export class Game implements GameContext {
     });
     window.addEventListener('blur', () => this.states.focusLost());
 
-    this.states.push(new ExploreState(this));
-    this.states.push(new TitleState(this));
+    this.states.push(new BootState(this));
   }
 
   start(): void {

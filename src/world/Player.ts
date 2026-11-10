@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { Vec2 } from '../core/Input';
 import { damp, lerpAngle } from '../core/math';
-import { PlaceholderCharacter } from '../render/PlaceholderCharacter';
+import type { CharacterModel } from '../render/CharacterModel';
 
 export interface PlayerConfig {
   walkSpeed: number;
@@ -23,14 +23,22 @@ export interface PlayerConfig {
 export class Player {
   readonly position = new THREE.Vector3();
   readonly velocity = new THREE.Vector3();
-  readonly model = new PlaceholderCharacter();
 
   private readonly previous = new THREE.Vector3();
   private readonly visual = new THREE.Vector3();
   private yaw = 0;
   private previousYaw = 0;
+  private running = false;
 
-  constructor(readonly config: PlayerConfig) {}
+  constructor(
+    readonly config: PlayerConfig,
+    readonly model: CharacterModel,
+  ) {
+    // Luz de preenchimento suave: destaca o personagem em cenários escuros.
+    const fill = new THREE.PointLight(0xcfd8ff, 2.2, 4.5, 1.5);
+    fill.position.set(0, 2.2, 1.2);
+    model.root.add(fill);
+  }
 
   get object(): THREE.Object3D {
     return this.model.root;
@@ -40,12 +48,29 @@ export class Player {
     return Math.hypot(this.velocity.x, this.velocity.z);
   }
 
-  /** Move sem interpolar (início de cena, viagem rápida). */
+  /** Direção para onde o Ryben olha, no plano XZ. */
+  get facing(): THREE.Vector3 {
+    return new THREE.Vector3(Math.sin(this.yaw), 0, Math.cos(this.yaw));
+  }
+
+  /** Move sem interpolar (início de cena, troca de área). */
   teleport(x: number, z: number, yaw = this.yaw): void {
     this.position.set(x, 0, z);
     this.previous.copy(this.position);
     this.velocity.set(0, 0, 0);
     this.yaw = this.previousYaw = yaw;
+  }
+
+  /** Para na hora (início de conversa, troca de área). */
+  stop(): void {
+    this.velocity.set(0, 0, 0);
+    this.previous.copy(this.position);
+    this.previousYaw = this.yaw;
+  }
+
+  /** Vira de frente para um ponto. */
+  lookAt(point: THREE.Vector3): void {
+    this.yaw = this.previousYaw = Math.atan2(point.x - this.position.x, point.z - this.position.z);
   }
 
   /**
@@ -54,6 +79,7 @@ export class Player {
   update(dt: number, move: Vec2, running: boolean): void {
     this.previous.copy(this.position);
     this.previousYaw = this.yaw;
+    this.running = running;
 
     const top = running ? this.config.runSpeed : this.config.walkSpeed;
     // "Para cima" na tela é -Z no mundo, porque a câmera fica do lado +Z.
@@ -72,12 +98,23 @@ export class Player {
     }
   }
 
+  /**
+   * Corrige a velocidade depois da colisão: se a parede segurou o Ryben,
+   * a velocidade cai junto e a animação não fica correndo no lugar.
+   */
+  afterCollision(dt: number): void {
+    if (dt <= 0) return;
+    this.velocity.x = (this.position.x - this.previous.x) / dt;
+    this.velocity.z = (this.position.z - this.previous.z) / dt;
+  }
+
   /** Posiciona o modelo entre o passo anterior e o atual. Devolve a posição desenhada. */
   syncVisual(alpha: number, frameDt: number): THREE.Vector3 {
     this.visual.lerpVectors(this.previous, this.position, alpha);
     this.model.root.position.copy(this.visual);
     this.model.root.rotation.y = lerpAngle(this.previousYaw, this.yaw, alpha);
-    this.model.animate(frameDt, this.speed, this.config.runSpeed);
+    this.model.locomote(this.speed, this.running);
+    this.model.update(frameDt);
     return this.visual;
   }
 }
