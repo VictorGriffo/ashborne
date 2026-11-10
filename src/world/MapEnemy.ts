@@ -139,6 +139,35 @@ export class MapEnemy {
     this.vanishTime = 0;
   }
 
+  /** Estado que vai para o save. */
+  get savedState(): 'passeando' | 'poupado' | 'derrotado' {
+    if (this.state === 'poupado') return 'poupado';
+    if (this.state === 'derrotado' || this.state === 'sumindo') return 'derrotado';
+    return 'passeando';
+  }
+
+  /** Aplica o estado vindo do save (ou de uma volta à área). */
+  applySaved(state: 'passeando' | 'poupado' | 'derrotado'): void {
+    if (state === 'derrotado') {
+      this.state = 'derrotado';
+      this.model.root.visible = false;
+    } else if (state === 'poupado') {
+      this.respawn();
+      this.spare();
+    } else if (this.state === 'derrotado' || this.state === 'sumindo') {
+      this.respawn();
+    }
+  }
+
+  /** Volta para casa, inteiro, passeando. */
+  respawn(): void {
+    this.position.copy(this.home);
+    this.model.root.visible = true;
+    this.model.root.scale.set(1, 1, 1);
+    this.target = undefined;
+    this.resume();
+  }
+
   private pickTarget(): void {
     const angle = this.rand() * Math.PI * 2;
     const r = Math.sqrt(this.rand()) * this.data.mapa.raioPasseio;

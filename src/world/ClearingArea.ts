@@ -4,6 +4,7 @@ import { createRandom, range } from '../core/random';
 import { PART1, PROPS } from '../render/palette';
 import type { Area, Exit, Spawn } from './Area';
 import { CollisionWorld } from './Collision';
+import type { Interactable } from './Interactable';
 import { MapEnemy } from './MapEnemy';
 import type { Npc } from './Npc';
 
@@ -41,7 +42,20 @@ export class ClearingArea implements Area {
   readonly spawns: Record<string, Spawn> = {
     centro: { x: 0, z: 7, yaw: 0 },
     'trilha-sul': { x: 0.3, z: 15.2, yaw: Math.PI },
+    'altar-da-clareira': { x: SHRINE.x, z: SHRINE.y + 2.4, yaw: Math.PI },
   };
+  /** O próprio altar é um ponto de save. */
+  readonly interactables: Interactable[] = [
+    {
+      kind: 'save',
+      id: 'altar-da-clareira',
+      name: 'Altar de Aether',
+      position: new THREE.Vector3(SHRINE.x, 0, SHRINE.y),
+      radius: 1.4,
+      spawn: this.spawns['altar-da-clareira'],
+    },
+  ];
+  private savePulse = 0;
   readonly exits: Exit[] = [
     { minX: -2.5, maxX: 2.5, minZ: 16.6, maxZ: 19, to: 'salao-da-guarda', spawn: 'porta-norte' },
   ];
@@ -107,6 +121,10 @@ export class ClearingArea implements Area {
     scene.fog = new THREE.Fog(PART1.night, 20, 46);
   }
 
+  activateSavePoint(): void {
+    this.savePulse = 1;
+  }
+
   /** Na batalha, as árvores ficam transparentes para não esconder o inimigo. */
   setBattleMode(on: boolean): void {
     this.battle = on;
@@ -123,7 +141,9 @@ export class ClearingArea implements Area {
 
     this.crystal.position.y = 1.75 + Math.sin(t * 1.6) * 0.08;
     this.crystal.rotation.y = t * 0.6;
-    this.crystalLight.intensity = 14 + Math.sin(t * 2.3) * 2.5 + Math.sin(t * 7.1) * 0.8;
+    this.savePulse = Math.max(0, this.savePulse - dt * 0.8);
+    this.crystalLight.intensity = 14 + Math.sin(t * 2.3) * 2.5 + Math.sin(t * 7.1) * 0.8 + this.savePulse * 30;
+    this.crystal.scale.set(0.8, 1.5, 0.8).multiplyScalar(1 + this.savePulse * 0.4);
 
     const pos = this.fireflies.geometry.getAttribute('position') as THREE.BufferAttribute;
     const arr = pos.array as Float32Array;

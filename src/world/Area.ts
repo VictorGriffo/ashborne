@@ -1,5 +1,6 @@
 import type * as THREE from 'three';
 import type { CollisionWorld } from './Collision';
+import type { Interactable } from './Interactable';
 import type { MapEnemy } from './MapEnemy';
 import type { Npc } from './Npc';
 
@@ -32,6 +33,11 @@ export interface Area {
   readonly npcs: Npc[];
   /** Mobs visíveis no mapa. */
   readonly enemies: MapEnemy[];
+  /** NPCs, baús e pontos de save. */
+  readonly interactables: Interactable[];
+
+  /** Efeito visual de quando o Ryben toca um ponto de save. */
+  activateSavePoint?(id: string): void;
 
   /** Fundo e névoa da cena. */
   applyEnvironment(scene: THREE.Scene): void;

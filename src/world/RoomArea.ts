@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import type { Assets } from '../render/Assets';
+import { SavePointModel } from '../render/SavePointModel';
+import type { Reward } from '../systems/Dialogue';
 import type { Area, Exit, Spawn } from './Area';
+import type { Interactable } from './Interactable';
 import { characterModels } from './characters';
 import { CollisionWorld } from './Collision';
 import { MapEnemy } from './MapEnemy';
@@ -39,6 +42,11 @@ export interface RoomData {
   npcs: Array<{ personagem: string; pos: number[]; rot: number; dialogo: string }>;
   /** Mobs visíveis no mapa (opcional). */
   mobs?: Array<{ mob: string; pos: number[] }>;
+  /** Baús e pontos de save (opcional). */
+  interativos?: Array<
+    | { tipo: 'bau'; id: string; pos: number[]; raio: number; conteudo: Reward }
+    | { tipo: 'save'; id: string; nome: string; pos: number[]; raio: number; chegada: { pos: number[]; rot: number } }
+  >;
   entradas: Record<string, { pos: number[]; rot: number }>;
   saidas: Array<{ caixa: number[]; area: string; entrada: string }>;
 }
@@ -65,8 +73,10 @@ export class RoomArea implements Area {
   readonly exits: Exit[] = [];
   readonly npcs: Npc[] = [];
   readonly enemies: MapEnemy[] = [];
+  readonly interactables: Interactable[] = [];
 
   private readonly flickers: Flicker[] = [];
+  private readonly savePoints = new Map<string, SavePointModel>();
   private time = 0;
 
   /** Modelos que a sala precisa, para carregar antes de montar. */
@@ -125,6 +135,23 @@ export class RoomArea implements Area {
       this.npcs.push(npc);
       this.root.add(npc.model.root);
       this.collision.addCircle(npc.position.x, npc.position.z, npc.radius);
+      this.interactables.push({ kind: 'npc', npc, position: npc.position, radius: npc.radius });
+    }
+
+    for (const it of data.interativos ?? []) {
+      const position = new THREE.Vector3(it.pos[0] * s, 0, it.pos[1] * s);
+      if (it.tipo === 'bau') {
+        this.interactables.push({ kind: 'bau', id: it.id, contents: it.conteudo, position, radius: it.raio * s });
+      } else {
+        const model = new SavePointModel();
+        model.root.position.copy(position);
+        this.root.add(model.root);
+        this.savePoints.set(it.id, model);
+        this.collision.addCircle(position.x, position.z, it.raio * s);
+        const spawn = { x: it.chegada.pos[0] * s, z: it.chegada.pos[1] * s, yaw: it.chegada.rot * DEG };
+        this.spawns[it.id] = spawn;
+        this.interactables.push({ kind: 'save', id: it.id, name: it.nome, spawn, position, radius: it.raio * s });
+      }
     }
 
     (data.mobs ?? []).forEach((m, i) => {
@@ -158,6 +185,11 @@ export class RoomArea implements Area {
     }
     for (const npc of this.npcs) npc.animate(dt);
     for (const enemy of this.enemies) enemy.animate(dt);
+    for (const sp of this.savePoints.values()) sp.animate(dt);
+  }
+
+  activateSavePoint(id: string): void {
+    this.savePoints.get(id)?.activate();
   }
 
   private buildLighting(): void {
