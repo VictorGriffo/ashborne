@@ -67,10 +67,13 @@
     { "_nota": "lados da porta", "caixa": [-2, -8.5, -1.1, -7.5] },
     { "caixa": [1.1, -8.5, 2, -7.5] },
     { "_nota": "atrás da porta", "caixa": [-2, -10, 2, -8.6] },
-    { "_nota": "borda sul, sem parede para não tapar a câmera", "caixa": [-10, 8.1, 10, 9] }
+    { "_nota": "borda sul, sem parede para não tapar a câmera, com a passagem para a vila no meio", "caixa": [-10, 8.1, -2.2, 9] },
+    { "caixa": [2.2, 8.1, 10, 9] },
+    { "caixa": [-2.2, 9.3, 2.2, 10] }
   ],
   "npcs": [
-    { "personagem": "mestre-orin", "pos": [3, -4.6], "rot": 0, "dialogo": "orin-primeiro-dia" }
+    { "personagem": "mestre-orin", "pos": [3, -4.6], "rot": 0, "dialogo": "orin-salao", "naoSe": "conversou-com-orin" },
+    { "personagem": "mestre-orin", "pos": [3, -4.6], "rot": 0, "dialogo": "orin-salao", "se": "treino-orin-concluido" }
   ],
   "interativos": [
     {
@@ -91,9 +94,11 @@
   ],
   "entradas": {
     "inicio": { "pos": [0, 5], "rot": 180 },
-    "porta-norte": { "pos": [0, -6.2], "rot": 0 }
+    "porta-norte": { "pos": [0, -6.2], "rot": 0 },
+    "porta-sul": { "pos": [0, 6.2], "rot": 180 }
   },
   "saidas": [
-    { "caixa": [-1.1, -8.55, 1.1, -7.7], "area": "clareira", "entrada": "trilha-sul" }
+    { "caixa": [-1.1, -8.55, 1.1, -7.7], "area": "patio", "entrada": "porta-salao" },
+    { "caixa": [-2.1, 7.8, 2.1, 9.2], "area": "vila", "entrada": "porta-salao" }
   ]
 }

@@ -1,0 +1,7 @@
+{
+  "mercador": {
+    "nome": "Bram, o mercador",
+    "saudacao": "Ervas, chás e uma lâmina que o Tob jura que está boa. Pague em Brasas!",
+    "itens": ["erva-lume", "cha-de-erva-lume", "lamina-remendada"]
+  }
+}

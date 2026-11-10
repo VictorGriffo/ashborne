@@ -1,0 +1,52 @@
+{
+  "id": "estrada",
+  "nome": "Estrada do Santuário",
+  "tipo": "ar-livre",
+  "ambiente": {
+    "fundo": "#0b1420",
+    "nevoa": [18, 40],
+    "ceu": "#5a78a8",
+    "chao": "#0e1a2b",
+    "luzAmbiente": 1.25,
+    "lua": { "cor": "#c4d2ff", "intensidade": 1.8 },
+    "vagalumes": 30
+  },
+  "limite": { "min": [-7, -28], "max": [7, 14] },
+  "caminhos": [{ "pontos": [[0, 15], [1.5, 8], [-1, 0], [1.8, -8], [-0.8, -16], [0.5, -24], [0, -29]], "largura": 2.8 }],
+  "vegetacao": { "arvores": 120, "dentro": 6, "pedras": 30, "grama": 220, "flores": 0.04, "semente": 21 },
+  "objetos": [
+    { "tipo": "placa", "pos": [3, 11] },
+    { "tipo": "fogueira", "pos": [4.4, 1.6] },
+    { "tipo": "caixote", "pos": [5.6, 0.4] },
+    { "tipo": "lampiao", "pos": [-2.8, 6] },
+    { "tipo": "pilar-quebrado", "pos": [-4.6, -10] },
+    { "tipo": "pilar-quebrado", "pos": [4.8, -19] },
+    { "tipo": "portal", "pos": [0, -27.6], "comprimento": 3.6 }
+  ],
+  "npcs": [{ "personagem": "viajante", "pos": [5.7, 2.9], "rot": -120, "dialogo": "viajante" }],
+  "mobs": [
+    { "mob": "lobo-da-estrada", "pos": [-3.6, 4] },
+    { "mob": "lobo-da-estrada", "pos": [3.6, -6] },
+    { "mob": "lobo-da-estrada", "pos": [-3, -13] },
+    { "mob": "lobo-alfa", "pos": [0.6, -21.4] }
+  ],
+  "interativos": [
+    {
+      "tipo": "save",
+      "id": "marco-da-estrada",
+      "nome": "Marco de Aether",
+      "pos": [-3.8, -1.6],
+      "raio": 0.5,
+      "chegada": { "pos": [-2.6, -1.6], "rot": -90 }
+    },
+    { "tipo": "examinar", "id": "placa-estrada", "rotulo": "Ler", "pos": [3, 11], "raio": 0.5, "falas": ["SANTUÁRIO DO CORAÇÃO: siga a estrada. Não alimente os lobos."] }
+  ],
+  "entradas": {
+    "sul": { "pos": [0.6, 12.2], "rot": 180 },
+    "norte": { "pos": [0.3, -25.6], "rot": 0 }
+  },
+  "saidas": [
+    { "caixa": [-2, 13.2, 2.6, 15], "area": "clareira", "entrada": "trilha-norte" },
+    { "caixa": [-1.6, -29, 1.8, -27.4], "area": "santuario", "entrada": "entrada" }
+  ]
+}

@@ -1,9 +1,285 @@
 {
-  "orin-primeiro-dia": {
+  "maren": {
     "inicio": [
-      { "se": "orin-ouviu-relato", "no": "depois" },
-      { "se": "poupou-um-mob", "no": "relato-poupou" },
-      { "se": "venceu-um-mob", "no": "relato-venceu" },
+      { "se": "maren-deu-amuleto", "no": "depois-amuleto" },
+      { "se": "vaelor-proposta", "no": "partida" },
+      { "se": "falou-com-maren", "no": "de-novo" },
+      { "no": "manha" }
+    ],
+    "nos": {
+      "manha": {
+        "quem": "maren",
+        "falas": [
+          "Ryben! Bom dia, dorminhoco. Você tem ideia de que dia é hoje?",
+          "Seu primeiro dia na Guarda. Eu ainda lembro de quando você mal alcançava a maçaneta.",
+          "Kael, Lyra e Tob estão pela vila. Diga oi antes de ir ao Salão da Guarda, no fim da rua."
+        ],
+        "marcar": ["falou-com-maren"]
+      },
+      "de-novo": {
+        "quem": "maren",
+        "falas": ["O Salão fica no fim da rua, ao norte. Vá, antes que o Mestre Orin pense que você desistiu."]
+      },
+      "partida": {
+        "quem": "maren",
+        "falas": ["Ryben... a Lyra me contou. Você vai até o santuário?"],
+        "escolhas": [
+          { "texto": "O conselheiro Vaelor pediu minha ajuda.", "ir": "vaelor" },
+          { "texto": "É só uma viagem curta, mãe.", "ir": "viagem" }
+        ]
+      },
+      "vaelor": {
+        "quem": "maren",
+        "falas": ["Vaelor.", "...", "Ele conheceu muita gente. Inclusive gente que eu amei."],
+        "ir": "presente"
+      },
+      "viagem": {
+        "quem": "maren",
+        "falas": ["Viagens curtas são as que mais demoram para acabar. Sua avó dizia isso."],
+        "ir": "presente"
+      },
+      "presente": {
+        "quem": "maren",
+        "falas": [
+          "Tome. Era para eu te dar quando você fosse mais velho.",
+          "Alguém muito importante usou isso antes de você. Ele... gostaria que fosse seu.",
+          "Não tire do pescoço. Promete?"
+        ],
+        "recompensa": { "itens": { "amuleto-de-maren": 1 } },
+        "marcar": ["maren-deu-amuleto"],
+        "ir": "aviso"
+      },
+      "aviso": {
+        "quem": "maren",
+        "falas": ["Equipe o amuleto pela Bolsa. E volte antes do eclipse, entendeu?"]
+      },
+      "depois-amuleto": {
+        "quem": "maren",
+        "falas": ["Volte antes do eclipse. E, Ryben... cuidado com quem sorri demais."]
+      }
+    }
+  },
+
+  "kael": {
+    "inicio": [
+      { "se": "vaelor-proposta", "no": "antes-da-viagem" },
+      { "se": "conheceu-kael", "no": "de-novo" },
+      { "no": "oi" }
+    ],
+    "nos": {
+      "oi": {
+        "quem": "kael",
+        "falas": [
+          "Olha quem acordou! O grande Ryben, terror dos travesseiros.",
+          "Primeiro dia na Guarda, hein? Aposto cinco Brasas que você tropeça no próprio pé no treino."
+        ],
+        "escolhas": [
+          { "texto": "Aposta aceita!", "ir": "aposta" },
+          { "texto": "Bom dia pra você também, Kael.", "ir": "bom-dia" }
+        ]
+      },
+      "aposta": {
+        "quem": "kael",
+        "falas": [
+          "Haha! Fechado. E se você poupar um boneco de treino, eu pago dobrado.",
+          "Ninguém poupa boneco de treino. Eles nem têm sentimentos. Eu acho."
+        ],
+        "marcar": ["conheceu-kael"]
+      },
+      "bom-dia": {
+        "quem": "kael",
+        "falas": ["Bom dia, bom dia. Sério agora: o Mestre Orin gosta de você. Não decepciona o velho."],
+        "marcar": ["conheceu-kael"]
+      },
+      "de-novo": {
+        "quem": "kael",
+        "falas": ["Vai lá, vai lá! Eu fico aqui, protegendo o poço. Alguém tem que proteger o poço."]
+      },
+      "antes-da-viagem": {
+        "quem": "kael",
+        "falas": [
+          "Você vai até o santuário? Com o conselheiro te mandando? Que chique.",
+          "Se achar alguma coisa brilhante lá, traz uma lembrancinha. E volta, tá?",
+          "Sem você, quem é que eu vou provocar?"
+        ]
+      }
+    }
+  },
+
+  "lyra": {
+    "inicio": [
+      { "se": "vaelor-proposta", "no": "cuidado" },
+      { "se": "lyra-ouviu-relato", "no": "depois" },
+      { "se": "viu-flores-murchas", "no": "relato" },
+      { "se": "lyra-pediu-ajuda", "no": "lembrete" },
+      { "se": "treino-orin-concluido", "no": "pedido" },
+      { "se": "conheceu-lyra", "no": "de-novo" },
+      { "no": "oi" }
+    ],
+    "nos": {
+      "oi": {
+        "quem": "lyra",
+        "falas": [
+          "Ah, Ryben. Cuidado com o canteiro, as Ervas-lume acabaram de brotar.",
+          "Primeiro dia na Guarda? Leve isto. Se se machucar, mastigue. Não engula inteira."
+        ],
+        "recompensa": { "itens": { "erva-lume": 1 } },
+        "marcar": ["conheceu-lyra"]
+      },
+      "de-novo": {
+        "quem": "lyra",
+        "falas": ["As ervas gostam de luar. Dizem que crescem onde o Aether pinga das árvores."]
+      },
+      "pedido": {
+        "quem": "lyra",
+        "falas": [
+          "Ryben, que bom que você veio. Tem algo errado.",
+          "As Ervas-lume pararam de brilhar ontem à noite. Todas ao mesmo tempo.",
+          "Na Clareira do Altar o Aether é mais forte. Pode ver se as flores de lá também estão assim?"
+        ],
+        "marcar": ["lyra-pediu-ajuda"]
+      },
+      "lembrete": {
+        "quem": "lyra",
+        "falas": ["A clareira fica depois do pátio de treino, pelo portão norte. Olhe as flores perto do altar."]
+      },
+      "relato": {
+        "quem": "lyra",
+        "falas": [
+          "Murchas... e uma runa apagada no altar?",
+          "Minha avó dizia que, quando os selos enfraquecem, o Aether é o primeiro a sentir.",
+          "Precisamos avisar alguém. O conselho, o Mestre Orin, alguém!"
+        ],
+        "marcar": ["lyra-ouviu-relato"]
+      },
+      "depois": {
+        "quem": "lyra",
+        "falas": ["Chegou alguém do conselho na praça. Um homem de roupa roxa. Talvez ele saiba o que fazer."]
+      },
+      "cuidado": {
+        "quem": "lyra",
+        "falas": ["Tome cuidado na estrada, Ryben. E não confie em tudo o que brilha."]
+      }
+    }
+  },
+
+  "tob": {
+    "inicio": [
+      { "se": "tob-deu-lamina", "no": "boa-sorte" },
+      { "se": "vaelor-proposta", "no": "lamina" },
+      { "se": "conheceu-tob", "no": "de-novo" },
+      { "no": "oi" }
+    ],
+    "nos": {
+      "oi": {
+        "quem": "tob",
+        "falas": [
+          "RYBEN! Olha, olha! Inventei uma coisa!",
+          "Uma caneca que nunca esfria. ...Ela esquenta sozinha. Às vezes demais. Não encosta.",
+          "Ah, e bom primeiro dia na Guarda! Se a espada quebrar, me procura. Eu conserto. Provavelmente."
+        ],
+        "marcar": ["conheceu-tob"]
+      },
+      "de-novo": {
+        "quem": "tob",
+        "falas": ["O mestre ferreiro viajou. Eu tô cuidando da forja sozinho. O que pode dar errado?"]
+      },
+      "lamina": {
+        "quem": "tob",
+        "falas": [
+          "Ouvi dizer que você vai pra estrada do santuário. Toma! A Lâmina Remendada!",
+          "Eu mesmo remendei. Se ela partir ao meio, a culpa é do aço, não minha.",
+          "Equipa pela Bolsa. Ela bate mais forte que essa espada de treino."
+        ],
+        "recompensa": { "itens": { "lamina-remendada": 1 } },
+        "marcar": ["tob-deu-lamina"]
+      },
+      "boa-sorte": {
+        "quem": "tob",
+        "falas": ["Volta inteiro. E a espada também, se der."]
+      }
+    }
+  },
+
+  "mira": {
+    "inicio": [{ "se": "vaelor-proposta", "no": "noite" }, { "no": "oi" }],
+    "nos": {
+      "oi": {
+        "quem": "mira",
+        "falas": [
+          "Bem-vindo à Lua de Cobre. Não sirvo bebida para quem tem menos de dezesseis anos.",
+          "Mas chá de Erva-lume eu faço para qualquer um. O Bram vende o meu chá ali na barraca."
+        ]
+      },
+      "noite": {
+        "quem": "mira",
+        "falas": ["O tal conselheiro pagou bebida para a taverna inteira. Gente generosa assim me deixa desconfiada."]
+      }
+    }
+  },
+
+  "contadora": {
+    "inicio": [{ "se": "ouviu-lenda", "no": "de-novo" }, { "no": "lenda" }],
+    "nos": {
+      "lenda": {
+        "quem": "contadora",
+        "falas": [
+          "Senta aqui, menino. Já ouviu a lenda dos sete selos?",
+          "Há muito tempo, a magia de Aetheria era selvagem. Sete Guardiões a prenderam em sete selos.",
+          "E o Coração de Aether guarda os sete. Dizem que só o sangue de um Guardião toca o Coração sem se queimar.",
+          "Seu pai... ah. Esta velha fala demais. Vá, vá, a Guarda espera por você."
+        ],
+        "marcar": ["ouviu-lenda"]
+      },
+      "de-novo": {
+        "quem": "contadora",
+        "falas": ["Sete selos, um Coração. E um eclipse a cada cem anos, quando tudo fica mais frágil."]
+      }
+    }
+  },
+
+  "crianca": {
+    "inicio": [{ "se": "vaelor-proposta", "no": "moeda" }, { "no": "oi" }],
+    "nos": {
+      "oi": {
+        "quem": "crianca",
+        "falas": ["Você é da Guarda? Me ensina a lutar?", "...Tá. Então me ensina a poupar. O Kael diz que é mais difícil."]
+      },
+      "moeda": {
+        "quem": "crianca",
+        "falas": ["O moço de roupa roxa deu uma moeda pra todo mundo. Mas a moeda era fria. Moeda não devia ser fria."]
+      }
+    }
+  },
+
+  "mercador": {
+    "inicio": [{ "no": "oi" }],
+    "nos": {
+      "oi": {
+        "quem": "mercador",
+        "falas": ["Bem-vindo! O Bram tem de tudo um pouco. E um pouco de tudo."],
+        "acao": "loja:mercador"
+      }
+    }
+  },
+
+  "guarda": {
+    "inicio": [{ "se": "lyra-ouviu-relato", "no": "conselheiro" }, { "no": "portao" }],
+    "nos": {
+      "portao": {
+        "quem": "guarda",
+        "falas": ["A estrada para fora da vila fica fechada à noite. Ordens do conselho.", "Se quer sair, vá pela floresta, depois do pátio da Guarda."]
+      },
+      "conselheiro": {
+        "quem": "guarda",
+        "falas": ["O conselheiro Vaelor veio pessoalmente. Coisa grande, se quer saber."]
+      }
+    }
+  },
+
+  "orin-salao": {
+    "inicio": [
+      { "se": "treino-orin-concluido", "no": "depois-treino" },
       { "se": "conversou-com-orin", "no": "de-novo" },
       { "no": "chegada" }
     ],
@@ -21,10 +297,7 @@
       },
       "pronto": {
         "quem": "mestre-orin",
-        "falas": [
-          "Pronto? Que bom. Coragem é o primeiro passo.",
-          "Mas aqui a lição mais difícil não é aprender a golpear. É aprender quando parar."
-        ],
+        "falas": ["Pronto? Que bom. Coragem é o primeiro passo.", "Mas aqui a lição mais difícil não é aprender a golpear. É aprender quando parar."],
         "ir": "licao"
       },
       "por-que": {
@@ -40,63 +313,181 @@
         "quem": "mestre-orin",
         "falas": [
           "Lembre-se: uma lâmina que sabe parar vale mais do que uma que só sabe cortar.",
-          "Nem todo inimigo quer lutar. Às vezes, poupar é a maior das vitórias.",
-          "Agora vá tomar um ar lá fora, pela porta do norte. O altar de Aether da clareira acalma até o Kael."
+          "Vá ao Pátio de Treino, pela porta norte. Comece pelos bonecos. Depois, eu mesmo vou testar você."
         ],
         "marcar": ["conversou-com-orin"]
       },
       "de-novo": {
         "quem": "mestre-orin",
-        "falas": [
-          "A porta do norte leva à clareira do altar.",
-          "E se o Kael propuser apostar Brasas no treino, finja que não ouviu."
-        ]
+        "falas": ["O pátio fica pela porta norte. Os bonecos não mordem. Quase nunca."]
       },
-      "relato-poupou": {
+      "depois-treino": {
         "quem": "mestre-orin",
         "falas": [
-          "Ora, ora. Ouvi dizer que um Brotinho de Aether anda saltitando por aí, feliz da vida.",
-          "Você acalmou a criatura em vez de cortá-la. Isso não se ensina com espada, Ryben.",
-          "É esse tipo de Guarda que Aetheria precisa. Tome, para a sua bolsa."
-        ],
-        "recompensa": { "itens": { "erva-lume": 2 }, "brasas": 10 },
-        "marcar": ["conversou-com-orin", "orin-ouviu-relato"],
-        "ir": "fim-do-dia"
-      },
-      "fim-do-dia": {
-        "quem": "mestre-orin",
-        "falas": [
-          "Amanhã começa o treino de verdade, no pátio. Descanse.",
-          "Ah, e se precisar recuperar o fôlego, o cristal ao lado da mesa guarda um pouco de Aether. Toque nele."
-        ]
-      },
-      "relato-venceu": {
-        "quem": "mestre-orin",
-        "falas": [
-          "Venceu um Brotinho na espada, foi? Hm.",
-          "Às vezes a luta é necessária. Mas aquele bichinho só estava com medo.",
-          "Volte à clareira. Observe, acalme, e veja o que acontece quando você poupa."
-        ],
-        "marcar": ["conversou-com-orin"]
-      },
-      "depois": {
-        "quem": "mestre-orin",
-        "falas": [
-          "O treino começa amanhã, no pátio. Hoje, descanse.",
-          "E lembre-se: uma lâmina que sabe parar..."
+          "Você foi bem hoje, Ryben. Melhor do que eu esperava.",
+          "Ah, a Lyra passou aqui procurando você. Parecia preocupada."
         ]
       }
     }
   },
+
+  "orin-patio": {
+    "inicio": [{ "naoSe": "boneco-superado", "no": "antes" }, { "no": "convite" }],
+    "nos": {
+      "antes": {
+        "quem": "mestre-orin",
+        "falas": ["Primeiro os bonecos, Ryben. Eu sou o prato principal."]
+      },
+      "convite": {
+        "quem": "mestre-orin",
+        "falas": [
+          "Muito bem. Os bonecos já sabem quem manda.",
+          "Agora é comigo. Desvie dos meus golpes e mostre o que aprendeu.",
+          "E lembre-se: nem toda luta precisa terminar com alguém no chão."
+        ],
+        "acao": "batalha:mestre-orin"
+      }
+    }
+  },
+
   "orin-resgate": {
     "inicio": [{ "no": "acordar" }],
     "nos": {
       "acordar": {
         "quem": "mestre-orin",
         "falas": [
-          "Calma, calma. Você está no salão. Te encontrei desmaiado na clareira.",
+          "Calma, calma. Você está no Salão da Guarda. Te encontraram desmaiado e te trouxeram até aqui.",
           "Nem todo inimigo precisa ser vencido na espada, Ryben. Observe. Escute. Às vezes um gesto gentil basta.",
           "Descanse um pouco. Sua vida já voltou."
+        ]
+      }
+    }
+  },
+
+  "vaelor-vila": {
+    "inicio": [{ "se": "vaelor-proposta", "no": "de-novo" }, { "no": "proposta" }],
+    "nos": {
+      "proposta": {
+        "quem": "vaelor",
+        "falas": [
+          "Então este é o jovem Ryben. O Mestre Orin fala muito bem de você.",
+          "Sou Vaelor, conselheiro da Rainha Elyen. Vim porque o Aether está adoecendo. Você já percebeu, não é?",
+          "Os selos estão fracos. Antes do eclipse, o Coração de Aether precisa ser levado a um lugar seguro.",
+          "Mas o santuário só se abre para certas pessoas. Pessoas especiais. Como você."
+        ],
+        "escolhas": [
+          { "texto": "Por que eu?", "ir": "por-que" },
+          { "texto": "Eu vou.", "ir": "aceita" }
+        ]
+      },
+      "por-que": {
+        "quem": "vaelor",
+        "falas": [
+          "Porque o Coração reconhece coragem. E porque eu vejo em você algo que os outros ainda não viram.",
+          "Pense nisso como a sua primeira missão de verdade."
+        ],
+        "ir": "aceita"
+      },
+      "aceita": {
+        "quem": "vaelor",
+        "falas": [
+          "Excelente. Siga pela floresta e pegue a estrada do santuário. Eu encontro você lá.",
+          "Ah, e não preocupe sua mãe com detalhes. Mães se preocupam demais."
+        ],
+        "marcar": ["vaelor-proposta"]
+      },
+      "de-novo": {
+        "quem": "vaelor",
+        "falas": ["A estrada começa depois da clareira, pela trilha norte. O eclipse não espera, jovem Ryben."]
+      }
+    }
+  },
+
+  "viajante": {
+    "inicio": [
+      { "se": "viajante-recompensou", "no": "obrigado" },
+      { "se": "alfa-superado", "no": "recompensa" },
+      { "no": "pedido" }
+    ],
+    "nos": {
+      "pedido": {
+        "quem": "viajante",
+        "falas": [
+          "Ei, você! Viu um lobo enorme por aí? De olhos vermelhos? Ele levou a minha mochila!",
+          "É o chefe da matilha. Fica perto do fim da estrada. Se for por lá, cuidado."
+        ]
+      },
+      "recompensa": {
+        "quem": "viajante",
+        "falas": ["Você... você enfrentou o Alfa? E trouxe a minha mochila!", "Tome. É pouco, mas é de coração."],
+        "recompensa": { "itens": { "cha-de-erva-lume": 2 }, "brasas": 15 },
+        "marcar": ["viajante-recompensou"]
+      },
+      "obrigado": {
+        "quem": "viajante",
+        "falas": ["Que o Aether ilumine o seu caminho, guarda."]
+      }
+    }
+  },
+
+  "catastrofe-eclipse": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "",
+        "falas": [
+          "O Coração de Aether pulsa sob seus dedos. Quente. Vivo.",
+          "De repente, o céu escurece no meio da noite. Uma sombra engole a lua.",
+          "O eclipse começou. E o Coração... está chamando você."
+        ]
+      }
+    }
+  },
+
+  "catastrofe-traicao": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "vaelor",
+        "falas": [
+          "Exatamente como eu imaginei.",
+          "Sangue de Guardião. O Coração só obedece a ele. Daren nunca me deixou chegar perto."
+        ],
+        "escolhas": [
+          { "texto": "Meu pai? Você conheceu meu pai?", "ir": "daren" },
+          { "texto": "Vaelor, o que você está fazendo?!", "ir": "plano" }
+        ]
+      },
+      "daren": {
+        "quem": "vaelor",
+        "falas": ["Conheci. Lutamos lado a lado. Ele também se recusava a ver o óbvio."],
+        "ir": "plano"
+      },
+      "plano": {
+        "quem": "vaelor",
+        "falas": [
+          "Os selos prendem uma magia que poderia mudar o mundo. Desperdiçada em rituais e coroas.",
+          "Obrigado, Ryben. Você abriu a porta.",
+          "Agora eu a atravesso."
+        ]
+      }
+    }
+  },
+
+  "catastrofe-fim": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "vaelor",
+        "falas": ["Não se culpe, garoto.", "...Na verdade, culpe-se, sim. Vai lhe fazer bem."],
+        "ir": "b"
+      },
+      "b": {
+        "quem": "",
+        "falas": [
+          "A luz do Coração se apaga. Os selos se espalham pelo céu como brasas.",
+          "Ao longe, no castelo, um sino toca. E depois para.",
+          "A última coisa que Ryben vê é o sorriso de Vaelor."
         ]
       }
     }

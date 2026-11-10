@@ -1,0 +1,76 @@
+{
+  "id": "santuario",
+  "nome": "Santuário do Coração",
+  "tipo": "ar-livre",
+  "ambiente": {
+    "fundo": "#100c1e",
+    "nevoa": [20, 44],
+    "ceu": "#6a5a9a",
+    "chao": "#140f24",
+    "luzAmbiente": 1.35,
+    "lua": { "cor": "#b9a6ff", "intensidade": 1.8 },
+    "vagalumes": 50,
+    "grama": ["#1c3b3a", "#2b4a4a"]
+  },
+  "limite": { "min": [-11, -13], "max": [11, 10] },
+  "caminhos": [{ "pontos": [[0, 11], [0, -7]], "largura": 2.4, "tipo": "pedra" }],
+  "manchas": [{ "pos": [0, -4], "raio": 8.5, "tipo": "pedra" }],
+  "vegetacao": { "arvores": 70, "dentro": 0, "pedras": 18, "grama": 90, "flores": 0.12, "semente": 41 },
+  "objetos": [
+    { "tipo": "coracao", "pos": [0, -8.6] },
+    { "tipo": "pilar", "pos": [-6, -9.4], "altura": 3.4 },
+    { "tipo": "pilar", "pos": [6, -9.4], "altura": 3.4 },
+    { "tipo": "pilar", "pos": [-7.4, -4], "altura": 3.4 },
+    { "tipo": "pilar", "pos": [7.4, -4], "altura": 3.4 },
+    { "tipo": "pilar", "pos": [-5.8, 1.2], "altura": 3 },
+    { "tipo": "pilar", "pos": [5.8, 1.2], "altura": 3 },
+    { "tipo": "pilar", "pos": [-3, -12.2], "altura": 3.6 },
+    { "tipo": "pilar", "pos": [3, -12.2], "altura": 3.6 },
+    { "tipo": "fogueira", "pos": [-3.4, -7.4] },
+    { "tipo": "fogueira", "pos": [3.4, -7.4] },
+    { "tipo": "pilar-quebrado", "pos": [-8.6, 6] },
+    { "tipo": "pilar-quebrado", "pos": [8.8, 5.4] },
+    { "tipo": "portal", "pos": [0, 9.4], "comprimento": 3.6 }
+  ],
+  "npcs": [
+    { "personagem": "vaelor", "pos": [2.4, -5.6], "rot": -110, "dialogo": "vaelor-vila", "se": "vaelor-no-santuario" }
+  ],
+  "mobs": [
+    { "mob": "sentinela-do-santuario", "pos": [-5.4, -1] },
+    { "mob": "sentinela-do-santuario", "pos": [5.4, -1] },
+    { "mob": "guardiao-do-coracao", "pos": [0, -4.4] }
+  ],
+  "interativos": [
+    {
+      "tipo": "save",
+      "id": "altar-da-entrada",
+      "nome": "Altar da Entrada",
+      "pos": [-3.8, 7.2],
+      "raio": 0.5,
+      "chegada": { "pos": [-2.6, 7.2], "rot": -90 }
+    },
+    {
+      "tipo": "examinar",
+      "id": "coracao",
+      "rotulo": "Tocar no Coração",
+      "pos": [0, -8.6],
+      "raio": 1.5,
+      "se": "guardiao-superado",
+      "naoSe": "tocou-coracao",
+      "falas": ["O Coração de Aether pulsa como um coração de verdade.", "Ele parece... conhecer você."],
+      "marcar": ["tocou-coracao"],
+      "acao": "cena:catastrofe"
+    },
+    {
+      "tipo": "examinar",
+      "id": "coracao-barreira",
+      "rotulo": "Tocar no Coração",
+      "pos": [0, -8.6],
+      "raio": 1.5,
+      "naoSe": "guardiao-superado",
+      "falas": ["Uma força invisível empurra você para trás.", "O Guardião do Coração ainda vigia."]
+    }
+  ],
+  "entradas": { "entrada": { "pos": [0, 7.6], "rot": 180 } },
+  "saidas": [{ "caixa": [-1.6, 9.2, 1.6, 10.8], "area": "estrada", "entrada": "norte" }]
+}

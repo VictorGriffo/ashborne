@@ -20,10 +20,7 @@
       "Gotinhas de Aether escorrem das folhas do Brotinho.",
       "O Brotinho finge que é só uma planta comum."
     ],
-    "textosCalmo": [
-      "O Brotinho parece calmo o bastante para ser poupado.",
-      "O Brotinho cochila de pé. Dá para poupá-lo."
-    ],
+    "textosCalmo": ["O Brotinho parece calmo o bastante para ser poupado.", "O Brotinho cochila de pé. Dá para poupá-lo."],
     "agir": [
       {
         "nome": "Observar",
@@ -39,13 +36,307 @@
         "textoCalmo": ["Você faz carinho no Brotinho.", "Ele ronrona feito orvalho caindo."],
         "calma": 1
       },
-      {
-        "nome": "Pisar forte",
-        "texto": ["Você bate o pé no chão.", "O Brotinho se encolhe, assustado!"],
-        "calma": -1
-      }
+      { "nome": "Pisar forte", "texto": ["Você bate o pé no chão.", "O Brotinho se encolhe, assustado!"], "calma": -1 }
     ],
     "ataques": ["gotas-lentas", "cortina-de-orvalho"],
     "ataquesCalmo": ["gotas-suaves"]
+  },
+
+  "boneco-de-treino": {
+    "nome": "Boneco de Treino",
+    "artigo": "o",
+    "modelo": "boneco",
+    "vida": 12,
+    "ataque": 2,
+    "defesa": 0,
+    "recompensa": { "xp": 3, "brasas": 1 },
+    "recompensaPoupar": { "lacos": 1, "brasas": 0 },
+    "calmaParaPoupar": 2,
+    "marcar": ["boneco-superado"],
+    "mapa": { "velocidade": 0, "raioPasseio": 0, "raioToque": 0.55 },
+    "encontro": "O Boneco de Treino encara você com olhos de botão.",
+    "surpresa": "Você pegou o Boneco de surpresa. Ele não percebeu. Ele nunca percebe.",
+    "aoVencer": "O Boneco de Treino perde um pouco de palha. Ele vai sobreviver.",
+    "aoPoupar": "O Boneco continua parado. Mas, de algum jeito, parece agradecido.",
+    "falas": ["...", "(silêncio de palha)", "...?"],
+    "falasCalmo": ["(silêncio satisfeito)"],
+    "textos": [
+      "O Boneco de Treino está parado. Muito parado.",
+      "Um passarinho pousa na cabeça do Boneco.",
+      "O vento balança a palha do Boneco. Ameaçador?"
+    ],
+    "textosCalmo": ["O Boneco parece em paz. Talvez dê para poupá-lo."],
+    "agir": [
+      {
+        "nome": "Observar",
+        "texto": ["BONECO DE TREINO: ataque 2, defesa 0.", "Feito de palha e boa vontade. Os aprendizes batem nele desde sempre."],
+        "calma": 0
+      },
+      {
+        "nome": "Conversar",
+        "texto": ["Você puxa conversa com o Boneco.", "Ele não responde. Mas parece ouvir."],
+        "textoCalmo": ["Você conta uma piada ao Boneco.", "Ele não ri. Mas também não reclama."],
+        "calma": 1
+      },
+      { "nome": "Ajeitar a palha", "texto": ["Você ajeita a palha do Boneco.", "Ele fica mais elegante."], "calma": 1 }
+    ],
+    "ataques": ["palha-ao-vento"],
+    "ataquesCalmo": ["palha-ao-vento"]
+  },
+
+  "mestre-orin": {
+    "nome": "Mestre Orin",
+    "artigo": "o",
+    "modelo": "npc",
+    "vida": 40,
+    "ataque": 3,
+    "defesa": 1,
+    "chefe": true,
+    "recompensa": { "xp": 10, "brasas": 5 },
+    "recompensaPoupar": { "lacos": 2, "brasas": 5 },
+    "calmaParaPoupar": 2,
+    "marcar": ["treino-orin-concluido"],
+    "encontro": "O Mestre Orin ergue a espada de madeira. \"Mostre o que sabe, Ryben.\"",
+    "surpresa": "O Mestre Orin já esperava por você.",
+    "aoVencer": "O Mestre Orin baixa a espada e sorri. \"Bom golpe. Agora aprenda quando não precisar dele.\"",
+    "aoPoupar": "O Mestre Orin guarda a espada. \"Isso. Saber parar também é vencer.\"",
+    "recusaPoupar": "\"Ainda não, Ryben. Prove primeiro que você sabe se defender.\"",
+    "falas": ["Pés firmes!", "Olhe para a lâmina, não para mim!", "De novo!"],
+    "falasCalmo": ["Bom. Muito bom.", "Respire."],
+    "textos": ["O Mestre Orin gira a espada de madeira.", "O Mestre Orin corrige sua postura com um olhar."],
+    "textosCalmo": ["O Mestre Orin parece satisfeito. Talvez seja hora de parar."],
+    "agir": [
+      { "nome": "Observar", "texto": ["MESTRE ORIN: ataque 3, defesa 1.", "Instrutor da Guarda. Ensina mais com perguntas do que com golpes."], "calma": 0 },
+      {
+        "nome": "Ouvir o conselho",
+        "texto": ["Você presta atenção nas palavras do Mestre Orin.", "\"Força sem controle é só barulho.\""],
+        "textoCalmo": ["\"Você aprende rápido. Seu... alguém que eu conheci também aprendia.\""],
+        "calma": 1
+      },
+      { "nome": "Baixar a guarda", "texto": ["Você baixa a espada e respira fundo.", "O Mestre Orin acena com a cabeça."], "calma": 1 }
+    ],
+    "ataques": ["espadas-de-madeira"],
+    "ataquesCalmo": ["espadas-de-madeira"]
+  },
+
+  "corvo-curioso": {
+    "nome": "Corvo Curioso",
+    "artigo": "o",
+    "modelo": "corvo",
+    "vida": 14,
+    "ataque": 3,
+    "defesa": 0,
+    "recompensa": { "xp": 5, "brasas": 4 },
+    "recompensaPoupar": { "lacos": 1, "brasas": 1 },
+    "calmaParaPoupar": 2,
+    "mapa": { "velocidade": 1.4, "raioPasseio": 3, "raioToque": 0.45 },
+    "encontro": "Um Corvo Curioso pousa na sua frente e inclina a cabeça.",
+    "surpresa": "O Corvo estava distraído com uma pedrinha brilhante!",
+    "aoPoupar": "O Corvo Curioso grasna contente e passa a seguir você de longe.",
+    "falas": ["Cróc?", "Brilho! Brilho!", "Cróc cróc!"],
+    "falasCalmo": ["...cróc ♪"],
+    "textos": ["O Corvo Curioso olha fixo para a sua espada.", "O Corvo arruma as penas, desconfiado."],
+    "textosCalmo": ["O Corvo parece satisfeito com o presente. Dá para poupá-lo."],
+    "agir": [
+      { "nome": "Observar", "texto": ["CORVO CURIOSO: ataque 3, defesa 0.", "Coleciona tudo o que brilha. Fica bravo quando não ganha nada."], "calma": 0 },
+      {
+        "nome": "Oferecer um brilho",
+        "texto": ["Você mostra o reflexo do Aether na lâmina.", "O Corvo arregala os olhos, encantado!"],
+        "calma": 2
+      },
+      { "nome": "Imitar o corvo", "texto": ["\"Cróc!\", você diz.", "O Corvo fica ofendido. Ou impressionado. Difícil saber."], "calma": 1 }
+    ],
+    "ataques": ["leque-de-penas"],
+    "ataquesCalmo": ["penas-soltas"]
+  },
+
+  "gato-de-telhado": {
+    "nome": "Gato de Telhado",
+    "artigo": "o",
+    "modelo": "gato",
+    "vida": 10,
+    "ataque": 2,
+    "defesa": 0,
+    "recompensa": { "xp": 3, "brasas": 2 },
+    "recompensaPoupar": { "lacos": 1, "brasas": 0 },
+    "calmaParaPoupar": 1,
+    "mapa": { "velocidade": 1.6, "raioPasseio": 3.5, "raioToque": 0.4 },
+    "encontro": "Um Gato de Telhado arqueia as costas e bufa!",
+    "surpresa": "O Gato estava lambendo a pata. Que vergonha para ele.",
+    "aoPoupar": "O Gato se esfrega na sua perna e vai embora como se nada tivesse acontecido.",
+    "falas": ["Fsss!", "Mrrau.", "..."],
+    "falasCalmo": ["Prrrrr."],
+    "textos": ["O Gato finge que não está vendo você.", "O Gato balança o rabo, impaciente."],
+    "textosCalmo": ["O Gato está ronronando. Pode poupá-lo."],
+    "agir": [
+      { "nome": "Observar", "texto": ["GATO DE TELHADO: ataque 2, defesa 0.", "Dono de todos os telhados da vila. Pelo menos na cabeça dele."], "calma": 0 },
+      { "nome": "Coçar atrás da orelha", "texto": ["Você coça atrás da orelha do Gato.", "Ele derrete."], "calma": 1 }
+    ],
+    "ataques": ["arranhoes"],
+    "ataquesCalmo": ["arranhoes"]
+  },
+
+  "lobo-da-estrada": {
+    "nome": "Lobo da Estrada",
+    "artigo": "o",
+    "modelo": "lobo",
+    "vida": 22,
+    "ataque": 4,
+    "defesa": 1,
+    "recompensa": { "xp": 8, "brasas": 6 },
+    "recompensaPoupar": { "lacos": 1, "brasas": 2 },
+    "calmaParaPoupar": 2,
+    "mapa": { "velocidade": 1.8, "raioPasseio": 3.5, "raioToque": 0.55 },
+    "encontro": "Um Lobo da Estrada salta do mato, rosnando!",
+    "surpresa": "O Lobo estava farejando uma pegada. Você chegou antes!",
+    "aoPoupar": "O Lobo abaixa as orelhas e volta para a matilha, tranquilo.",
+    "falas": ["Grrrr...", "*rosnado baixo*", "Auuu!"],
+    "falasCalmo": ["*abana o rabo, sem graça*"],
+    "textos": ["O Lobo anda em círculos à sua volta.", "O Lobo mostra os dentes.", "Ao longe, outro lobo uiva."],
+    "textosCalmo": ["O Lobo já não vê você como ameaça. Dá para poupá-lo."],
+    "agir": [
+      { "nome": "Observar", "texto": ["LOBO DA ESTRADA: ataque 4, defesa 1.", "Protege o território da matilha. Ataca o que parece perigoso."], "calma": 0 },
+      {
+        "nome": "Mostrar que não é ameaça",
+        "texto": ["Você abaixa a espada e se agacha devagar.", "O Lobo para de rosnar."],
+        "calma": 1
+      },
+      { "nome": "Uivar junto", "texto": ["Você uiva para a lua.", "O Lobo inclina a cabeça... e uiva também!"], "calma": 1 },
+      { "nome": "Encarar", "texto": ["Você encara o Lobo nos olhos.", "Péssima ideia. Ele fica furioso!"], "calma": -1 }
+    ],
+    "ataques": ["investida-mirada", "uivo-em-cortina"],
+    "ataquesCalmo": ["investida-lenta"]
+  },
+
+  "lobo-alfa": {
+    "nome": "Lobo Alfa",
+    "artigo": "o",
+    "modelo": "lobo-alfa",
+    "vida": 45,
+    "ataque": 5,
+    "defesa": 2,
+    "unico": true,
+    "chefe": true,
+    "recompensa": { "xp": 25, "brasas": 15 },
+    "recompensaPoupar": { "lacos": 2, "brasas": 6 },
+    "calmaParaPoupar": 3,
+    "marcar": ["alfa-superado"],
+    "mapa": { "velocidade": 1.2, "raioPasseio": 2.5, "raioToque": 0.75 },
+    "encontro": "O Lobo Alfa surge, enorme, de olhos em brasa. A matilha inteira obedece a ele.",
+    "surpresa": "O Alfa estava cochilando sobre uma mochila velha!",
+    "aoVencer": "O Lobo Alfa recua, ferido, e some no mato. Deixou a mochila para trás.",
+    "aoPoupar": "O Lobo Alfa encosta o focinho na sua mão. A matilha inteira se acalma.",
+    "falas": ["GRRRRR!", "*uivo que gela o sangue*", "*passos pesados*"],
+    "falasCalmo": ["*respira fundo, como um velho cansado*"],
+    "textos": ["O Lobo Alfa mede você dos pés à cabeça.", "As cicatrizes do Alfa contam muitas histórias.", "A matilha observa, quieta, entre as árvores."],
+    "textosCalmo": ["O Alfa baixa a cabeça. Ele aceita você. Dá para poupá-lo."],
+    "agir": [
+      { "nome": "Observar", "texto": ["LOBO ALFA: ataque 5, defesa 2.", "Velho, cansado de brigar. Mas ninguém nunca tentou outra coisa com ele."], "calma": 0 },
+      { "nome": "Mostrar que não é ameaça", "texto": ["Você abaixa a espada.", "O Alfa observa. Não confia ainda."], "calma": 1 },
+      { "nome": "Uivar junto", "texto": ["Você uiva para a lua.", "A matilha responde. O Alfa hesita."], "calma": 1 },
+      { "nome": "Devolver o respeito", "texto": ["Você faz uma reverência ao velho lobo.", "Os olhos em brasa do Alfa suavizam."], "calma": 1 }
+    ],
+    "ataques": ["matilha", "investida-mirada", "uivo-em-cortina"],
+    "ataquesCalmo": ["investida-lenta"]
+  },
+
+  "sentinela-do-santuario": {
+    "nome": "Sentinela do Santuário",
+    "artigo": "a",
+    "modelo": "sentinela",
+    "vida": 26,
+    "ataque": 5,
+    "defesa": 2,
+    "recompensa": { "xp": 12, "brasas": 8 },
+    "recompensaPoupar": { "lacos": 1, "brasas": 3 },
+    "calmaParaPoupar": 2,
+    "mapa": { "velocidade": 0.8, "raioPasseio": 2, "raioToque": 0.6 },
+    "encontro": "Uma Sentinela do Santuário gira o olho de Aether na sua direção.",
+    "surpresa": "A Sentinela estava virada para o outro lado. Até pedras se distraem.",
+    "aoPoupar": "A Sentinela fecha o olho e volta a vigiar, em silêncio.",
+    "falas": ["INTRUSO.", "PROTEGER O CORAÇÃO.", "IDENTIFIQUE-SE."],
+    "falasCalmo": ["...RECONHECIDO."],
+    "textos": ["A Sentinela flutua, imóvel, zumbindo baixinho.", "Runas lilases correm pela pedra da Sentinela."],
+    "textosCalmo": ["A Sentinela parece reconhecer você. Dá para poupá-la."],
+    "agir": [
+      { "nome": "Observar", "texto": ["SENTINELA DO SANTUÁRIO: ataque 5, defesa 2.", "Guardiã de pedra. Ataca quem chega correndo ou com a arma em punho."], "calma": 0 },
+      { "nome": "Ficar imóvel", "texto": ["Você fica parado como uma estátua.", "O olho da Sentinela escaneia você, devagar."], "calma": 1 },
+      { "nome": "Fazer reverência", "texto": ["Você faz uma reverência ao santuário.", "As runas da Sentinela piscam, em resposta."], "calma": 1 }
+    ],
+    "ataques": ["feixes-em-grade", "grade-dupla"],
+    "ataquesCalmo": ["feixes-lentos"]
+  },
+
+  "guardiao-do-coracao": {
+    "nome": "Guardião do Coração",
+    "artigo": "o",
+    "modelo": "guardiao",
+    "vida": 70,
+    "ataque": 6,
+    "defesa": 3,
+    "unico": true,
+    "chefe": true,
+    "recompensa": { "xp": 40, "brasas": 25 },
+    "recompensaPoupar": { "lacos": 3, "brasas": 10 },
+    "calmaParaPoupar": 3,
+    "marcar": ["guardiao-superado"],
+    "mapa": { "velocidade": 0, "raioPasseio": 0, "raioToque": 1.1 },
+    "encontro": "O Guardião do Coração desperta. Pedra contra pedra, ele se levanta.",
+    "surpresa": "O Guardião dormia há séculos. Leva um tempo para acordar.",
+    "aoVencer": "O Guardião do Coração desaba em pedaços. As runas se apagam, uma a uma.",
+    "aoPoupar": "O Guardião se ajoelha. As runas brilham em reconhecimento: sangue de Guardião.",
+    "recusaPoupar": "O Guardião não entende misericórdia. Ainda não.",
+    "falas": ["NINGUÉM TOCA O CORAÇÃO.", "SÓ O SANGUE DOS GUARDIÕES.", "VOLTE."],
+    "falasCalmo": ["...ESSE SANGUE... EU CONHEÇO."],
+    "textos": ["O Guardião bate os punhos no chão. O santuário treme.", "O visor do Guardião brilha mais forte.", "Pó de pedra cai dos ombros do Guardião."],
+    "textosCalmo": ["O Guardião hesita. Ele reconhece algo em você. Dá para poupá-lo."],
+    "agir": [
+      { "nome": "Observar", "texto": ["GUARDIÃO DO CORAÇÃO: ataque 6, defesa 3.", "Construído pelos antigos Guardiões. Só deixa passar quem tem o sangue deles."], "calma": 0 },
+      { "nome": "Mostrar respeito", "texto": ["Você baixa a espada diante do Guardião.", "Ele para por um instante. Depois continua."], "calma": 1 },
+      {
+        "nome": "Tocar a runa da armadura",
+        "texto": ["Você estende a mão e toca a runa no peito do Guardião.", "A runa brilha sob seus dedos. O Guardião estremece!"],
+        "textoCalmo": ["Você mantém a mão na runa.", "O brilho passa da pedra para a sua pele. Ele sabe quem você é."],
+        "calma": 2
+      }
+    ],
+    "ataques": ["punhos-de-pedra", "grade-dupla", "chuva-de-pedras"],
+    "ataquesCalmo": ["feixes-lentos"]
+  },
+
+  "vaelor": {
+    "nome": "Vaelor",
+    "artigo": "o",
+    "modelo": "npc",
+    "vida": 999,
+    "ataque": 8,
+    "defesa": 9,
+    "chefe": true,
+    "recompensa": { "xp": 0, "brasas": 0 },
+    "recompensaPoupar": { "lacos": 0, "brasas": 0 },
+    "calmaParaPoupar": 999,
+    "roteiro": {
+      "turnos": 3,
+      "fim": [
+        "Vaelor levanta a mão. O ar fica pesado como chumbo.",
+        "Seus joelhos dobram. A espada cai da sua mão.",
+        "Você não consegue mais se mexer..."
+      ]
+    },
+    "encontro": "Vaelor abre os braços. O Aether do Coração escorre para as mãos dele.",
+    "surpresa": "",
+    "aoPoupar": "",
+    "recusaPoupar": "Vaelor ri. \"Poupar? Você ainda acha que está no controle?\"",
+    "falas": ["Pobre garoto.", "Obrigado pela porta.", "Daren ficaria tão decepcionado."],
+    "falasCalmo": ["..."],
+    "textos": ["Vaelor nem se dá ao trabalho de se defender.", "O eclipse cobre o santuário de roxo.", "Os selos giram no céu, rachando."],
+    "textosCalmo": ["Vaelor sorri."],
+    "agir": [
+      { "nome": "Observar", "texto": ["VAELOR: ataque 8, defesa 9.", "Conselheiro da Rainha. Antigo companheiro de Daren. Mentiroso."], "calma": 0 },
+      { "nome": "Perguntar por quê", "texto": ["\"Por quê?!\", você grita.", "\"Porque a magia não deveria ter dono, Ryben. Nem selos.\""], "calma": 0 },
+      { "nome": "Chamar por ajuda", "texto": ["Você chama pelo Mestre Orin, por Kael, por sua mãe.", "Ninguém responde. Só o eco."], "calma": 0 }
+    ],
+    "ataques": ["aether-sombrio", "lua-negra"],
+    "ataquesCalmo": ["aether-sombrio"]
   }
 }

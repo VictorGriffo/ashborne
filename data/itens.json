@@ -7,16 +7,40 @@
     "descricao": "Uma erva que brilha fraquinho no escuro. Recupera 10 de vida.",
     "usar": "Você mastiga a Erva-lume. Tem gosto de hortelã e luar."
   },
+  "cha-de-erva-lume": {
+    "nome": "Chá de Erva-lume",
+    "tipo": "cura",
+    "cura": 22,
+    "preco": 10,
+    "descricao": "Erva-lume fervida com mel, receita da Mira. Recupera 22 de vida.",
+    "usar": "Você bebe o chá ainda morno. O peito aquece."
+  },
   "espada-de-treino": {
     "nome": "Espada de Treino",
     "tipo": "arma",
     "ataque": 2,
-    "descricao": "Lâmina sem fio da Guarda. Machuca mais o orgulho do que o corpo."
+    "preco": 6,
+    "descricao": "Lâmina sem fio da Guarda. Machuca mais o orgulho do que o corpo. Ataque +2."
+  },
+  "lamina-remendada": {
+    "nome": "Lâmina Remendada",
+    "tipo": "arma",
+    "ataque": 4,
+    "preco": 36,
+    "descricao": "Uma espada velha que o Tob consertou com muito capricho e pouca técnica. Ataque +4."
   },
   "tunica-da-guarda-aprendiz": {
     "nome": "Túnica da Guarda Aprendiz",
     "tipo": "vestes",
     "defesa": 1,
-    "descricao": "Verde, com barra de Aether. Ainda grande demais nos ombros."
+    "preco": 6,
+    "descricao": "Verde, com barra de Aether. Ainda grande demais nos ombros. Defesa +1."
+  },
+  "amuleto-de-maren": {
+    "nome": "Amuleto de Maren",
+    "tipo": "amuleto",
+    "defesa": 1,
+    "defesaVidaBaixa": 3,
+    "descricao": "Presente da sua mãe. Defesa +1, e +3 a mais quando a vida está baixa."
   }
 }

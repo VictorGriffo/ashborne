@@ -1,0 +1,21 @@
+{
+  "catastrofe": [
+    { "evento": "coracao-sobe" },
+    { "esperar": 1 },
+    { "dialogo": "catastrofe-eclipse" },
+    { "evento": "eclipse" },
+    { "esperar": 1.6 },
+    { "flag": "vaelor-no-santuario" },
+    { "esperar": 0.8 },
+    { "dialogo": "catastrofe-traicao" },
+    { "evento": "selos-quebram" },
+    { "clarao": true },
+    { "esperar": 1.2 },
+    { "batalha": "vaelor" },
+    { "evento": "coracao-apaga" },
+    { "esperar": 1.2 },
+    { "dialogo": "catastrofe-fim" },
+    { "clarao": true },
+    { "fim": "parte-1" }
+  ]
+}

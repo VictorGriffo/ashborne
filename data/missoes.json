@@ -1,12 +1,41 @@
 {
-  "_formato": "Missões em ordem. A missão ativa é a primeira com alguma etapa pendente. Cada etapa termina quando a flag 'concluida' é marcada; 'area' é onde o mapa põe o marcador.",
+  "_formato": "Missões em ordem. A missão ativa é a primeira com alguma etapa pendente. Cada etapa termina quando a flag 'concluida' (ou todas as da lista) é marcada; 'area' é onde o mapa põe o marcador.",
   "1.1": {
     "nome": "Primeiro dia na Guarda",
     "etapas": [
-      { "texto": "Fale com o Mestre Orin no Salão da Guarda.", "area": "salao-da-guarda", "concluida": "conversou-com-orin" },
-      { "texto": "Tome um ar na Clareira do Altar, pela porta norte do salão.", "area": "clareira", "concluida": "visitou-clareira" },
-      { "texto": "Encontre um Brotinho de Aether e acalme-o em vez de lutar.", "area": "clareira", "concluida": "poupou-um-mob" },
-      { "texto": "Volte ao salão e conte ao Mestre Orin como foi.", "area": "salao-da-guarda", "concluida": "orin-ouviu-relato" }
+      { "texto": "Fale com sua mãe, Maren, em frente de casa.", "area": "vila", "concluida": "falou-com-maren" },
+      { "texto": "Encontre seus amigos pela vila: Kael, Lyra e Tob.", "area": "vila", "concluida": ["conheceu-kael", "conheceu-lyra", "conheceu-tob"] },
+      { "texto": "Vá ao Salão da Guarda, no fim da rua ao norte, e fale com o Mestre Orin.", "area": "salao-da-guarda", "concluida": "conversou-com-orin" },
+      { "texto": "No Pátio de Treino, enfrente um Boneco de Treino.", "area": "patio", "concluida": "boneco-superado" },
+      { "texto": "Treine com o Mestre Orin no pátio. Ele quer ver se você sabe quando parar.", "area": "patio", "concluida": "treino-orin-concluido" }
     ]
+  },
+  "1.2": {
+    "nome": "Os selos enfraquecem",
+    "etapas": [
+      { "texto": "A Lyra quer falar com você na vila. Algo está errado com o Aether.", "area": "vila", "concluida": "lyra-pediu-ajuda" },
+      { "texto": "Vá à Clareira do Altar, depois do pátio, e examine as flores de Aether.", "area": "clareira", "concluida": "viu-flores-murchas" },
+      { "texto": "Volte à vila e conte à Lyra o que viu.", "area": "vila", "concluida": "lyra-ouviu-relato" },
+      { "texto": "Alguém importante chegou à praça da vila. Vá até lá.", "area": "vila", "concluida": "vaelor-proposta" }
+    ]
+  },
+  "1.3": {
+    "nome": "A estrada do santuário",
+    "etapas": [
+      { "texto": "Fale com sua mãe antes de partir.", "area": "vila", "concluida": "maren-deu-amuleto" },
+      { "texto": "Saia pela trilha norte da Clareira do Altar e pegue a Estrada do Santuário.", "area": "estrada", "concluida": "visitou-estrada" },
+      { "texto": "Siga a estrada até o Santuário.", "area": "santuario", "concluida": "visitou-santuario" }
+    ]
+  },
+  "1.4": {
+    "nome": "O santuário",
+    "etapas": [
+      { "texto": "Supere o Guardião do Coração.", "area": "santuario", "concluida": "guardiao-superado" },
+      { "texto": "Aproxime-se do Coração de Aether.", "area": "santuario", "concluida": "tocou-coracao" }
+    ]
+  },
+  "1.5": {
+    "nome": "A catástrofe",
+    "etapas": [{ "texto": "O eclipse começou.", "area": "santuario", "concluida": "parte-1-concluida" }]
   }
 }

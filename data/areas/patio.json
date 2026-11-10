@@ -1,0 +1,63 @@
+{
+  "id": "patio",
+  "nome": "Pátio de Treino",
+  "tipo": "ar-livre",
+  "ambiente": {
+    "fundo": "#0e1a2b",
+    "nevoa": [24, 50],
+    "ceu": "#7a96c8",
+    "chao": "#1a2638",
+    "luzAmbiente": 1.5,
+    "lua": { "cor": "#c8d4ff", "intensidade": 2.1 },
+    "vagalumes": 20
+  },
+  "limite": { "min": [-11, -9], "max": [11, 9] },
+  "caminhos": [{ "pontos": [[0, 10], [0, -10]], "largura": 2 }],
+  "manchas": [{ "pos": [0, -0.5], "raio": 7.5, "tipo": "areia" }],
+  "vegetacao": { "arvores": 55, "dentro": 0, "pedras": 10, "grama": 90, "flores": 0.04, "semente": 31 },
+  "objetos": [
+    { "tipo": "casa", "pos": [0, 17.5], "rot": 180, "tamanho": [10, 5.5], "altura": 2.4, "cor": "#8a8478", "telhado": "#3a3f5c" },
+    { "tipo": "portal", "pos": [0, -9.4], "comprimento": 3.2 },
+    { "tipo": "cerca", "pos": [-6.4, -8.8], "comprimento": 8.6 },
+    { "tipo": "cerca", "pos": [6.4, -8.8], "comprimento": 8.6 },
+    { "tipo": "cerca", "pos": [-10.8, 0], "rot": 90, "comprimento": 16 },
+    { "tipo": "cerca", "pos": [10.8, 0], "rot": 90, "comprimento": 16 },
+    { "tipo": "banco", "pos": [-8.6, 4], "rot": 90 },
+    { "tipo": "banco", "pos": [8.6, 4], "rot": 90 },
+    { "tipo": "caixote", "pos": [8.8, -6.6] },
+    { "tipo": "caixote", "pos": [9.5, -5.8] },
+    { "tipo": "caixote", "pos": [-9.2, -6.4] },
+    { "tipo": "lampiao", "pos": [-3.2, 6.6] },
+    { "tipo": "lampiao", "pos": [3.2, 6.6] },
+    { "tipo": "lampiao", "pos": [-3, -7.2] },
+    { "tipo": "lampiao", "pos": [3, -7.2] }
+  ],
+  "npcs": [
+    {
+      "personagem": "mestre-orin",
+      "pos": [0, 2.4],
+      "rot": 0,
+      "dialogo": "orin-patio",
+      "se": "conversou-com-orin",
+      "naoSe": "treino-orin-concluido"
+    }
+  ],
+  "mobs": [
+    { "mob": "boneco-de-treino", "pos": [-4.5, -3.4] },
+    { "mob": "boneco-de-treino", "pos": [0, -4.6] },
+    { "mob": "boneco-de-treino", "pos": [4.5, -3.4] }
+  ],
+  "entradas": {
+    "porta-salao": { "pos": [0, 7.4], "rot": 180 },
+    "portao-norte": { "pos": [0, -7.4], "rot": 0 }
+  },
+  "saidas": [
+    { "caixa": [-1.4, 8.4, 1.4, 9.8], "area": "salao-da-guarda", "entrada": "porta-norte" },
+    {
+      "caixa": [-1.4, -9.8, 1.4, -8.4],
+      "area": "clareira",
+      "entrada": "trilha-sul",
+      "bloqueio": { "se": "treino-orin-concluido", "mensagem": "O Mestre Orin pediu que você terminasse o treino antes de sair do pátio." }
+    }
+  ]
+}

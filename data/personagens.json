@@ -5,11 +5,7 @@
     "escala": 0.7,
     "acessorios": ["Rogue_Cape"],
     "itens": [{ "modelo": "kaykit-adventurers/Knight", "malha": "1H_Sword", "osso": "handslotr" }],
-    "animacoes": {
-      "parado": "Idle",
-      "andando": "Walking_A",
-      "correndo": "Running_A"
-    },
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A" },
     "passo": { "andando": 2.6, "correndo": 5.2 },
     "atributos": { "nivel": 1, "vida": 20, "forca": 4, "defesa": 0 },
     "equipamento": { "arma": "espada-de-treino", "vestes": "tunica-da-guarda-aprendiz" },
@@ -20,12 +16,104 @@
     "modelo": "kaykit-adventurers/Knight",
     "escala": 0.78,
     "acessorios": ["Knight_Cape", "1H_Sword", "Badge_Shield"],
-    "animacoes": {
-      "parado": "Idle",
-      "andando": "Walking_A",
-      "correndo": "Running_A",
-      "falando": "Interact"
-    },
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "maren": {
+    "nome": "Maren",
+    "modelo": "kaykit-adventurers/Mage",
+    "escala": 0.72,
+    "acessorios": ["Mage_Cape"],
+    "tinta": "#f0c8d4",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "kael": {
+    "nome": "Kael",
+    "modelo": "kaykit-adventurers/Rogue_Hooded",
+    "escala": 0.72,
+    "acessorios": ["Rogue_Cape"],
+    "tinta": "#a8c0ff",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Cheer" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "lyra": {
+    "nome": "Lyra",
+    "modelo": "kaykit-adventurers/Mage",
+    "escala": 0.68,
+    "acessorios": ["Mage_Hat", "Spellbook"],
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "tob": {
+    "nome": "Tob",
+    "modelo": "kaykit-adventurers/Barbarian",
+    "escala": 0.72,
+    "acessorios": ["Mug"],
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Cheer" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "vaelor": {
+    "nome": "Vaelor",
+    "modelo": "kaykit-adventurers/Mage",
+    "escala": 0.84,
+    "acessorios": ["Mage_Hat", "Mage_Cape", "2H_Staff"],
+    "tinta": "#8a6cc8",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Spellcast_Raise" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "mira": {
+    "nome": "Mira",
+    "modelo": "kaykit-adventurers/Rogue",
+    "escala": 0.7,
+    "acessorios": [],
+    "tinta": "#f2b8a0",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "contadora": {
+    "nome": "Vó Hesta",
+    "modelo": "kaykit-adventurers/Mage",
+    "escala": 0.62,
+    "acessorios": ["Mage_Cape"],
+    "tinta": "#a8acbc",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "crianca": {
+    "nome": "Pip",
+    "modelo": "kaykit-adventurers/Rogue_Hooded",
+    "escala": 0.46,
+    "acessorios": [],
+    "tinta": "#ffd9a0",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Cheer" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "mercador": {
+    "nome": "Bram, o mercador",
+    "modelo": "kaykit-adventurers/Barbarian",
+    "escala": 0.74,
+    "acessorios": ["Barbarian_Hat"],
+    "tinta": "#d8b080",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "guarda": {
+    "nome": "Guarda do portão",
+    "modelo": "kaykit-adventurers/Knight",
+    "escala": 0.76,
+    "acessorios": ["Knight_Helmet", "1H_Sword", "Rectangle_Shield"],
+    "tinta": "#c0c8d8",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "viajante": {
+    "nome": "Viajante perdido",
+    "modelo": "kaykit-adventurers/Rogue_Hooded",
+    "escala": 0.7,
+    "acessorios": ["Rogue_Cape"],
+    "tinta": "#c8b090",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
     "passo": { "andando": 2.6, "correndo": 5.2 }
   }
 }

@@ -1,0 +1,76 @@
+{
+  "id": "vila",
+  "nome": "Vila",
+  "tipo": "ar-livre",
+  "_comentario": "Posições em metros do jogo. rot em graus (0 = frente para a câmera, 90 = frente para a direita).",
+  "ambiente": {
+    "fundo": "#0e1a2b",
+    "nevoa": [26, 54],
+    "ceu": "#7a96c8",
+    "chao": "#1a2638",
+    "luzAmbiente": 1.5,
+    "lua": { "cor": "#c8d4ff", "intensidade": 2.0 },
+    "vagalumes": 40
+  },
+  "limite": { "min": [-16, -12], "max": [16, 12] },
+  "caminhos": [
+    { "pontos": [[0, 13], [0.4, 6], [0, 0], [-0.3, -6], [0, -13]], "largura": 2.6 },
+    { "pontos": [[-17, 1], [-8, 0.6], [0, 0], [8, -0.5], [17, 0.4]], "largura": 2.2 }
+  ],
+  "manchas": [{ "pos": [0, 0], "raio": 4.2, "tipo": "pedra" }],
+  "vegetacao": { "arvores": 70, "dentro": 3, "pedras": 14, "grama": 140, "flores": 0.05, "semente": 11 },
+  "objetos": [
+    { "tipo": "casa", "pos": [0, -16.4], "tamanho": [10, 5.5], "altura": 3.4, "cor": "#8a8478", "telhado": "#3a3f5c" },
+    { "tipo": "portal", "pos": [0, -12.4], "comprimento": 3.6 },
+    { "tipo": "poco", "pos": [0, 0] },
+    { "tipo": "forja", "pos": [-8.5, -6.5], "tamanho": [4.4, 3.4] },
+    { "tipo": "casa", "pos": [8.5, -6.5], "tamanho": [5, 3.6], "cor": "#a07a58", "telhado": "#5a2e2a" },
+    { "tipo": "placa", "pos": [5.4, -4.4] },
+    { "tipo": "casa", "pos": [-11.5, 5.5], "rot": 90, "tamanho": [4, 3.2], "cor": "#c8b496", "telhado": "#7a3b33" },
+    { "tipo": "casa", "pos": [11.5, 5.5], "rot": -90, "tamanho": [4, 3.2], "cor": "#b8a58a", "telhado": "#4a5a7a" },
+    { "tipo": "casa", "pos": [13.4, -10], "tamanho": [3.4, 2.8], "cor": "#a8a090", "telhado": "#6a3b33" },
+    { "tipo": "casa", "pos": [-13.6, -10.4], "tamanho": [3.4, 2.8], "cor": "#b0a08a", "telhado": "#3a4a6a" },
+    { "tipo": "barraca", "pos": [5, 3.4], "cor": "#8a3b4a" },
+    { "tipo": "canteiro", "pos": [-6, 9.2], "tamanho": [2.6, 1.4] },
+    { "tipo": "cerca", "pos": [-6, 10.4], "comprimento": 3.4 },
+    { "tipo": "banco", "pos": [-3.6, 2.3] },
+    { "tipo": "caixote", "pos": [10.6, -3.8] },
+    { "tipo": "caixote", "pos": [11.5, -3.3] },
+    { "modelo": "kaykit-dungeon/barrel_large", "pos": [6.3, -4.3], "escala": 0.45 },
+    { "tipo": "lampiao", "pos": [2.6, -3.2] },
+    { "tipo": "lampiao", "pos": [-2.8, 3.4] },
+    { "tipo": "lampiao", "pos": [3, 9] },
+    { "tipo": "lampiao", "pos": [-3, -9] },
+    { "tipo": "portal", "pos": [0, 12.6], "comprimento": 3.6 }
+  ],
+  "npcs": [
+    { "personagem": "maren", "pos": [-9.0, 5.3], "rot": 90, "dialogo": "maren" },
+    { "personagem": "kael", "pos": [2.0, -1.9], "rot": 20, "dialogo": "kael" },
+    { "personagem": "lyra", "pos": [-4.4, 8.1], "rot": -20, "dialogo": "lyra" },
+    { "personagem": "tob", "pos": [-10.8, -3.6], "rot": 30, "dialogo": "tob" },
+    { "personagem": "mira", "pos": [9.8, -4.0], "rot": 0, "dialogo": "mira" },
+    { "personagem": "contadora", "pos": [9.6, 7.0], "rot": -60, "dialogo": "contadora" },
+    { "personagem": "crianca", "pos": [-1.6, 5.6], "rot": 40, "dialogo": "crianca" },
+    { "personagem": "mercador", "pos": [6.9, 3.1], "rot": -30, "dialogo": "mercador" },
+    { "personagem": "guarda", "pos": [2.2, 10.8], "rot": 0, "dialogo": "guarda" },
+    { "personagem": "vaelor", "pos": [-2.2, -2.4], "rot": 20, "dialogo": "vaelor-vila", "se": "lyra-ouviu-relato", "naoSe": "visitou-santuario" }
+  ],
+  "mobs": [{ "mob": "gato-de-telhado", "pos": [12.5, -0.6] }],
+  "interativos": [
+    {
+      "tipo": "save",
+      "id": "pedra-da-praca",
+      "nome": "Pedra de Aether da Praça",
+      "pos": [3.6, -2.8],
+      "raio": 0.5,
+      "chegada": { "pos": [3.6, -1.5], "rot": 180 }
+    },
+    { "tipo": "bau", "id": "bau-da-vila", "pos": [-13.6, 8.6], "raio": 0.8, "conteudo": { "itens": { "erva-lume": 1 }, "brasas": 4 } },
+    { "tipo": "examinar", "id": "placa-taverna", "rotulo": "Ler", "pos": [5.4, -4.4], "raio": 0.5, "falas": ["LUA DE COBRE: chá, sopa e boas histórias."] }
+  ],
+  "entradas": {
+    "casa": { "pos": [-7.7, 5.5], "rot": -90 },
+    "porta-salao": { "pos": [0, -10.2], "rot": 0 }
+  },
+  "saidas": [{ "caixa": [-1.6, -12.9, 1.6, -11.3], "area": "salao-da-guarda", "entrada": "porta-sul" }]
+}

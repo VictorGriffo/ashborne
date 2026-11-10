@@ -1,12 +1,11 @@
 {
-  "_formato": "caixa = [largura, altura] da área de desvio, em unidades lógicas. Cada onda gera projéteis entre 'de' e 'ate' (segundos) a cada 'intervalo'. Tipos: chuva, cortina, leque, mira. Velocidades em unidades por segundo.",
+  "_formato": "caixa = [largura, altura] da área de desvio, em unidades lógicas. Cada onda gera projéteis entre 'de' e 'ate' (segundos) a cada 'intervalo'. Tipos: chuva, cortina, leque, mira, feixe. Velocidades em unidades por segundo.",
+
   "gotas-lentas": {
     "nome": "Gotas que caem devagar",
     "duracao": 6,
     "caixa": [150, 120],
-    "ondas": [
-      { "tipo": "chuva", "de": 0, "ate": 5.2, "intervalo": 0.34, "velocidade": 52, "raio": 4, "balanco": 10 }
-    ]
+    "ondas": [{ "tipo": "chuva", "de": 0, "ate": 5.2, "intervalo": 0.34, "velocidade": 52, "raio": 4, "balanco": 10 }]
   },
   "cortina-de-orvalho": {
     "nome": "Cortina de orvalho",
@@ -21,10 +20,26 @@
     "nome": "Gotas suaves",
     "duracao": 4.5,
     "caixa": [130, 110],
+    "ondas": [{ "tipo": "chuva", "de": 0, "ate": 3.8, "intervalo": 0.7, "velocidade": 40, "raio": 3.5, "balanco": 6 }]
+  },
+
+  "palha-ao-vento": {
+    "nome": "Palha ao vento",
+    "duracao": 4.5,
+    "caixa": [130, 110],
+    "ondas": [{ "tipo": "chuva", "de": 0, "ate": 3.8, "intervalo": 0.55, "velocidade": 38, "raio": 3.5, "balanco": 16 }]
+  },
+
+  "espadas-de-madeira": {
+    "nome": "Espadas de madeira",
+    "duracao": 6,
+    "caixa": [150, 120],
     "ondas": [
-      { "tipo": "chuva", "de": 0, "ate": 3.8, "intervalo": 0.7, "velocidade": 40, "raio": 3.5, "balanco": 6 }
+      { "tipo": "mira", "de": 0.2, "ate": 2.8, "intervalo": 0.7, "velocidade": 70, "raio": 4 },
+      { "tipo": "cortina", "de": 3, "ate": 5.4, "intervalo": 1.2, "velocidade": 50, "raio": 4, "espaco": 15, "vao": 40 }
     ]
   },
+
   "leque-de-penas": {
     "nome": "Penas em leque",
     "duracao": 6,
@@ -33,12 +48,110 @@
       { "tipo": "leque", "de": 0.2, "ate": 5.2, "intervalo": 1.1, "velocidade": 70, "raio": 3.5, "quantidade": 5, "abertura": 70, "origem": [0.5, 0], "mirar": true }
     ]
   },
+  "penas-soltas": {
+    "nome": "Penas soltas",
+    "duracao": 4.5,
+    "caixa": [140, 110],
+    "ondas": [
+      { "tipo": "leque", "de": 0.2, "ate": 3.8, "intervalo": 1.4, "velocidade": 50, "raio": 3.5, "quantidade": 3, "abertura": 60, "origem": [0.5, 0], "mirar": false }
+    ]
+  },
+
+  "arranhoes": {
+    "nome": "Arranhões",
+    "duracao": 4.5,
+    "caixa": [130, 110],
+    "ondas": [{ "tipo": "mira", "de": 0.2, "ate": 3.8, "intervalo": 0.6, "velocidade": 85, "raio": 3 }]
+  },
+
   "investida-mirada": {
     "nome": "Investidas em linha reta",
     "duracao": 6,
     "caixa": [160, 120],
+    "ondas": [{ "tipo": "mira", "de": 0.3, "ate": 5.3, "intervalo": 0.55, "velocidade": 95, "raio": 4 }]
+  },
+  "investida-lenta": {
+    "nome": "Investidas cansadas",
+    "duracao": 4.5,
+    "caixa": [150, 110],
+    "ondas": [{ "tipo": "mira", "de": 0.3, "ate": 3.8, "intervalo": 0.9, "velocidade": 65, "raio": 4 }]
+  },
+  "uivo-em-cortina": {
+    "nome": "Uivo",
+    "duracao": 6,
+    "caixa": [160, 120],
     "ondas": [
-      { "tipo": "mira", "de": 0.3, "ate": 5.3, "intervalo": 0.55, "velocidade": 95, "raio": 4 }
+      { "tipo": "cortina", "de": 0.2, "ate": 5.4, "intervalo": 0.95, "velocidade": 62, "raio": 4, "espaco": 13, "vao": 34 }
+    ]
+  },
+  "matilha": {
+    "nome": "A matilha",
+    "duracao": 7,
+    "caixa": [170, 125],
+    "ondas": [
+      { "tipo": "mira", "de": 0.3, "ate": 6.2, "intervalo": 0.7, "velocidade": 100, "raio": 4 },
+      { "tipo": "cortina", "de": 2.5, "ate": 6.2, "intervalo": 1.5, "velocidade": 55, "raio": 4, "espaco": 14, "vao": 40 }
+    ]
+  },
+
+  "feixes-em-grade": {
+    "nome": "Feixes de luz em grade",
+    "duracao": 6,
+    "caixa": [150, 120],
+    "ondas": [{ "tipo": "feixe", "de": 0.3, "ate": 5.2, "intervalo": 0.75, "velocidade": 0, "raio": 0, "orientacao": "alterna", "espessura": 14, "aviso": 0.75, "disparo": 0.35 }]
+  },
+  "grade-dupla": {
+    "nome": "Grade dupla",
+    "duracao": 6.5,
+    "caixa": [160, 120],
+    "ondas": [
+      { "tipo": "feixe", "de": 0.3, "ate": 5.6, "intervalo": 1.1, "velocidade": 0, "raio": 0, "orientacao": "h", "espessura": 16, "aviso": 0.8, "disparo": 0.4 },
+      { "tipo": "feixe", "de": 0.85, "ate": 5.6, "intervalo": 1.1, "velocidade": 0, "raio": 0, "orientacao": "v", "espessura": 16, "aviso": 0.8, "disparo": 0.4 },
+      { "tipo": "chuva", "de": 2, "ate": 5.6, "intervalo": 0.8, "velocidade": 55, "raio": 3.5, "balanco": 0 }
+    ]
+  },
+  "feixes-lentos": {
+    "nome": "Feixes lentos",
+    "duracao": 4.5,
+    "caixa": [140, 110],
+    "ondas": [{ "tipo": "feixe", "de": 0.3, "ate": 3.6, "intervalo": 1.2, "velocidade": 0, "raio": 0, "orientacao": "alterna", "espessura": 12, "aviso": 1, "disparo": 0.3 }]
+  },
+
+  "punhos-de-pedra": {
+    "nome": "Punhos de pedra",
+    "duracao": 7,
+    "caixa": [170, 125],
+    "ondas": [
+      { "tipo": "chuva", "de": 0.2, "ate": 6.2, "intervalo": 0.5, "velocidade": 70, "raio": 7, "balanco": 0 },
+      { "tipo": "feixe", "de": 1.5, "ate": 6.2, "intervalo": 1.6, "velocidade": 0, "raio": 0, "orientacao": "h", "espessura": 18, "aviso": 0.8, "disparo": 0.4 }
+    ]
+  },
+  "chuva-de-pedras": {
+    "nome": "Chuva de pedras",
+    "duracao": 6.5,
+    "caixa": [170, 125],
+    "ondas": [
+      { "tipo": "cortina", "de": 0.2, "ate": 5.8, "intervalo": 1.0, "velocidade": 60, "raio": 5, "espaco": 16, "vao": 38 },
+      { "tipo": "leque", "de": 1, "ate": 5.8, "intervalo": 1.6, "velocidade": 70, "raio": 4, "quantidade": 7, "abertura": 360, "origem": [0.5, 0.15], "mirar": false }
+    ]
+  },
+
+  "aether-sombrio": {
+    "nome": "Aether sombrio",
+    "duracao": 6,
+    "caixa": [170, 125],
+    "ondas": [
+      { "tipo": "leque", "de": 0.2, "ate": 5.4, "intervalo": 0.8, "velocidade": 85, "raio": 4, "quantidade": 9, "abertura": 360, "origem": [0.5, 0.2], "mirar": false },
+      { "tipo": "mira", "de": 1, "ate": 5.4, "intervalo": 0.45, "velocidade": 120, "raio": 4 }
+    ]
+  },
+  "lua-negra": {
+    "nome": "Lua negra",
+    "duracao": 6,
+    "caixa": [170, 125],
+    "ondas": [
+      { "tipo": "feixe", "de": 0.2, "ate": 5.4, "intervalo": 0.55, "velocidade": 0, "raio": 0, "orientacao": "alterna", "espessura": 18, "aviso": 0.55, "disparo": 0.35 },
+      { "tipo": "chuva", "de": 0.5, "ate": 5.4, "intervalo": 0.3, "velocidade": 80, "raio": 4, "balanco": 12 }
     ]
   }
 }
