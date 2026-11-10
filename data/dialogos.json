@@ -992,6 +992,132 @@
     }
   },
 
+  "selo-7-restaurado": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "",
+        "falas": [
+          "O pedestal real se acende em dourado. A cinza que cobre a Cidadela se ergue por um instante, e o primeiro raio de sol em nove anos toca as ruínas.",
+          "O sétimo selo foi restaurado. O portão do santuário se abre devagar.",
+          "Você aprendeu uma magia nova: LUZ DO ALVORECER. Em Agir → Magia, ela causa um dano altíssimo. Mas dizem que ela cobra um preço de quem a usa."
+        ],
+        "recompensa": { "itens": { "lagrima-de-aether": 3, "brasa-renascida": 1 } }
+      }
+    }
+  },
+
+  "vaelor-final": {
+    "inicio": [
+      { "se": ["vaelor-derrotado", "selos-ao-menos-7"], "no": "decisao-completa" },
+      { "se": "vaelor-derrotado", "no": "decisao-parcial" },
+      { "se": "lacos-altos", "no": "altos" },
+      { "no": "baixos" }
+    ],
+    "nos": {
+      "altos": {
+        "quem": "vaelor",
+        "falas": [
+          "Você chegou. Passou por todos os meus generais, e quase todos o deixaram passar. Interessante.",
+          "Eles confiaram em você, Ryben. Lyra. Tob. Até o Kael. Eu nunca fui tão amado assim.",
+          "Mas a magia não precisa de amor. Precisa de liberdade. Venha, garoto. Vamos terminar o que seu pai começou."
+        ],
+        "acao": "batalha:vaelor-final"
+      },
+      "baixos": {
+        "quem": "vaelor",
+        "falas": [
+          "Você chegou sozinho, Ryben. Que triste. Nove anos, e ninguém ficou ao seu lado.",
+          "Os Laços que você deixou para trás não se partiram: nunca existiram.",
+          "Seu pai teria vergonha. Mas teria entendido."
+        ],
+        "acao": "cena:final-ruina"
+      },
+      "decisao-completa": {
+        "quem": "",
+        "falas": [
+          "Vaelor está de joelhos. O Coração de Aether, solto, pulsa entre vocês, rachado, mas inteiro.",
+          "Os sete selos brilham no céu atrás de você. Lyra, Tob, Kael, Mira, Orin, todos de algum modo estão aqui.",
+          "O Coração só pode ser selado de novo por quem o tocar com todo o seu Aether. Ou por quem o tocar, e confiar no que ficou para trás."
+        ],
+        "escolhas": [
+          { "texto": "Me sacrificar e selar o Coração.", "ir": "cinzas" },
+          { "texto": "Selar o Coração com todos os sete selos. E viver.", "ir": "renascido" }
+        ]
+      },
+      "decisao-parcial": {
+        "quem": "",
+        "falas": [
+          "Vaelor está de joelhos. O Coração de Aether pulsa, rachado, mas faltam selos para fechá-lo sem custo.",
+          "O único jeito é oferecer tudo o que você tem."
+        ],
+        "escolhas": [
+          { "texto": "Me sacrificar e selar o Coração.", "ir": "cinzas" },
+          { "texto": "Recuar. Não consigo.", "ir": "ruina" }
+        ]
+      },
+      "cinzas": {
+        "quem": "",
+        "falas": ["Você respira fundo, e dá um passo em direção ao Coração."],
+        "acao": "cena:final-cinzas"
+      },
+      "renascido": {
+        "quem": "",
+        "falas": ["Você respira fundo, e estende a mão. Os sete selos respondem."],
+        "acao": "cena:final-renascido"
+      },
+      "ruina": {
+        "quem": "",
+        "falas": ["Suas mãos tremem. O Coração pulsa, e Vaelor ri baixinho."],
+        "acao": "cena:final-ruina"
+      }
+    }
+  },
+
+  "final-cinzas-narracao": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "",
+        "falas": [
+          "O Aether de Ryben flui para o Coração, e a Luz do Alvorecer sobe como o primeiro sol de um mundo novo.",
+          "Os sete selos se fecham, um a um, em círculo. Vaelor, sem a magia antiga, é só um homem cansado.",
+          "Lyra chega correndo, tarde demais. Kael vem logo atrás. Tob segura o chapéu, sem saber o que fazer com as mãos.",
+          "Ryben sorri para eles, uma última vez."
+        ]
+      }
+    }
+  },
+
+  "final-renascido-narracao": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "",
+        "falas": [
+          "O Aether de Ryben flui para o Coração, mas não sozinho. Os sete selos emprestam sua força, e os Laços que Ryben criou seguram seus braços.",
+          "A Luz do Alvorecer sobe, não como um fim, mas como um começo. O Coração se fecha, inteiro de novo.",
+          "Ryben cai de joelhos, vivo. Kael o levanta. Lyra o abraça. Tob chora, e finge que é poeira.",
+          "Aetheria tem cinzas de sobra. Mas, dessa vez, também tem quem as semeie."
+        ]
+      }
+    }
+  },
+
+  "final-ruina-narracao": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "",
+        "falas": [
+          "O Coração de Aether se abre nas mãos de Vaelor. A magia antiga escorre, livre, pelas rachaduras do mundo.",
+          "Não há ninguém para segurar Ryben, nem para ouvi-lo gritar.",
+          "Vaelor governa em silêncio. Aetheria aprende o nome do medo."
+        ]
+      }
+    }
+  },
+
   "selo-1-restaurado": {
     "inicio": [{ "no": "a" }],
     "nos": {

@@ -10,7 +10,8 @@
       { "nome": "Floresta de Sylven", "area": "floresta-de-sylven", "spawn": "carroca", "se": "selo-2" },
       { "nome": "Pântano de Morn", "area": "pantano-de-morn", "spawn": "carroca", "se": "selo-3" },
       { "nome": "Dunas de Sahr", "area": "dunas-de-sahr", "spawn": "carroca", "se": "selo-4" },
-      { "nome": "Picos de Frostveil", "area": "picos-de-frostveil", "spawn": "carroca", "se": "selo-5" }
+      { "nome": "Picos de Frostveil", "area": "picos-de-frostveil", "spawn": "carroca", "se": "selo-5" },
+      { "nome": "Cidadela de Aetheria Alta", "area": "cidadela", "spawn": "carroca", "se": "selos-ao-menos-6" }
     ],
     "conversas": [
       "\"Sabe por que eu dirijo a carroça? Porque cavalos não me contradizem.\"",

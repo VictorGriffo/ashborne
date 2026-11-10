@@ -70,7 +70,9 @@
       { "texto": "Restaure o selo das Dunas de Sahr, pela estrada sudeste. O Dravik respeita a honra.", "area": "dunas-de-sahr", "concluida": "selo-4" },
       { "texto": "Restaure o selo dos Picos de Frostveil, pela trilha norte. A Isolde só cede ao calor.", "area": "picos-de-frostveil", "concluida": "selo-5" },
       { "texto": "Cruze de barco, saindo da doca de Linne, e restaure o selo da Costa de Maré Alta. O Brannic ouve o mar.", "area": "costa-de-mare-alta", "concluida": "selo-6" },
-      { "texto": "Em breve: a Cidadela de Aetheria Alta e o Kael (M7).", "area": "vila-ruinas", "concluida": "marco-seguinte-ainda-nao-existe" }
+      { "texto": "Pegue a carroça do Brum até a Cidadela de Aetheria Alta e enfrente o general Kael.", "area": "cidadela", "concluida": "kael-superado" },
+      { "texto": "Restaure o selo da Cidadela. O portão do santuário vai se abrir.", "area": "cidadela", "concluida": "selo-7" },
+      { "texto": "Atravesse o portão e enfrente Vaelor diante do Coração de Aether.", "area": "santuario-final", "concluida": "vaelor-derrotado" }
     ]
   }
 }

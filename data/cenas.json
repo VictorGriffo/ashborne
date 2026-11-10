@@ -12,6 +12,10 @@
   "selo-4": [{ "evento": "selo-restaurado" }, { "clarao": true }, { "esperar": 1.4 }, { "flag": "selo-4" }, { "dialogo": "selo-4-restaurado" }],
   "selo-5": [{ "evento": "selo-restaurado" }, { "clarao": true }, { "esperar": 1.4 }, { "flag": "selo-5" }, { "dialogo": "selo-5-restaurado" }],
   "selo-6": [{ "evento": "selo-restaurado" }, { "clarao": true }, { "esperar": 1.4 }, { "flag": "selo-6" }, { "dialogo": "selo-6-restaurado" }],
+  "selo-7": [{ "evento": "selo-restaurado" }, { "clarao": true }, { "esperar": 1.4 }, { "flag": "selo-7" }, { "dialogo": "selo-7-restaurado" }],
+  "final-cinzas": [{ "clarao": true }, { "esperar": 1 }, { "dialogo": "final-cinzas-narracao" }, { "clarao": true }, { "esperar": 1 }, { "fim": "final-cinzas" }],
+  "final-renascido": [{ "clarao": true }, { "esperar": 1 }, { "dialogo": "final-renascido-narracao" }, { "clarao": true }, { "esperar": 1 }, { "fim": "final-renascido" }],
+  "final-ruina": [{ "clarao": true }, { "esperar": 1 }, { "dialogo": "final-ruina-narracao" }, { "esperar": 1 }, { "fim": "final-ruina" }],
   "catastrofe": [
     { "evento": "coracao-sobe" },
     { "esperar": 1 },
