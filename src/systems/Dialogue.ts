@@ -20,6 +20,20 @@ export interface DialogueNode {
   ir?: string;
   /** Flags marcadas quando o nó termina. */
   marcar?: string[];
+  /** Itens e Brasas entregues quando o nó termina. */
+  recompensa?: Reward;
+}
+
+export interface Reward {
+  itens?: Record<string, number>;
+  brasas?: number;
+}
+
+/** Quem percorre um diálogo: o da história (JSON) ou uma mensagem simples. */
+export interface DialogueSource {
+  readonly step: DialogueStep;
+  advance(): void;
+  choose(index: number): void;
 }
 
 export interface DialogueStart {
@@ -42,7 +56,7 @@ export type DialogueStep =
   | { kind: 'end' };
 
 /** Percorre um diálogo, uma fala por vez. Não sabe nada de tela nem de teclado. */
-export class DialogueRunner {
+export class DialogueRunner implements DialogueSource {
   private readonly data: DialogueData;
   private node: DialogueNode | undefined;
   private line = 0;
@@ -50,6 +64,7 @@ export class DialogueRunner {
   constructor(
     readonly id: string,
     private readonly flags: Flags,
+    private readonly onReward: (reward: Reward) => void = () => {},
   ) {
     const data = DIALOGUES[id];
     if (!data) throw new Error(`Diálogo não encontrado: ${id}`);
@@ -94,6 +109,7 @@ export class DialogueRunner {
 
   private finishNode(node: DialogueNode): void {
     for (const flag of node.marcar ?? []) this.flags.set(flag);
+    if (node.recompensa) this.onReward(node.recompensa);
   }
 
   private enter(id: string | undefined): void {
@@ -105,4 +121,22 @@ export class DialogueRunner {
     this.node = this.data.nos[id];
     if (!this.node) throw new Error(`Nó "${id}" não existe no diálogo ${this.id}`);
   }
+}
+
+/** Mensagem simples, sem personagem (baú aberto, item encontrado...). */
+export class MessageSource implements DialogueSource {
+  private index = 0;
+
+  constructor(private readonly lines: string[]) {}
+
+  get step(): DialogueStep {
+    const text = this.lines[this.index];
+    return text === undefined ? { kind: 'end' } : { kind: 'line', speaker: '', text };
+  }
+
+  advance(): void {
+    this.index++;
+  }
+
+  choose(): void {}
 }

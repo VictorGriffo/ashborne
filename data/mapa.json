@@ -1,0 +1,17 @@
+{
+  "titulo": "Arredores da Vila",
+  "_formato": "pos = [x, y] em porcentagem do mapa. Regiões 'futuro' aparecem como ??? até existirem no jogo.",
+  "regioes": [
+    { "id": "salao-da-guarda", "nome": "Salão da Guarda", "pos": [40, 64] },
+    { "id": "clareira", "nome": "Clareira do Altar", "pos": [47, 36] },
+    { "id": "vila", "nome": "Vila", "pos": [60, 84], "futuro": true },
+    { "id": "estrada", "nome": "Estrada do Santuário", "pos": [70, 24], "futuro": true },
+    { "id": "santuario", "nome": "Santuário", "pos": [84, 10], "futuro": true }
+  ],
+  "caminhos": [
+    ["salao-da-guarda", "clareira"],
+    ["salao-da-guarda", "vila"],
+    ["clareira", "estrada"],
+    ["estrada", "santuario"]
+  ]
+}

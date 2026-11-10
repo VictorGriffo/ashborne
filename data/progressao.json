@@ -1,0 +1,17 @@
+{
+  "_nota": "Parte 1: níveis 1 a 12. 'xp' é a experiência total para chegar ao nível. Valores serão ajustados nos testes de jogo.",
+  "niveis": [
+    { "nivel": 1, "xp": 0, "vida": 20, "forca": 4, "defesa": 0 },
+    { "nivel": 2, "xp": 10, "vida": 24, "forca": 5, "defesa": 0 },
+    { "nivel": 3, "xp": 30, "vida": 28, "forca": 6, "defesa": 1 },
+    { "nivel": 4, "xp": 60, "vida": 32, "forca": 7, "defesa": 1 },
+    { "nivel": 5, "xp": 100, "vida": 36, "forca": 8, "defesa": 2 },
+    { "nivel": 6, "xp": 160, "vida": 40, "forca": 9, "defesa": 2 },
+    { "nivel": 7, "xp": 240, "vida": 44, "forca": 10, "defesa": 3 },
+    { "nivel": 8, "xp": 340, "vida": 48, "forca": 11, "defesa": 3 },
+    { "nivel": 9, "xp": 460, "vida": 52, "forca": 12, "defesa": 4 },
+    { "nivel": 10, "xp": 600, "vida": 56, "forca": 13, "defesa": 4 },
+    { "nivel": 11, "xp": 780, "vida": 60, "forca": 14, "defesa": 5 },
+    { "nivel": 12, "xp": 1000, "vida": 64, "forca": 15, "defesa": 5 }
+  ]
+}

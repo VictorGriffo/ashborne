@@ -1,0 +1,12 @@
+{
+  "_formato": "Missões em ordem. A missão ativa é a primeira com alguma etapa pendente. Cada etapa termina quando a flag 'concluida' é marcada; 'area' é onde o mapa põe o marcador.",
+  "1.1": {
+    "nome": "Primeiro dia na Guarda",
+    "etapas": [
+      { "texto": "Fale com o Mestre Orin no Salão da Guarda.", "area": "salao-da-guarda", "concluida": "conversou-com-orin" },
+      { "texto": "Tome um ar na Clareira do Altar, pela porta norte do salão.", "area": "clareira", "concluida": "visitou-clareira" },
+      { "texto": "Encontre um Brotinho de Aether e acalme-o em vez de lutar.", "area": "clareira", "concluida": "poupou-um-mob" },
+      { "texto": "Volte ao salão e conte ao Mestre Orin como foi.", "area": "salao-da-guarda", "concluida": "orin-ouviu-relato" }
+    ]
+  }
+}

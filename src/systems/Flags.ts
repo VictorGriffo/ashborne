@@ -1,6 +1,6 @@
 /**
- * Marcadores de progresso da história ("conversou-com-orin", "selo-1"...).
- * Diálogos e missões leem e escrevem aqui. No M3 isto entra no save.
+ * Marcadores de progresso da história ("conversou-com-orin", "visitou-clareira"...).
+ * Diálogos e missões leem e escrevem aqui, e tudo vai para o save.
  */
 export class Flags {
   private readonly set_ = new Set<string>();
@@ -20,5 +20,14 @@ export class Flags {
   /** Lista para salvar e para o painel de depuração. */
   list(): string[] {
     return [...this.set_];
+  }
+
+  load(flags: string[]): void {
+    this.set_.clear();
+    for (const f of flags) this.set_.add(f);
+  }
+
+  reset(): void {
+    this.set_.clear();
   }
 }

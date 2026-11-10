@@ -72,6 +72,23 @@
   "npcs": [
     { "personagem": "mestre-orin", "pos": [3, -4.6], "rot": 0, "dialogo": "orin-primeiro-dia" }
   ],
+  "interativos": [
+    {
+      "tipo": "bau",
+      "id": "bau-do-salao",
+      "pos": [8.3, 5.8],
+      "raio": 1.3,
+      "conteudo": { "itens": { "erva-lume": 2 }, "brasas": 5 }
+    },
+    {
+      "tipo": "save",
+      "id": "cristal-do-salao",
+      "nome": "Cristal da Guarda",
+      "pos": [-6.6, 6],
+      "raio": 0.5,
+      "chegada": { "pos": [-5, 6], "rot": -90 }
+    }
+  ],
   "entradas": {
     "inicio": { "pos": [0, 5], "rot": 180 },
     "porta-norte": { "pos": [0, -6.2], "rot": 0 }

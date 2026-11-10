@@ -1,6 +1,9 @@
 {
   "orin-primeiro-dia": {
     "inicio": [
+      { "se": "orin-ouviu-relato", "no": "depois" },
+      { "se": "poupou-um-mob", "no": "relato-poupou" },
+      { "se": "venceu-um-mob", "no": "relato-venceu" },
       { "se": "conversou-com-orin", "no": "de-novo" },
       { "no": "chegada" }
     ],
@@ -47,6 +50,40 @@
         "falas": [
           "A porta do norte leva à clareira do altar.",
           "E se o Kael propuser apostar Brasas no treino, finja que não ouviu."
+        ]
+      },
+      "relato-poupou": {
+        "quem": "mestre-orin",
+        "falas": [
+          "Ora, ora. Ouvi dizer que um Brotinho de Aether anda saltitando por aí, feliz da vida.",
+          "Você acalmou a criatura em vez de cortá-la. Isso não se ensina com espada, Ryben.",
+          "É esse tipo de Guarda que Aetheria precisa. Tome, para a sua bolsa."
+        ],
+        "recompensa": { "itens": { "erva-lume": 2 }, "brasas": 10 },
+        "marcar": ["conversou-com-orin", "orin-ouviu-relato"],
+        "ir": "fim-do-dia"
+      },
+      "fim-do-dia": {
+        "quem": "mestre-orin",
+        "falas": [
+          "Amanhã começa o treino de verdade, no pátio. Descanse.",
+          "Ah, e se precisar recuperar o fôlego, o cristal ao lado da mesa guarda um pouco de Aether. Toque nele."
+        ]
+      },
+      "relato-venceu": {
+        "quem": "mestre-orin",
+        "falas": [
+          "Venceu um Brotinho na espada, foi? Hm.",
+          "Às vezes a luta é necessária. Mas aquele bichinho só estava com medo.",
+          "Volte à clareira. Observe, acalme, e veja o que acontece quando você poupa."
+        ],
+        "marcar": ["conversou-com-orin"]
+      },
+      "depois": {
+        "quem": "mestre-orin",
+        "falas": [
+          "O treino começa amanhã, no pátio. Hoje, descanse.",
+          "E lembre-se: uma lâmina que sabe parar..."
         ]
       }
     }
