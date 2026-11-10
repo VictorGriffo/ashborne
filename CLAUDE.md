@@ -80,6 +80,6 @@ ashborne/
 
 ## Próximo passo
 
-Começar o M0. No M0, o personagem é um boneco provisório feito de formas simples no código. Os modelos reais entram a partir do M1.
+O M0 está feito (game loop de passo fixo, máquina de estados em pilha, entrada por ações, clareira de teste com câmera fixa e o Ryben provisório feito de formas simples). Próximo: começar o M1, em que os modelos reais dos pacotes CC0 substituem o boneco provisório e a clareira dá lugar a uma sala com colisão de verdade. O README explica a arquitetura do código.
 
 Para o conteúdo (personagens, itens, magias, mobs, missões, territórios), consulte `docs/design.md`. Ao criar os JSON em `data/`, siga os nomes e as regras de lá.
