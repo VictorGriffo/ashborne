@@ -82,8 +82,10 @@ ashborne/
 
 M0 e M1 estão feitos. O jogo começa no Salão da Guarda (sala montada por `data/areas/salao-da-guarda.json` com peças KayKit Dungeon Remastered), com o Mestre Orin e um diálogo com escolhas e flags. A porta do norte leva à Clareira do Altar (gerada no código). Ryben usa o modelo KayKit Rogue e o Orin usa o Knight, ambos com animações. O README explica a arquitetura.
 
-Próximo: o M2 (menu Lutar/Agir/Item/Poupar, fase de desvio e um inimigo que pode ser poupado). O design sugere começar pelo treino com o Mestre Orin no Pátio de Treino da Guarda, a batalha fácil que ensina o Poupar. A batalha deve entrar como um estado de sobreposição na pilha, como o diálogo. Os padrões de ataque vão em JSON.
+O M2 também está feito: dois Brotinhos de Aether passeiam pela clareira; encostar começa uma batalha (`src/battle/`) com Lutar (barra de precisão), Agir (acalma), Item (Erva-lume) e Poupar/Fugir, e a fase de desvio com a brasa numa caixa 2D. Poupar rende Laços, vencer rende experiência e Brasas. Mobs, padrões de ataque e itens estão em `data/mobs.json`, `data/ataques.json` e `data/itens.json`. O estado do Ryben (vida, atributos, inventário, Laços, XP, Brasas, dificuldade) fica em `src/systems/PlayerState.ts`. A dificuldade muda no menu de pausa.
 
-Pendências conhecidas: não há controle por toque no celular, e o projeto ainda não foi enviado ao GitHub.
+**Celular deitado é plataforma principal** (pedido do Victor): há controles de toque (`src/ui/TouchControls.ts`: analógico dinâmico na metade esquerda, botões A, B e pausa), layout compacto para telas baixas (`@media (max-height: 500px)`), aviso para girar em pé, tela cheia com trava na horizontal no primeiro toque, e manifesto PWA com `orientation: landscape`. Toda tela nova precisa funcionar com toque e caber em 844×390.
+
+Próximo: o M3 (inventário, experiência e nível, mapa, salvar e carregar, viagem rápida). Pendências: o projeto ainda não foi enviado ao GitHub, e não há service worker (o jogo ainda não funciona sem internet).
 
 Para o conteúdo (personagens, itens, magias, mobs, missões, territórios), consulte `docs/design.md`. Ao criar os JSON em `data/`, siga os nomes e as regras de lá.
