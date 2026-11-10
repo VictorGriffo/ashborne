@@ -1,13 +1,15 @@
 import * as THREE from 'three';
 import { BattleState, type BattleHost, type BattleResult } from '../../battle/BattleState';
+import { mob } from '../../battle/data';
 import { CameraRig } from '../../render/CameraRig';
 import { CharacterModel } from '../../render/CharacterModel';
+import { check } from '../../systems/conditions';
 import { item } from '../../systems/items';
 import { activeQuest } from '../../systems/Quests';
 import { buildSave, writeSave } from '../../systems/SaveGame';
 import { el } from '../../ui/dom';
 import { exitAt, type Area } from '../../world/Area';
-import { allSavePoints, areaName, createArea, PLAYER_CHARACTER, START } from '../../world/areas';
+import { allSavePoints, areaName, createArea, PLAYER_CHARACTER, RESCUE } from '../../world/areas';
 import { character } from '../../world/characters';
 import { chestFlag, promptHeight, promptLabel, type Interactable } from '../../world/Interactable';
 import type { MapEnemy } from '../../world/MapEnemy';
@@ -15,11 +17,13 @@ import type { Npc } from '../../world/Npc';
 import { Player } from '../../world/Player';
 import type { GameContext } from '../GameContext';
 import type { GameState } from '../StateMachine';
+import { CutsceneState } from './CutsceneState';
 import { DialogueState } from './DialogueState';
 import { InventoryState } from './InventoryState';
 import { MapState } from './MapState';
 import { PauseState } from './PauseState';
 import { SavePointState, type TravelDestination } from './SavePointState';
+import { ShopState } from './ShopState';
 import { TransitionState } from './TransitionState';
 
 /** Distância extra, além dos dois raios, para poder interagir. */
@@ -61,8 +65,10 @@ export class ExploreState implements GameState {
   private leaving = false;
   private readonly tmp = new THREE.Vector3();
 
-  /** Mob da batalha em andamento. */
-  private battleEnemy?: MapEnemy;
+  /** Posição do inimigo da batalha em andamento (mob do mapa ou NPC). */
+  private battleFocus?: THREE.Vector3;
+  /** Última posição fora de uma saída bloqueada, para devolver o Ryben. */
+  private readonly lastSafe = new THREE.Vector3();
   /** Tempo sem encontros depois de uma batalha (para não emendar outra). */
   private grace = 0;
   /** Diálogo a abrir assim que a exploração voltar ao topo. */
@@ -146,8 +152,10 @@ export class ExploreState implements GameState {
       return;
     }
 
+    this.refreshNpcs();
     this.player.update(dt, input.moveVector(), input.down('run'));
     this.area.collision.resolve(this.player.position, this.player.config.radius);
+    this.pushOutOfNpcs();
     this.player.afterCollision(dt);
 
     this.target = this.findTarget();
@@ -164,18 +172,51 @@ export class ExploreState implements GameState {
 
     const exit = exitAt(this.area, this.player.position.x, this.player.position.z);
     if (exit && !this.leaving) {
+      if (exit.lock && !check(this.ctx.flags, exit.lock)) {
+        // Saída fechada: avisa e devolve o Ryben para onde estava.
+        this.player.teleport(this.lastSafe.x, this.lastSafe.z);
+        this.ctx.states.push(new DialogueState(this.ctx, [exit.lock.mensagem]));
+        return;
+      }
       this.leaving = true;
       this.player.stop();
       this.ctx.states.push(new TransitionState(this.ctx, () => this.loadArea(exit.to, exit.spawn)));
+    } else if (!exit) {
+      this.lastSafe.copy(this.player.position);
+    }
+  }
+
+  /** NPCs aparecem e somem conforme as flags (o Vaelor surge na vila, por exemplo). */
+  private refreshNpcs(): void {
+    for (const npc of this.area.npcs) {
+      const active = check(this.ctx.flags, npc.condition);
+      if (active !== npc.active) npc.setActive(active);
+    }
+  }
+
+  /** NPCs ativos são obstáculos redondos (fora da colisão fixa, porque podem sumir). */
+  private pushOutOfNpcs(): void {
+    const p = this.player.position;
+    const r = this.player.config.radius;
+    for (const npc of this.area.npcs) {
+      if (!npc.active) continue;
+      const dx = p.x - npc.position.x;
+      const dz = p.z - npc.position.z;
+      const min = npc.radius + r;
+      const d = Math.hypot(dx, dz);
+      if (d < min && d > 1e-6) {
+        p.x = npc.position.x + (dx / d) * min;
+        p.z = npc.position.z + (dz / d) * min;
+      }
     }
   }
 
   render(alpha: number, frameDt: number): void {
     const shown = this.player.syncVisual(alpha, frameDt);
     this.rig.fitAspect(this.ctx.renderer.aspect);
-    if (this.battleEnemy) {
-      // Enquadra o Ryben e o mob juntos, mais de perto.
-      this.focus.lerpVectors(shown, this.battleEnemy.position, 0.5).add(BATTLE_FOCUS_SHIFT);
+    if (this.battleFocus) {
+      // Enquadra o Ryben e o inimigo juntos, mais de perto.
+      this.focus.lerpVectors(shown, this.battleFocus, 0.5).add(BATTLE_FOCUS_SHIFT);
       this.rig.setZoom(this.ctx.config.batalha.zoomCamera);
       this.rig.follow(this.focus, frameDt);
     } else {
@@ -282,6 +323,8 @@ export class ExploreState implements GameState {
     let bestDist = Infinity;
     for (const it of this.area.interactables) {
       if (it.kind === 'bau' && this.ctx.flags.has(chestFlag(it.id))) continue;
+      if (it.kind === 'npc' && !it.npc.active) continue;
+      if (!check(this.ctx.flags, it.condition)) continue;
       const to = this.tmp.subVectors(it.position, this.player.position).setY(0);
       const dist = to.length();
       const reach = it.radius + this.player.config.radius + TALK_REACH;
@@ -307,13 +350,63 @@ export class ExploreState implements GameState {
         return this.openChest(target.id, target.contents);
       case 'save':
         return this.touchSavePoint(target);
+      case 'examinar':
+        for (const f of target.marcar ?? []) this.ctx.flags.set(f);
+        this.ctx.states.push(new DialogueState(this.ctx, target.lines, () => this.runAction(target.acao)));
+        return;
     }
   }
 
   private talk(npc: Npc): void {
     npc.faceTowards(this.player.position);
     npc.greet();
-    this.ctx.states.push(new DialogueState(this.ctx, npc.dialogue, () => npc.resetFacing()));
+    this.ctx.states.push(
+      new DialogueState(this.ctx, npc.dialogue, (action) => {
+        npc.resetFacing();
+        this.runAction(action, npc);
+      }),
+    );
+  }
+
+  /** Ação pedida por um diálogo ou objeto: "batalha:<mob>", "loja:<id>" ou "cena:<id>". */
+  private runAction(action: string | undefined, npc?: Npc): void {
+    if (!action) return;
+    const [kind, id] = action.split(':');
+    if (kind === 'loja') this.ctx.states.push(new ShopState(this.ctx, id));
+    else if (kind === 'cena') this.startCutscene(id);
+    else if (kind === 'batalha' && npc) this.startNpcBattle(id, npc);
+  }
+
+  private startCutscene(id: string): void {
+    this.player.stop();
+    this.ctx.states.push(
+      new CutsceneState(this.ctx, id, {
+        event: (name) => this.area.cutsceneEvent?.(name),
+        refresh: () => this.refreshNpcs(),
+        battle: (mobId) => {
+          const npc = this.area.npcs.find((n) => n.active && n.characterId === mobId);
+          if (npc) this.startNpcBattle(mobId, npc);
+          else this.startScriptedBattle(mobId, this.player.position.clone().add(new THREE.Vector3(0, 0, -2)));
+        },
+      }),
+    );
+  }
+
+  /** Batalha contra um NPC (o treino com o Orin, o Vaelor na catástrofe). */
+  private startNpcBattle(mobId: string, npc: Npc): void {
+    npc.faceTowards(this.player.position);
+    this.player.lookAt(npc.position);
+    this.beginBattle(mobId, npc.position, {
+      hurt: () => npc.model.playOnce('Hit_A'),
+      defeated: () => npc.model.playOnce('Hit_B'),
+      spared: () => npc.model.playOnce('Cheer'),
+      done: () => npc.resetFacing(),
+    });
+  }
+
+  /** Batalha de história sem um corpo no mapa. */
+  private startScriptedBattle(mobId: string, at: THREE.Vector3): void {
+    this.beginBattle(mobId, at, {});
   }
 
   private openChest(id: string, contents: { itens?: Record<string, number>; brasas?: number }): void {
@@ -380,53 +473,94 @@ export class ExploreState implements GameState {
 
   // -- Batalha ----------------------------------------------------------------------
 
+  /** Encostou num mob do mapa. */
   private startBattle(enemy: MapEnemy): void {
     const surprise = enemy.isBehind(this.player.position);
     enemy.startBattle();
-    this.player.stop();
-    this.player.lookAt(enemy.position);
     enemy.faceTowards(this.player.position);
-    this.battleEnemy = enemy;
+    this.player.lookAt(enemy.position);
+    this.beginBattle(
+      enemy.mobId,
+      enemy.position,
+      {
+        hurt: () => enemy.model.hurt(),
+        defeated: () => enemy.defeat(),
+        spared: () => enemy.spare(),
+        done: (result) => {
+          if (result === 'fuga' || result === 'derrota') enemy.resume();
+          if (result === 'fuga') {
+            // Dá um passo para trás, para longe do mob.
+            const away = this.tmp.subVectors(this.player.position, enemy.position).setY(0).normalize();
+            this.player.teleport(this.player.position.x + away.x * 0.8, this.player.position.z + away.z * 0.8);
+            this.area.collision.resolve(this.player.position, this.player.config.radius);
+          }
+        },
+      },
+      surprise,
+    );
+  }
+
+  /** Começa uma batalha contra um mob do mapa, um NPC ou um inimigo de história. */
+  private beginBattle(
+    mobId: string,
+    position: THREE.Vector3,
+    hooks: {
+      hurt?: () => void;
+      defeated?: () => void;
+      spared?: () => void;
+      done?: (result: BattleResult) => void;
+    },
+    surprise = false,
+  ): void {
+    this.player.stop();
+    this.battleFocus = position;
     this.area.setBattleMode?.(true);
     this.target = undefined;
     this.areaTitleTimer = 0;
     this.areaTitle.classList.remove('visible');
 
     const host: BattleHost = {
-      enemyScreenPoint: () => this.screenPoint(enemy.position, 1.1),
+      enemyScreenPoint: () => this.screenPoint(position, 1.1),
       enemyHurt: () => {
-        enemy.model.hurt();
+        hooks.hurt?.();
         this.player.model.playOnce(ATTACK_ANIMATION);
       },
-      enemyDefeated: () => enemy.defeat(),
-      enemySpared: () => enemy.spare(),
-      finish: (result) => this.endBattle(enemy, result),
+      enemyDefeated: () => hooks.defeated?.(),
+      enemySpared: () => hooks.spared?.(),
+      finish: (result) => {
+        hooks.done?.(result);
+        this.endBattle(mobId, result);
+      },
     };
-    this.ctx.states.push(new BattleState(this.ctx, enemy.mobId, host, { surprise }));
+    this.ctx.states.push(new BattleState(this.ctx, mobId, host, { surprise }));
   }
 
-  private endBattle(enemy: MapEnemy, result: BattleResult): void {
-    this.battleEnemy = undefined;
+  private endBattle(mobId: string, result: BattleResult): void {
+    this.battleFocus = undefined;
     this.area.setBattleMode?.(false);
     this.grace = this.ctx.config.batalha.pausaAposToque;
 
-    if (result === 'poupado') this.ctx.flags.set('poupou-um-mob');
-    if (result === 'vitoria') this.ctx.flags.set('venceu-um-mob');
+    // Flags para missões e diálogos: "poupou:<mob>", "venceu:<mob>", e as do JSON do mob.
+    if (result === 'poupado') {
+      this.ctx.flags.set('poupou-um-mob');
+      this.ctx.flags.set(`poupou:${mobId}`);
+    }
+    if (result === 'vitoria') {
+      this.ctx.flags.set('venceu-um-mob');
+      this.ctx.flags.set(`venceu:${mobId}`);
+    }
+    if (result === 'vitoria' || result === 'poupado') {
+      for (const f of mob(mobId).marcar ?? []) this.ctx.flags.set(f);
+    }
 
-    if (result === 'fuga') {
-      enemy.resume();
-      // Dá um passo para trás, para longe do mob.
-      const away = this.tmp.subVectors(this.player.position, enemy.position).setY(0).normalize();
-      this.player.teleport(this.player.position.x + away.x * 0.8, this.player.position.z + away.z * 0.8);
-      this.area.collision.resolve(this.player.position, this.player.config.radius);
-    } else if (result === 'derrota') {
-      enemy.resume();
+    if (result === 'derrota') {
       this.ctx.states.push(
         new TransitionState(
           this.ctx,
           () => {
+            // Derrota: alguém da Guarda leva o Ryben para o salão.
             this.ctx.player.restore();
-            this.loadArea(START.area, START.spawn);
+            this.loadArea(RESCUE.area, RESCUE.spawn);
             this.pendingDialogue = 'orin-resgate';
           },
           { duration: 0.8, hold: 0.6 },

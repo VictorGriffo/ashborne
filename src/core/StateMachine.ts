@@ -69,6 +69,15 @@ export class StateMachine {
     });
   }
 
+  /** Esvazia a pilha (de cima para baixo) e começa só com este estado. */
+  resetTo(state: GameState): void {
+    this.schedule(() => {
+      while (this.stack.length > 0) this.stack.pop()!.exit?.();
+      this.stack.push(state);
+      state.enter?.();
+    });
+  }
+
   update(dt: number): void {
     this.updating = true;
     try {

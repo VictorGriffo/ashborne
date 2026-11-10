@@ -9,7 +9,8 @@ import { mob, pattern, type MobData } from './data';
 import { DodgePhase } from './DodgePhase';
 import { FightBar } from './FightBar';
 
-export type BattleResult = 'vitoria' | 'poupado' | 'fuga' | 'derrota';
+/** "roteiro": batalha de história que acaba sozinha (a derrota obrigatória para o Vaelor). */
+export type BattleResult = 'vitoria' | 'poupado' | 'fuga' | 'derrota' | 'roteiro';
 
 /** O que a batalha precisa do mundo 3D por trás dela. */
 export interface BattleHost {
@@ -228,7 +229,8 @@ export class BattleState implements GameState {
     const player = this.ctx.player;
     const raw = player.attack * (0.5 + accuracy) * range(this.rand, 0.9, 1.1);
     const damage = Math.max(1, Math.round(raw) - this.data.defesa);
-    this.enemyHp = Math.max(0, this.enemyHp - damage);
+    // Na batalha de história, o inimigo não cai (a derrota do Ryben é obrigatória).
+    this.enemyHp = Math.max(this.data.roteiro ? 1 : 0, this.enemyHp - damage);
     this.ui.setEnemyHp(this.enemyHp, this.data.vida);
     this.ui.popup(String(damage), p.x, p.y, 'dano');
     this.host.enemyHurt();
@@ -288,14 +290,20 @@ export class BattleState implements GameState {
           if (this.spareable) this.win('poupado');
           else
             this.showText(
-              [`Você tenta poupar ${this.the}, mas ele ainda está nervoso demais.`],
+              [this.data.recusaPoupar ?? `Você tenta poupar ${this.the}, mas ele ainda está nervoso demais.`],
               () => this.afterPlayerAction(),
             );
         },
       },
       {
         label: 'Fugir',
-        action: () => this.showText(['Você recua devagar e escapa.'], () => this.close('fuga')),
+        action: () => {
+          if (this.data.chefe || this.data.roteiro) {
+            this.showText(['Não dá para fugir agora!'], () => this.playerTurn(false));
+          } else {
+            this.showText(['Você recua devagar e escapa.'], () => this.close('fuga'));
+          }
+        },
       },
     ]);
     this.phase = { kind: 'list' };
@@ -309,6 +317,13 @@ export class BattleState implements GameState {
   // -- Turno do inimigo ---------------------------------------------------------
 
   private enemyTurn(): void {
+    // Batalha de história: depois de N turnos, acaba do jeito que o roteiro manda.
+    const script = this.data.roteiro;
+    if (script && this.turn >= script.turnos) {
+      this.ui.showBubble(null);
+      this.showText(script.fim, () => this.close('roteiro'));
+      return;
+    }
     this.turn++;
     const calm = this.spareable;
     this.ui.setCommandsActive(false);
@@ -338,6 +353,8 @@ export class BattleState implements GameState {
     const hit = dodge.update(dt, this.ctx.input.moveVector());
     if (hit) {
       this.ctx.player.takeHit(this.data.ataque);
+      // Na batalha de história, o Ryben não cai antes da hora.
+      if (this.data.roteiro && this.ctx.player.hp <= 0) this.ctx.player.hp = 1;
       this.refreshPlayer();
       this.ui.shake();
       if (this.ctx.player.hp <= 0) {
@@ -362,7 +379,7 @@ export class BattleState implements GameState {
       const ups = player.gainXp(xp);
       this.host.enemyDefeated();
       lines = [
-        `${this.The} se desfaz em brilho.`,
+        this.data.aoVencer ?? `${this.The} se desfaz em brilho.`,
         `Você ganhou ${xp} de experiência e ${plural(brasas, 'Brasa', 'Brasas')}.`,
         ...ups.map(
           (u) => `Ryben subiu para o nível ${u.level}! Vida máxima ${u.maxHp}, força ${u.strength}, defesa ${u.defense}.`,

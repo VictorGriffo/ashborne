@@ -1107,6 +1107,154 @@ body {
   line-height: 1.8;
 }
 
+/* Loja */
+
+.shop {
+  width: min(460px, 100%);
+  text-align: center;
+}
+
+.shop .menu button {
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* Cutscenes: faixas de cinema e clarão */
+
+.cinema-bars::before,
+.cinema-bars::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 9vh;
+  background: #000;
+  transform: scaleY(0);
+  transition: transform 0.6s ease;
+  z-index: 1;
+}
+
+.cinema-bars::before {
+  top: 0;
+  transform-origin: top;
+}
+
+.cinema-bars::after {
+  bottom: 0;
+  transform-origin: bottom;
+}
+
+.cinema-bars.visible::before,
+.cinema-bars.visible::after {
+  transform: scaleY(1);
+}
+
+.cinema-flash {
+  position: absolute;
+  inset: 0;
+  background: #f4fbff;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.cinema-flash.on {
+  animation: cinema-flash 0.9s ease-out;
+}
+
+@keyframes cinema-flash {
+  0% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Fim de parte */
+
+.end-screen {
+  background: #05070c;
+  gap: 28px;
+  z-index: 5;
+}
+
+.end-lines {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: min(620px, 100%);
+  text-align: center;
+}
+
+.end-line {
+  max-width: 100%;
+  margin: 0;
+  font-family: var(--title-font);
+  font-size: clamp(15px, 2.6vw, 21px);
+  letter-spacing: 0.04em;
+  color: var(--text);
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 1.4s ease,
+    transform 1.4s ease;
+}
+
+.end-line:last-child {
+  margin-top: 10px;
+  color: var(--ember);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.end-line.visible {
+  opacity: 1;
+  transform: none;
+}
+
+.end-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+
+.end-footer.visible {
+  opacity: 1;
+}
+
+.end-footer h2 {
+  margin: 0;
+  font-family: var(--title-font);
+  font-size: clamp(22px, 4vw, 34px);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.end-note {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.end-footer .prompt {
+  margin-top: 6px;
+  padding: 8px 20px;
+  border: 1px solid rgba(127, 224, 208, 0.5);
+  border-radius: 6px;
+  background: rgba(22, 50, 74, 0.6);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
 /* Celular: controles de toque --------------------------------------------- */
 
 .only-touch {
@@ -1441,6 +1589,25 @@ body:has(.dialogue.visible) .touch-map {
   }
   .title-menu {
     margin-top: 16px;
+  }
+  .end-screen {
+    gap: 12px;
+  }
+  .end-lines {
+    gap: 5px;
+  }
+  .end-line {
+    font-size: 15px;
+  }
+  .end-line:last-child {
+    margin-top: 4px;
+  }
+  .end-footer h2 {
+    font-size: 20px;
+  }
+  .end-footer .prompt {
+    margin-top: 0;
+    padding: 6px 16px;
   }
 }
 

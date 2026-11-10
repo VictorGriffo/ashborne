@@ -23,7 +23,20 @@ export interface MobData {
   recompensa: { xp: number; brasas: number };
   recompensaPoupar: { lacos: number; brasas: number };
   calmaParaPoupar: number;
-  mapa: { velocidade: number; raioPasseio: number; raioToque: number };
+  /** Como anda no mapa. Mobs que só aparecem em batalhas de história não precisam. */
+  mapa?: { velocidade: number; raioPasseio: number; raioToque: number };
+  /** Elite ou chefe: vencido, não volta ao salvar. */
+  unico?: boolean;
+  /** Chefe: não dá para fugir. */
+  chefe?: boolean;
+  /** Primeira frase da vitória, no lugar de "se desfaz em brilho". */
+  aoVencer?: string;
+  /** Batalha de história que termina sozinha depois de N turnos do inimigo (derrota obrigatória). */
+  roteiro?: { turnos: number; fim: string[] };
+  /** Flags marcadas quando o mob é vencido ou poupado (missões que aceitam os dois caminhos). */
+  marcar?: string[];
+  /** Resposta a uma tentativa de poupar antes da hora, no lugar do texto padrão. */
+  recusaPoupar?: string;
   encontro: string;
   surpresa: string;
   /** Reação ao ser poupado. */
@@ -39,7 +52,12 @@ export interface MobData {
 
 /** Uma onda de projéteis dentro de um padrão de ataque. */
 export interface WaveData {
-  tipo: 'chuva' | 'cortina' | 'leque' | 'mira';
+  tipo: 'chuva' | 'cortina' | 'leque' | 'mira' | 'feixe';
+  /** feixe: "h" (linhas), "v" (colunas) ou "alterna"; espessura; segundos de aviso e de disparo. */
+  orientacao?: 'h' | 'v' | 'alterna';
+  espessura?: number;
+  aviso?: number;
+  disparo?: number;
   de: number;
   ate: number;
   intervalo: number;

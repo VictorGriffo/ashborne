@@ -99,9 +99,13 @@ export class PlayerState {
     return this.strength + this.equipped('arma').reduce((n, i) => n + (i.ataque ?? 0), 0);
   }
 
-  /** Defesa do nível mais a das vestes e do amuleto. */
+  /** Defesa do nível mais a das vestes e do amuleto (com o bônus de vida baixa). */
   get defense(): number {
-    return this.row.defesa + this.equipped('vestes', 'amuleto').reduce((n, i) => n + (i.defesa ?? 0), 0);
+    const low = this.hp <= this.maxHp * 0.3;
+    return (
+      this.row.defesa +
+      this.equipped('vestes', 'amuleto').reduce((n, i) => n + (i.defesa ?? 0) + (low ? (i.defesaVidaBaixa ?? 0) : 0), 0)
+    );
   }
 
   /** Experiência total que falta para o próximo nível, ou null no nível máximo. */

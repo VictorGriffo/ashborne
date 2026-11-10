@@ -47,7 +47,7 @@ export class TitleState implements GameState {
       this.screen.append(prompt);
       this.screen.addEventListener('click', () => ctx.input.trigger('confirm'));
     }
-    this.screen.append(el('p', 'build', 'Protótipo M3'));
+    this.screen.append(el('p', 'build', 'Protótipo M4 · Parte 1'));
     this.screen.addEventListener('mousedown', (e) => e.preventDefault());
   }
 

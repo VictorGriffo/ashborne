@@ -16,6 +16,17 @@ interface Bullet {
   lilac: boolean;
 }
 
+/** Feixe de luz: primeiro um aviso fraco, depois o disparo que machuca. */
+interface Beam {
+  horizontal: boolean;
+  /** Posição da linha (y se horizontal, x se vertical) e meia espessura. */
+  at: number;
+  half: number;
+  warn: number;
+  fire: number;
+  age: number;
+}
+
 export interface DodgeOptions {
   /** Multiplicador de velocidade (dificuldade, ataque surpresa). */
   speed: number;
@@ -42,6 +53,8 @@ export class DodgePhase {
   readonly height: number;
   readonly soul: { x: number; y: number };
   private readonly bullets: Bullet[] = [];
+  private readonly beams: Beam[] = [];
+  private beamCount = 0;
   private readonly nextSpawn: number[];
   private time = -WARMUP;
   private invulnerable = 0;
@@ -86,6 +99,11 @@ export class DodgePhase {
         b.x < -MARGIN || b.x > this.width + MARGIN || b.y < -MARGIN * 2 || b.y > this.height + MARGIN;
       if (out) this.bullets.splice(i, 1);
     }
+    for (let i = this.beams.length - 1; i >= 0; i--) {
+      const beam = this.beams[i];
+      beam.age += dt;
+      if (beam.age > beam.warn + beam.fire) this.beams.splice(i, 1);
+    }
 
     if (this.invulnerable > 0) {
       this.invulnerable -= dt;
@@ -95,12 +113,19 @@ export class DodgePhase {
       const dx = b.x - s.x;
       const dy = b.y - s.y;
       const r = b.r + soulRadius;
-      if (dx * dx + dy * dy < r * r) {
-        this.invulnerable = this.opts.invulnerable;
-        return true;
-      }
+      if (dx * dx + dy * dy < r * r) return this.hit();
+    }
+    for (const beam of this.beams) {
+      if (beam.age < beam.warn) continue;
+      const d = Math.abs((beam.horizontal ? s.y : s.x) - beam.at);
+      if (d < beam.half + soulRadius * 0.6) return this.hit();
     }
     return false;
+  }
+
+  private hit(): boolean {
+    this.invulnerable = this.opts.invulnerable;
+    return true;
   }
 
   /** Desenha a caixa. `scale` converte unidades lógicas em pixels do canvas. */
@@ -111,6 +136,7 @@ export class DodgePhase {
     ctx.save();
     ctx.scale(scale, scale);
 
+    for (const beam of this.beams) this.drawBeam(ctx, beam);
     ctx.globalCompositeOperation = 'lighter';
     for (const b of this.bullets) drawDrop(ctx, b);
     ctx.globalCompositeOperation = 'source-over';
@@ -120,6 +146,30 @@ export class DodgePhase {
     if (!blink) drawEmber(ctx, this.soul.x, this.soul.y, this.opts.soulRadius, clock);
 
     ctx.restore();
+  }
+
+  private drawBeam(ctx: CanvasRenderingContext2D, beam: Beam): void {
+    const firing = beam.age >= beam.warn;
+    const w = beam.horizontal ? this.width : beam.half * 2;
+    const h = beam.horizontal ? beam.half * 2 : this.height;
+    const x = beam.horizontal ? 0 : beam.at - beam.half;
+    const y = beam.horizontal ? beam.at - beam.half : 0;
+    if (!firing) {
+      // Aviso: contorno tracejado lilás piscando.
+      const blink = Math.floor(beam.age * 10) % 2 === 0;
+      ctx.strokeStyle = blink ? 'rgba(185, 166, 255, 0.85)' : 'rgba(185, 166, 255, 0.35)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 3]);
+      ctx.strokeRect(x, y, w, h);
+      ctx.setLineDash([]);
+      return;
+    }
+    const fade = 1 - (beam.age - beam.warn) / beam.fire;
+    ctx.fillStyle = `rgba(127, 224, 208, ${0.35 + 0.5 * fade})`;
+    ctx.fillRect(x, y, w, h);
+    ctx.fillStyle = `rgba(240, 255, 252, ${0.9 * fade})`;
+    if (beam.horizontal) ctx.fillRect(x, beam.at - beam.half * 0.35, w, beam.half * 0.7);
+    else ctx.fillRect(beam.at - beam.half * 0.35, y, beam.half * 0.7, h);
   }
 
   // ---------------------------------------------------------------------------
@@ -167,6 +217,25 @@ export class DodgePhase {
           const a = n === 1 ? base : base + (k / (n - 1) - 0.5) * spread;
           this.add(x0, y0, Math.cos(a) * v, Math.sin(a) * v, r, 0);
         }
+        break;
+      }
+      case 'feixe': {
+        // Na dificuldade mais rápida o aviso encurta; nunca some de todo.
+        const horizontal = w.orientacao === 'h' || (w.orientacao === 'alterna' && this.beamCount % 2 === 0);
+        this.beamCount++;
+        const half = (w.espessura ?? 12) / 2;
+        const span = horizontal ? this.height : this.width;
+        // Mira perto da brasa, com um desvio aleatório.
+        const target = horizontal ? this.soul.y : this.soul.x;
+        const at = clamp(target + (rand() - 0.5) * span * 0.5, half, span - half);
+        this.beams.push({
+          horizontal,
+          at,
+          half,
+          warn: Math.max(0.35, (w.aviso ?? 0.7) / this.opts.speed),
+          fire: w.disparo ?? 0.35,
+          age: 0,
+        });
         break;
       }
       case 'mira': {

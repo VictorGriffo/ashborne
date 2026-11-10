@@ -23,7 +23,8 @@ export class DialogueState implements GameState {
   constructor(
     private readonly ctx: GameContext,
     source: string | string[],
-    private readonly onEnd: () => void = () => {},
+    /** Chamado ao fechar, com a ação pedida pelo diálogo (batalha, loja, cena), se houver. */
+    private readonly onEnd: (action?: string) => void = () => {},
   ) {
     this.runner =
       typeof source === 'string'
@@ -100,6 +101,6 @@ export class DialogueState implements GameState {
     if (this.closed) return;
     this.closed = true;
     this.ctx.states.pop();
-    this.onEnd();
+    this.onEnd(this.runner.action);
   }
 }

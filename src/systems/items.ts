@@ -8,6 +8,9 @@ export interface ItemData {
   cura?: number;
   ataque?: number;
   defesa?: number;
+  /** Defesa extra quando a vida está em 30% ou menos (Amuleto de Maren). */
+  defesaVidaBaixa?: number;
+  /** Preço de compra em Brasas; a venda paga a metade. Sem preço, não se vende. */
   preco?: number;
   /** Texto mostrado ao usar o item. */
   usar?: string;
