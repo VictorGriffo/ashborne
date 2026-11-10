@@ -80,6 +80,10 @@ ashborne/
 
 ## Próximo passo
 
-O M0 está feito (game loop de passo fixo, máquina de estados em pilha, entrada por ações, clareira de teste com câmera fixa e o Ryben provisório feito de formas simples). Próximo: começar o M1, em que os modelos reais dos pacotes CC0 substituem o boneco provisório e a clareira dá lugar a uma sala com colisão de verdade. O README explica a arquitetura do código.
+M0 e M1 estão feitos. O jogo começa no Salão da Guarda (sala montada por `data/areas/salao-da-guarda.json` com peças KayKit Dungeon Remastered), com o Mestre Orin e um diálogo com escolhas e flags. A porta do norte leva à Clareira do Altar (gerada no código). Ryben usa o modelo KayKit Rogue e o Orin usa o Knight, ambos com animações. O README explica a arquitetura.
+
+Próximo: o M2 (menu Lutar/Agir/Item/Poupar, fase de desvio e um inimigo que pode ser poupado). O design sugere começar pelo treino com o Mestre Orin no Pátio de Treino da Guarda, a batalha fácil que ensina o Poupar. A batalha deve entrar como um estado de sobreposição na pilha, como o diálogo. Os padrões de ataque vão em JSON.
+
+Pendências conhecidas: não há controle por toque no celular, e o projeto ainda não foi enviado ao GitHub.
 
 Para o conteúdo (personagens, itens, magias, mobs, missões, territórios), consulte `docs/design.md`. Ao criar os JSON em `data/`, siga os nomes e as regras de lá.
