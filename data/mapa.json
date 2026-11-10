@@ -7,7 +7,7 @@
     { "id": "patio", "nome": "Pátio de Treino", "pos": [36, 52] },
     { "id": "clareira", "nome": "Clareira do Altar", "pos": [44, 34] },
     { "id": "estrada", "nome": "Estrada do Santuário", "pos": [66, 22] },
-    { "id": "santuario", "nome": "Santuário", "pos": [84, 9] }
+    { "id": "santuario", "nome": "Santuário", "pos": [84, 14] }
   ],
   "caminhos": [
     ["vila", "salao-da-guarda"],
