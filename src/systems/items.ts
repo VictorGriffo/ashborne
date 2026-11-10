@@ -3,7 +3,11 @@ import itens from '../../data/itens.json';
 /** Formato de data/itens.json. */
 export interface ItemData {
   nome: string;
-  tipo: 'cura' | 'arma' | 'vestes' | 'amuleto' | 'chave';
+  tipo: 'cura' | 'aether' | 'arma' | 'vestes' | 'amuleto' | 'chave';
+  /** Aether recuperado ao usar. */
+  aether?: number;
+  /** Item único (não aparece como ×N). */
+  unico?: boolean;
   descricao: string;
   cura?: number;
   ataque?: number;

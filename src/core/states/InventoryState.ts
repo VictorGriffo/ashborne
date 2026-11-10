@@ -1,5 +1,6 @@
 import { EQUIP_SLOTS, type EquipSlot } from '../../systems/PlayerState';
 import { item } from '../../systems/items';
+import { knownSpells, spell } from '../../systems/spells';
 import { el, fadeIn, fadeOut } from '../../ui/dom';
 import { MenuList, type MenuItem } from '../../ui/MenuList';
 import type { GameContext } from '../GameContext';
@@ -69,9 +70,10 @@ export class InventoryState implements GameState {
     this.ids = [...player.inventory.keys()];
     const items: MenuItem[] = this.ids.map((id) => {
       const data = item(id);
-      const tag = data.tipo === 'cura' ? 'usar' : EQUIP_SLOTS.includes(data.tipo as EquipSlot) ? 'equipar' : '';
+      const tag = ['cura', 'aether'].includes(data.tipo) ? 'usar' : EQUIP_SLOTS.includes(data.tipo as EquipSlot) ? 'equipar' : '';
+      const count = data.unico ? '' : `  ×${player.itemCount(id)}`;
       return {
-        label: `${data.nome}  ×${player.itemCount(id)}${tag ? `   · ${tag}` : ''}`,
+        label: `${data.nome}${count}${tag ? `   · ${tag}` : ''}`,
         action: () => this.useItem(id),
       };
     });
@@ -100,6 +102,13 @@ export class InventoryState implements GameState {
       }
       const healed = player.useHealing(id) ?? 0;
       this.feedback.textContent = `${data.usar ?? `Você usa ${data.nome}.`} +${healed} de vida.`;
+    } else if (data.tipo === 'aether') {
+      if (player.aether >= player.maxAether) {
+        this.feedback.textContent = 'Seu Aether já está cheio.';
+        return;
+      }
+      const got = player.useAetherItem(id) ?? 0;
+      this.feedback.textContent = `${data.usar ?? `Você usa ${data.nome}.`} +${got} de Aether.`;
     } else if (EQUIP_SLOTS.includes(data.tipo as EquipSlot)) {
       player.equip(id);
       this.feedback.textContent = `Você equipou ${data.nome}.`;
@@ -125,11 +134,16 @@ export class InventoryState implements GameState {
       ['Nível', String(p.level)],
       ['Experiência', next === null ? `${p.xp} (máximo)` : `${p.xp} / ${next}`],
       ['Vida', `${p.hp} / ${p.maxHp}`],
+      ...(knownSpells((f) => this.ctx.flags.has(f)).length > 0
+        ? ([['Aether', `${p.aether} / ${p.maxAether}`]] as Array<[string, string]>)
+        : []),
       ['Ataque', String(p.attack)],
       ['Defesa', String(p.defense)],
       ['Laços', String(p.lacos)],
       ['Brasas', String(p.brasas)],
     ];
+    const known = knownSpells((f) => this.ctx.flags.has(f));
+    if (known.length > 0) rows.push(['Magias', known.map((id) => spell(id).nome).join(', ')]);
     this.statsEl.replaceChildren(
       ...rows.map(([label, value]) => {
         const row = el('div', 'bag-row');

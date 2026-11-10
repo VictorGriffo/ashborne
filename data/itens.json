@@ -15,6 +15,28 @@
     "descricao": "Erva-lume fervida com mel, receita da Mira. Recupera 22 de vida.",
     "usar": "Você bebe o chá ainda morno. O peito aquece."
   },
+  "sopa-da-resistencia": {
+    "nome": "Sopa da Resistência",
+    "tipo": "cura",
+    "cura": 40,
+    "preco": 18,
+    "descricao": "Sopa grossa de raiz e feijão, feita no acampamento. Recupera 40 de vida.",
+    "usar": "Você toma a sopa quente. Tem gosto de casa."
+  },
+  "lagrima-de-aether": {
+    "nome": "Lágrima de Aether",
+    "tipo": "aether",
+    "aether": 8,
+    "preco": 20,
+    "descricao": "Uma gota de Aether cristalizada. Recupera 8 de Aether.",
+    "usar": "A lágrima se desfaz na sua língua. O Aether volta a correr nas veias."
+  },
+  "brasa-renascida": {
+    "nome": "Brasa Renascida",
+    "tipo": "chave",
+    "descricao": "Uma brasa que não apaga. Se a vida zerar, ela revive o Ryben uma vez por batalha, com metade da vida.",
+    "unico": true
+  },
   "espada-de-treino": {
     "nome": "Espada de Treino",
     "tipo": "arma",
@@ -29,12 +51,32 @@
     "preco": 36,
     "descricao": "Uma espada velha que o Tob consertou com muito capricho e pouca técnica. Ataque +4."
   },
+  "lamina-de-brasa": {
+    "nome": "Lâmina de Brasa",
+    "tipo": "arma",
+    "ataque": 8,
+    "preco": 120,
+    "descricao": "Forjada pelo Tob com brasa de Aether. Quente ao toque. Ataque +8."
+  },
   "tunica-da-guarda-aprendiz": {
     "nome": "Túnica da Guarda Aprendiz",
     "tipo": "vestes",
     "defesa": 1,
     "preco": 6,
     "descricao": "Verde, com barra de Aether. Ainda grande demais nos ombros. Defesa +1."
+  },
+  "capa-do-exilio": {
+    "nome": "Capa do Exílio",
+    "tipo": "vestes",
+    "defesa": 3,
+    "descricao": "Cinza, remendada, com capuz. Esconde o rosto de quem não quer ser reconhecido. Defesa +3."
+  },
+  "capa-da-resistencia": {
+    "nome": "Capa da Resistência",
+    "tipo": "vestes",
+    "defesa": 6,
+    "preco": 80,
+    "descricao": "Reforçada com couro e fios de Aether. Cheira a fumaça de fogueira. Defesa +6."
   },
   "amuleto-de-maren": {
     "nome": "Amuleto de Maren",

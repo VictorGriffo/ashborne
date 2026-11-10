@@ -16,6 +16,7 @@ interface LevelRow {
   vida: number;
   forca: number;
   defesa: number;
+  aether: number;
 }
 
 const LEVELS: LevelRow[] = progressao.niveis;
@@ -40,6 +41,8 @@ export interface PlayerSave {
   tempoDeJogo: number;
   equipamento: Partial<Record<EquipSlot, string>>;
   inventario: Record<string, number>;
+  aether?: number;
+  nivelMaximo?: number;
 }
 
 /**
@@ -53,6 +56,10 @@ export class PlayerState {
   lacos = 0;
   brasas = 0;
   hp = 0;
+  /** Aether: o recurso das magias. Só enche depois do primeiro selo. */
+  aether = 0;
+  /** Nível máximo atual: 12 na Parte 1, 30 na Parte 2. */
+  levelCap = progressao.nivelMaximoParte1;
   difficultyId: DifficultyId = 'aventura';
   /** Segundos de jogo, para mostrar no save. */
   playTime = 0;
@@ -70,10 +77,27 @@ export class PlayerState {
     this.lacos = 0;
     this.brasas = 0;
     this.playTime = 0;
+    this.levelCap = progressao.nivelMaximoParte1;
     this.equipment = { ...(RYBEN.equipamento as Partial<Record<EquipSlot, string>>) };
     this.inventory.clear();
     for (const [id, n] of Object.entries(RYBEN.inventario)) this.inventory.set(id, n);
     this.hp = this.maxHp;
+    this.aether = this.maxAether;
+  }
+
+  /**
+   * O salto de nove anos: o Ryben volta mais velho, sem as magias da juventude,
+   * no nível 8 e com a Capa do Exílio. Laços, Brasas e itens continuam.
+   */
+  startPartTwo(): void {
+    this.levelCap = LEVELS.length;
+    this.level = progressao.nivelAoVoltar;
+    this.xp = LEVELS[this.level - 1].xp;
+    this.equipment.vestes = 'capa-do-exilio';
+    this.addItem('capa-do-exilio');
+    this.consume('capa-do-exilio'); // vem já vestida, sem sobrar na bolsa
+    this.hp = this.maxHp;
+    this.aether = this.maxAether;
   }
 
   // -- Atributos --------------------------------------------------------------
@@ -94,6 +118,10 @@ export class PlayerState {
     return this.row.forca;
   }
 
+  get maxAether(): number {
+    return this.row.aether;
+  }
+
   /** Força mais o ataque da arma. */
   get attack(): number {
     return this.strength + this.equipped('arma').reduce((n, i) => n + (i.ataque ?? 0), 0);
@@ -110,7 +138,7 @@ export class PlayerState {
 
   /** Experiência total que falta para o próximo nível, ou null no nível máximo. */
   get nextLevelXp(): number | null {
-    return LEVELS[this.level]?.xp ?? null;
+    return this.level >= this.levelCap ? null : (LEVELS[this.level]?.xp ?? null);
   }
 
   private equipped(...slots: EquipSlot[]): ItemData[] {
@@ -123,7 +151,7 @@ export class PlayerState {
   gainXp(amount: number): LevelUp[] {
     this.xp += amount;
     const ups: LevelUp[] = [];
-    while (LEVELS[this.level] && this.xp >= LEVELS[this.level].xp) {
+    while (this.level < this.levelCap && LEVELS[this.level] && this.xp >= LEVELS[this.level].xp) {
       const before = this.maxHp;
       this.level++;
       // A vida ganha no nível já vem cheia.
@@ -158,14 +186,35 @@ export class PlayerState {
   }
 
   /** Dano recebido de um ataque com o valor bruto do inimigo. Devolve o dano aplicado. */
-  takeHit(enemyAttack: number): number {
-    const damage = Math.max(1, Math.round(enemyAttack * this.difficulty.dano) - this.defense);
+  takeHit(enemyAttack: number, factor = 1): number {
+    const damage = Math.max(1, Math.round((Math.round(enemyAttack * this.difficulty.dano) - this.defense) * factor));
     this.hp = Math.max(0, this.hp - damage);
     return damage;
   }
 
   restore(): void {
     this.hp = this.maxHp;
+    this.aether = this.maxAether;
+  }
+
+  /** Gasta Aether. Devolve false se não houver o bastante. */
+  spendAether(amount: number): boolean {
+    if (this.aether < amount) return false;
+    this.aether -= amount;
+    return true;
+  }
+
+  gainAether(amount: number): number {
+    const before = this.aether;
+    this.aether = Math.min(this.maxAether, this.aether + amount);
+    return this.aether - before;
+  }
+
+  /** Usa um item de Aether (Lágrima). Devolve quanto recuperou, ou null se não deu. */
+  useAetherItem(id: string): number | null {
+    const data = item(id);
+    if (data.tipo !== 'aether' || !this.consume(id)) return null;
+    return this.gainAether(data.aether ?? 0);
   }
 
   // -- Inventário e equipamento -------------------------------------------------
@@ -219,6 +268,8 @@ export class PlayerState {
       tempoDeJogo: Math.round(this.playTime),
       equipamento: { ...this.equipment },
       inventario: Object.fromEntries(this.inventory),
+      aether: this.aether,
+      nivelMaximo: this.levelCap,
     };
   }
 
@@ -232,6 +283,8 @@ export class PlayerState {
     this.equipment = { ...s.equipamento };
     this.inventory.clear();
     for (const [id, n] of Object.entries(s.inventario)) if (n > 0) this.inventory.set(id, n);
+    this.levelCap = s.nivelMaximo ?? progressao.nivelMaximoParte1;
     this.hp = Math.max(1, Math.min(this.maxHp, s.vida));
+    this.aether = Math.max(0, Math.min(this.maxAether, s.aether ?? this.maxAether));
   }
 }

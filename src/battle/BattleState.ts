@@ -3,7 +3,9 @@ import { PauseState } from '../core/states/PauseState';
 import type { GameState } from '../core/StateMachine';
 import { createRandom, range } from '../core/random';
 import { item } from '../systems/items';
+import { knownSpells, spell } from '../systems/spells';
 import { fadeIn, fadeOut } from '../ui/dom';
+import type { MenuItem } from '../ui/MenuList';
 import { BattleUI, BOX_MORPH_SECONDS, COMMANDS } from './BattleUI';
 import { mob, pattern, type MobData } from './data';
 import { DodgePhase } from './DodgePhase';
@@ -59,6 +61,12 @@ export class BattleState implements GameState {
   private calm = 0;
   private turn = 0;
   private clock = 0;
+  /** Efeitos de magia ativos (duram o próximo turno do inimigo, ou vários, no caso da cura). */
+  private fx: { shield?: number; veil?: number; slow?: number; regen?: { amount: number; turns: number } } = {};
+  /** A Brasa Renascida só revive uma vez por batalha. */
+  private revived = false;
+  /** Multiplicador do dano no turno inimigo atual (Raiz Firme). */
+  private turnShield = 1;
   /** Texto de clima que aparece com o menu no começo de cada turno. */
   private flavor = '';
   private closed = false;
@@ -178,6 +186,8 @@ export class BattleState implements GameState {
   /** Volta ao menu principal. `fresh` sorteia um novo texto de clima. */
   private playerTurn(fresh = true): void {
     if (fresh) {
+      // O Aether volta devagar: 1 por turno.
+      if (this.ctx.player.gainAether(1) > 0) this.refreshPlayer();
       const pool = this.spareable ? this.data.textosCalmo : this.data.textos;
       this.flavor = pick(this.rand, pool);
     }
@@ -238,25 +248,101 @@ export class BattleState implements GameState {
 
   private openActs(): void {
     this.ui.setCommandsActive(false);
-    this.ui.showList(
-      this.data.agir.map((act) => ({
-        label: act.nome,
-        action: () => {
-          this.calm = Math.max(0, this.calm + act.calma);
-          const lines = this.spareable && act.textoCalmo ? act.textoCalmo : act.texto;
-          const becameCalm = this.spareable && act.calma > 0 && this.calm - act.calma < this.data.calmaParaPoupar;
-          const extra = becameCalm ? [`${this.The} parece calmo o bastante. Você pode poupá-lo agora.`] : [];
-          this.ui.setSpareReady(this.spareable);
-          this.showText([...lines, ...extra], () => this.afterPlayerAction());
-        },
-      })),
-    );
+    const items: MenuItem[] = this.data.agir.map((act) => ({
+      label: act.nome,
+      action: () => this.doAct(act.calma, act.texto, act.textoCalmo),
+    }));
+    // Com algum selo restaurado, "Magia" abre a lista de magias (dentro do Agir).
+    if (knownSpells((f) => this.ctx.flags.has(f)).length > 0) {
+      items.push({ label: `Magia ▸  ${this.ctx.player.aether}/${this.ctx.player.maxAether}`, action: () => this.openSpells() });
+    }
+    this.ui.showList(items);
     this.phase = { kind: 'list' };
+  }
+
+  /** Aplica uma ação de Agir: muda a calma e mostra o texto. */
+  private doAct(calma: number, texto: string[], textoCalmo?: string[]): void {
+    const before = this.calm;
+    this.calm = Math.max(0, this.calm + calma);
+    const lines = this.spareable && textoCalmo ? textoCalmo : texto;
+    const becameCalm = this.spareable && before < this.data.calmaParaPoupar;
+    const extra = becameCalm ? [`${this.The} parece calmo o bastante. Você pode poupá-lo agora.`] : [];
+    this.ui.setSpareReady(this.spareable);
+    this.showText([...lines, ...extra], () => this.afterPlayerAction());
+  }
+
+  private openSpells(): void {
+    const player = this.ctx.player;
+    const ids = knownSpells((f) => this.ctx.flags.has(f));
+    this.ui.showList([
+      ...ids.map((id) => {
+        const s = spell(id);
+        return {
+          label: `${s.nome} · ${s.custo}`,
+          action: () => this.castSpell(id),
+        };
+      }),
+      { label: `Voltar (Aether ${player.aether}/${player.maxAether})`, action: () => this.openActs() },
+    ]);
+    this.phase = { kind: 'list' };
+  }
+
+  /** Lança uma magia: gasta Aether e aplica o efeito de acordo com o tipo. */
+  private castSpell(id: string): void {
+    const s = spell(id);
+    const player = this.ctx.player;
+    if (this.data.roteiro && s.efeito === 'dano') {
+      this.showText(['O Aether não responde. Algo o prende.'], () => this.playerTurn(false));
+      return;
+    }
+    if (!player.spendAether(s.custo)) {
+      this.showText(['Aether insuficiente.'], () => this.playerTurn(false));
+      return;
+    }
+    this.refreshPlayer();
+    const lines = [s.texto];
+    switch (s.efeito) {
+      case 'escudo':
+        this.fx.shield = s.valor;
+        lines.push('O dano do próximo ataque inimigo cai pela metade.');
+        break;
+      case 'cura-gradual':
+        this.fx.regen = { amount: s.valor, turns: s.turnos ?? 3 };
+        lines.push(`Você vai recuperar ${s.valor} de vida por turno, durante ${s.turnos ?? 3} turnos.`);
+        break;
+      case 'veu':
+        this.fx.veil = s.valor;
+        lines.push('Os projéteis do próximo turno ficam menores.');
+        break;
+      case 'lentidao':
+        this.fx.slow = s.valor;
+        lines.push(`${this.The} fica lento. Os ataques do próximo turno vão devagar.`);
+        break;
+      case 'calma': {
+        const before = this.calm;
+        this.calm += s.valor;
+        this.ui.setSpareReady(this.spareable);
+        lines.push(`${this.The} respira mais devagar.`);
+        if (this.spareable && before < this.data.calmaParaPoupar) lines.push('Você pode poupá-lo agora.');
+        break;
+      }
+      case 'dano': {
+        const damage = Math.max(1, Math.round(player.attack * s.valor) - this.data.defesa);
+        this.enemyHp = Math.max(this.data.roteiro ? 1 : 0, this.enemyHp - damage);
+        this.ui.setEnemyHp(this.enemyHp, this.data.vida);
+        const p = this.host.enemyScreenPoint();
+        this.ui.popup(String(damage), p.x, p.y, 'dano');
+        this.host.enemyHurt();
+        lines.push(`${damage} de dano.`);
+        break;
+      }
+    }
+    this.showText(lines, () => this.afterPlayerAction());
   }
 
   private openItems(): void {
     const player = this.ctx.player;
-    const healing = [...player.inventory.entries()].filter(([id]) => item(id).tipo === 'cura');
+    const healing = [...player.inventory.entries()].filter(([id]) => ['cura', 'aether'].includes(item(id).tipo));
     if (healing.length === 0) {
       this.ui.setCommandsActive(false);
       this.showText(['Sua bolsa está vazia.'], () => this.playerTurn(false));
@@ -268,6 +354,15 @@ export class BattleState implements GameState {
         label: `${item(id).nome}  ×${count}`,
         action: () => {
           const data = item(id);
+          if (data.tipo === 'aether') {
+            const got = player.useAetherItem(id) ?? 0;
+            this.refreshPlayer();
+            this.showText(
+              [data.usar ?? `Você usa ${data.nome}.`, got > 0 ? `Você recuperou ${got} de Aether.` : 'Seu Aether já estava cheio.'],
+              () => this.afterPlayerAction(),
+            );
+            return;
+          }
           player.consume(id);
           const healed = player.heal(data.cura ?? 0);
           this.refreshPlayer();
@@ -333,6 +428,18 @@ export class BattleState implements GameState {
     const cfg = this.ctx.config.batalha;
     let speed = this.ctx.player.difficulty.velocidade;
     if (this.options.surprise && this.turn === 1) speed *= SURPRISE_SLOWDOWN;
+    if (this.fx.slow) speed *= this.fx.slow;
+
+    // Florescer: cura no começo do turno enquanto durar.
+    if (this.fx.regen) {
+      const healed = this.ctx.player.heal(this.fx.regen.amount / this.ctx.player.difficulty.cura);
+      if (healed > 0) {
+        const p = this.host.enemyScreenPoint();
+        this.ui.popup(`+${healed}`, p.x, p.y + 120, 'cura');
+      }
+      this.refreshPlayer();
+      if (--this.fx.regen.turns <= 0) this.fx.regen = undefined;
+    }
 
     const dodge = new DodgePhase(pat, {
       speed,
@@ -340,7 +447,11 @@ export class BattleState implements GameState {
       soulRadius: cfg.raioAlma,
       invulnerable: cfg.invencivel,
       rand: this.rand,
+      radiusScale: this.fx.veil ?? 1,
     });
+    // Escudo, véu e lentidão duram só este turno do inimigo.
+    this.turnShield = this.fx.shield ?? 1;
+    this.fx.shield = this.fx.veil = this.fx.slow = undefined;
     this.ui.dodgeMode(dodge.width, dodge.height);
     // O canvas aparece quando a caixa termina de encolher.
     window.setTimeout(() => {
@@ -352,9 +463,16 @@ export class BattleState implements GameState {
   private updateDodge(dodge: DodgePhase, dt: number): void {
     const hit = dodge.update(dt, this.ctx.input.moveVector());
     if (hit) {
-      this.ctx.player.takeHit(this.data.ataque);
+      this.ctx.player.takeHit(this.data.ataque, this.turnShield);
       // Na batalha de história, o Ryben não cai antes da hora.
       if (this.data.roteiro && this.ctx.player.hp <= 0) this.ctx.player.hp = 1;
+      // Brasa Renascida: revive uma vez por batalha, com metade da vida.
+      if (this.ctx.player.hp <= 0 && !this.revived && this.ctx.player.itemCount('brasa-renascida') > 0) {
+        this.revived = true;
+        this.ctx.player.hp = Math.ceil(this.ctx.player.maxHp / 2);
+        const p = this.host.enemyScreenPoint();
+        this.ui.popup('BRASA RENASCIDA', p.x, p.y + 100, 'cura');
+      }
       this.refreshPlayer();
       this.ui.shake();
       if (this.ctx.player.hp <= 0) {
@@ -438,7 +556,8 @@ export class BattleState implements GameState {
 
   private refreshPlayer(): void {
     const p = this.ctx.player;
-    this.ui.setPlayer(p.level, p.hp, p.maxHp);
+    const hasMagic = knownSpells((f) => this.ctx.flags.has(f)).length > 0;
+    this.ui.setPlayer(p.level, p.hp, p.maxHp, hasMagic ? { cur: p.aether, max: p.maxAether } : undefined);
   }
 }
 

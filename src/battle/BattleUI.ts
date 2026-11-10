@@ -31,6 +31,7 @@ export class BattleUI {
   private readonly arenaList: HTMLDivElement;
   private readonly hpBar: HTMLDivElement;
   private readonly hpText: HTMLSpanElement;
+  private readonly aetherText: HTMLSpanElement;
   private readonly levelText: HTMLSpanElement;
   private readonly buttons: HTMLButtonElement[] = [];
   private readonly flashEl: HTMLDivElement;
@@ -79,7 +80,9 @@ export class BattleUI {
     this.hpBar = el('div');
     hpTrack.append(this.hpBar);
     this.hpText = el('span', 'battle-stats-hp');
-    stats.append(name, this.levelText, hpLabel, hpTrack, this.hpText);
+    this.aetherText = el('span', 'battle-stats-aether');
+    this.aetherText.hidden = true;
+    stats.append(name, this.levelText, hpLabel, hpTrack, this.hpText, this.aetherText);
 
     const commands = el('div', 'battle-commands');
     COMMANDS.forEach((label, i) => {
@@ -120,7 +123,9 @@ export class BattleUI {
     this.enemyBar.style.width = `${Math.max(0, (hp / max) * 100)}%`;
   }
 
-  setPlayer(level: number, hp: number, max: number): void {
+  setPlayer(level: number, hp: number, max: number, aether?: { cur: number; max: number }): void {
+    this.aetherText.hidden = !aether;
+    if (aether) this.aetherText.textContent = `AETHER ${aether.cur}/${aether.max}`;
     this.levelText.textContent = `NV ${level}`;
     this.hpBar.style.width = `${Math.max(0, (hp / max) * 100)}%`;
     this.hpText.textContent = `${hp} / ${max}`;

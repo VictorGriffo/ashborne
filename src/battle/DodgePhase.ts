@@ -34,6 +34,8 @@ export interface DodgeOptions {
   soulRadius: number;
   invulnerable: number;
   rand: () => number;
+  /** Escala do tamanho dos projéteis (o Véu de Névoa deixa menores). */
+  radiusScale?: number;
 }
 
 /** Tempo para a caixa mudar de forma antes dos projéteis começarem. */
@@ -188,7 +190,7 @@ export class DodgePhase {
   private emit(w: WaveData): void {
     const rand = this.opts.rand;
     const v = w.velocidade * this.opts.speed;
-    const r = w.raio;
+    const r = w.raio * (this.opts.radiusScale ?? 1);
 
     switch (w.tipo) {
       case 'chuva': {

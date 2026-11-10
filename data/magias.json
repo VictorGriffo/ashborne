@@ -1,0 +1,74 @@
+{
+  "_formato": "Cada selo restaurado concede uma magia. 'custo' é em Aether. 'efeito' decide o que acontece: escudo (reduz o dano do próximo turno do inimigo), cura-gradual (cura um pouco a cada turno), veu (projéteis menores), dano (golpe de luz), lentidao (ataques mais lentos), calma (avança o poupar). 'valor' depende do efeito.",
+  "raiz-firme": {
+    "nome": "Raiz Firme",
+    "selo": 1,
+    "elemento": "Terra",
+    "custo": 4,
+    "efeito": "escudo",
+    "valor": 0.5,
+    "descricao": "Raízes seguram o chão sob seus pés. O dano do próximo turno inimigo cai pela metade.",
+    "texto": "Você finca o pé no chão. Raízes de Aether sobem e envolvem suas pernas."
+  },
+  "florescer": {
+    "nome": "Florescer",
+    "selo": 2,
+    "elemento": "Vida",
+    "custo": 5,
+    "efeito": "cura-gradual",
+    "valor": 4,
+    "turnos": 3,
+    "descricao": "Brotos de luz curam você aos poucos: 4 de vida no começo de cada um dos próximos 3 turnos.",
+    "texto": "Flores de Aether brotam ao seu redor, devagar."
+  },
+  "veu-de-nevoa": {
+    "nome": "Véu de Névoa",
+    "selo": 3,
+    "elemento": "Névoa",
+    "custo": 5,
+    "efeito": "veu",
+    "valor": 0.6,
+    "descricao": "Uma névoa esconde você. Os projéteis do próximo turno ficam menores e mais difíceis de acertar.",
+    "texto": "A névoa sobe dos seus pés e esconde a sua silhueta."
+  },
+  "lanca-solar": {
+    "nome": "Lança Solar",
+    "selo": 4,
+    "elemento": "Sol",
+    "custo": 6,
+    "efeito": "dano",
+    "valor": 2.4,
+    "descricao": "Um raio de luz atravessa o inimigo. Dano alto, sem precisar acertar a barra.",
+    "texto": "Você ergue a mão. Uma lança de luz rasga o ar."
+  },
+  "congelar": {
+    "nome": "Congelar",
+    "selo": 5,
+    "elemento": "Gelo",
+    "custo": 6,
+    "efeito": "lentidao",
+    "valor": 0.55,
+    "descricao": "Geada trava o inimigo. Os ataques dele ficam bem mais lentos no próximo turno.",
+    "texto": "Cristais de gelo sobem pelo chão e prendem os pés do inimigo."
+  },
+  "mare-calmante": {
+    "nome": "Maré Calmante",
+    "selo": 6,
+    "elemento": "Maré",
+    "custo": 5,
+    "efeito": "calma",
+    "valor": 2,
+    "descricao": "Uma onda suave passa pelo inimigo e o acalma. Avança bastante o poupar.",
+    "texto": "Uma onda suave de Aether cobre o campo de batalha, sem molhar nada."
+  },
+  "luz-do-alvorecer": {
+    "nome": "Luz do Alvorecer",
+    "selo": 7,
+    "elemento": "Luz",
+    "custo": 8,
+    "efeito": "dano",
+    "valor": 3.4,
+    "descricao": "A luz do amanhecer, ligada ao sacrifício do final. Dano altíssimo.",
+    "texto": "O mundo clareia por um instante, como se o sol nascesse dentro do campo de batalha."
+  }
+}
