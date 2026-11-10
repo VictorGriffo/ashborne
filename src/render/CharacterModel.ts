@@ -41,6 +41,8 @@ export class CharacterModel {
   private readonly mixer: THREE.AnimationMixer;
   private readonly actions = new Map<string, THREE.AnimationAction>();
   private current?: THREE.AnimationAction;
+  /** Animação de uma vez só em andamento; a locomoção espera ela acabar. */
+  private oneShot?: THREE.AnimationAction;
 
   constructor(
     assets: Assets,
@@ -67,6 +69,8 @@ export class CharacterModel {
     for (const clip of gltf.animations) this.actions.set(clip.name, this.mixer.clipAction(clip));
     // Animações de uma vez só (playOnce) voltam sozinhas para a de parado.
     this.mixer.addEventListener('finished', (e) => {
+      if (e.action !== this.oneShot) return;
+      this.oneShot = undefined;
       if (e.action === this.current) this.play(this.data.animacoes.parado, 0.3);
     });
     this.play(data.animacoes.parado, 0);
@@ -96,7 +100,9 @@ export class CharacterModel {
     if (!action) return;
     action.setLoop(THREE.LoopOnce, 1);
     action.clampWhenFinished = true;
-    this.play(name);
+    if (action === this.current) this.current = undefined; // permite repetir o mesmo gesto
+    this.play(name, 0.1);
+    this.oneShot = action;
   }
 
   /**
@@ -105,6 +111,8 @@ export class CharacterModel {
    */
   locomote(speed: number, running: boolean): void {
     const { animacoes, passo } = this.data;
+    if (this.oneShot && speed < 0.15) return;
+    this.oneShot = undefined;
     if (speed < 0.15) {
       this.play(animacoes.parado);
     } else if (!running || speed < passo.andando * 1.2) {

@@ -1,11 +1,7 @@
 import type { DialogueChoice } from '../systems/Dialogue';
 import { el, fadeIn, fadeOut } from './dom';
 import { MenuList } from './MenuList';
-
-/** Letras por segundo do efeito de máquina de escrever. */
-const CHARS_PER_SECOND = 45;
-/** Pausa extra depois de pontuação, em segundos. */
-const PUNCTUATION_PAUSE: Record<string, number> = { '.': 0.18, '!': 0.18, '?': 0.18, ',': 0.08, '…': 0.25 };
+import { Typewriter } from './Typewriter';
 
 /**
  * Caixa de diálogo na parte de baixo da tela: nome de quem fala,
@@ -14,13 +10,9 @@ const PUNCTUATION_PAUSE: Record<string, number> = { '.': 0.18, '!': 0.18, '?': 0
 export class DialogueBox {
   readonly el: HTMLDivElement;
   private readonly nameEl: HTMLDivElement;
-  private readonly textEl: HTMLParagraphElement;
   private readonly moreEl: HTMLDivElement;
   private readonly choicesEl: HTMLDivElement;
-
-  private full = '';
-  private shown = 0;
-  private wait = 0;
+  private readonly writer: Typewriter;
   menu?: MenuList;
 
   /** @param onTap chamado ao clicar ou tocar na caixa, fora das escolhas */
@@ -32,10 +24,11 @@ export class DialogueBox {
       if (!this.menu) onTap();
     });
     this.nameEl = el('div', 'dialogue-name');
-    this.textEl = el('p', 'dialogue-text');
+    const textEl = el('p', 'dialogue-text');
     this.moreEl = el('div', 'dialogue-more');
     this.choicesEl = el('div', 'dialogue-choices');
-    this.el.append(this.nameEl, this.textEl, this.choicesEl, this.moreEl);
+    this.el.append(this.nameEl, textEl, this.choicesEl, this.moreEl);
+    this.writer = new Typewriter(textEl);
   }
 
   show(parent: HTMLElement): void {
@@ -49,37 +42,25 @@ export class DialogueBox {
   /** Começa uma nova fala. */
   say(speaker: string, text: string): void {
     this.nameEl.textContent = speaker;
-    this.full = text;
-    this.shown = 0;
-    this.wait = 0;
-    this.textEl.textContent = '';
+    this.writer.set(text);
     this.clearChoices();
     this.moreEl.hidden = true;
   }
 
   /** A fala inteira já apareceu? */
   get finished(): boolean {
-    return this.shown >= this.full.length;
+    return this.writer.finished;
   }
 
   /** Mostra o resto da fala de uma vez. */
   complete(): void {
-    this.shown = this.full.length;
-    this.textEl.textContent = this.full;
+    this.writer.complete();
   }
 
   /** Avança o efeito de digitação. */
   update(dt: number): void {
-    if (this.finished) {
-      this.moreEl.hidden = this.menu !== undefined;
-      return;
-    }
-    this.wait -= dt;
-    while (this.wait <= 0 && !this.finished) {
-      const ch = this.full[this.shown++];
-      this.wait += 1 / CHARS_PER_SECOND + (PUNCTUATION_PAUSE[ch] ?? 0);
-    }
-    this.textEl.textContent = this.full.slice(0, this.shown);
+    this.writer.update(dt);
+    this.moreEl.hidden = !this.writer.finished || this.menu !== undefined;
   }
 
   /** Mostra as escolhas como um menu. */

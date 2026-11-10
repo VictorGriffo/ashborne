@@ -2,6 +2,7 @@ import config from '../../data/config.json';
 import { Assets } from '../render/Assets';
 import { Renderer } from '../render/Renderer';
 import { Flags } from '../systems/Flags';
+import { PlayerState } from '../systems/PlayerState';
 import { DebugHud } from '../ui/DebugHud';
 import type { GameConfig, GameContext } from './GameContext';
 import { GameLoop } from './GameLoop';
@@ -20,6 +21,7 @@ export class Game implements GameContext {
   readonly states = new StateMachine();
   readonly assets = new Assets();
   readonly flags = new Flags();
+  readonly player = new PlayerState();
   readonly debug: DebugHud;
   private readonly loop: GameLoop;
 

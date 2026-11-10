@@ -36,6 +36,17 @@ export class MenuList {
     this.select(0);
   }
 
+  /** Opção selecionada. */
+  get selectedIndex(): number {
+    return this.index;
+  }
+
+  /** Troca o texto de uma opção (ex.: "Dificuldade: Aventura"). */
+  setLabel(i: number, label: string): void {
+    const button = this.buttons[i];
+    if (button) button.textContent = label;
+  }
+
   /** Lê a entrada de um passo de lógica. */
   handle(input: Input): void {
     if (input.pressed('up')) this.select((this.index - 1 + this.items.length) % this.items.length);

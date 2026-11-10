@@ -3,6 +3,7 @@ import type { Assets } from '../render/Assets';
 import type { Area, Exit, Spawn } from './Area';
 import { characterModels } from './characters';
 import { CollisionWorld } from './Collision';
+import { MapEnemy } from './MapEnemy';
 import { Npc } from './Npc';
 
 /** Formato de data/areas/*.json. Posições em unidades do kit; `escala` converte para o mundo. */
@@ -36,6 +37,8 @@ export interface RoomData {
   /** Caixas extras: [minX, minZ, maxX, maxZ]. */
   colisores: Array<{ caixa: number[] }>;
   npcs: Array<{ personagem: string; pos: number[]; rot: number; dialogo: string }>;
+  /** Mobs visíveis no mapa (opcional). */
+  mobs?: Array<{ mob: string; pos: number[] }>;
   entradas: Record<string, { pos: number[]; rot: number }>;
   saidas: Array<{ caixa: number[]; area: string; entrada: string }>;
 }
@@ -61,6 +64,7 @@ export class RoomArea implements Area {
   readonly spawns: Record<string, Spawn> = {};
   readonly exits: Exit[] = [];
   readonly npcs: Npc[] = [];
+  readonly enemies: MapEnemy[] = [];
 
   private readonly flickers: Flicker[] = [];
   private time = 0;
@@ -123,6 +127,12 @@ export class RoomArea implements Area {
       this.collision.addCircle(npc.position.x, npc.position.z, npc.radius);
     }
 
+    (data.mobs ?? []).forEach((m, i) => {
+      const enemy = new MapEnemy(m.mob, m.pos[0] * s, m.pos[1] * s, i + 1);
+      this.enemies.push(enemy);
+      this.root.add(enemy.model.root);
+    });
+
     for (const [name, e] of Object.entries(data.entradas)) {
       this.spawns[name] = { x: e.pos[0] * s, z: e.pos[1] * s, yaw: e.rot * DEG };
     }
@@ -147,6 +157,7 @@ export class RoomArea implements Area {
       f.light.intensity = f.base * (1 + wobble);
     }
     for (const npc of this.npcs) npc.animate(dt);
+    for (const enemy of this.enemies) enemy.animate(dt);
   }
 
   private buildLighting(): void {

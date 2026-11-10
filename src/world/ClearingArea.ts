@@ -4,6 +4,7 @@ import { createRandom, range } from '../core/random';
 import { PART1, PROPS } from '../render/palette';
 import type { Area, Exit, Spawn } from './Area';
 import { CollisionWorld } from './Collision';
+import { MapEnemy } from './MapEnemy';
 import type { Npc } from './Npc';
 
 /** Raio da área em que o jogador pode andar. */
@@ -32,6 +33,11 @@ export class ClearingArea implements Area {
   readonly root = new THREE.Group();
   readonly collision = new CollisionWorld();
   readonly npcs: Npc[] = [];
+  /** Dois Brotinhos de Aether passeando pela clareira. */
+  readonly enemies: MapEnemy[] = [
+    new MapEnemy('brotinho-de-aether', -5.5, 3, 11),
+    new MapEnemy('brotinho-de-aether', 6, -1, 23),
+  ];
   readonly spawns: Record<string, Spawn> = {
     centro: { x: 0, z: 7, yaw: 0 },
     'trilha-sul': { x: 0.3, z: 15.2, yaw: Math.PI },
@@ -50,6 +56,10 @@ export class ClearingArea implements Area {
   private readonly fireflyBase: Float32Array;
   private readonly fireflySeed: Float32Array;
   private time = 0;
+  /** Materiais das árvores, que ficam transparentes durante a batalha. */
+  private readonly treeMaterials: THREE.MeshStandardMaterial[] = [];
+  private treeOpacity = 1;
+  private battle = false;
 
   constructor() {
     const rand = createRandom(20261110);
@@ -88,11 +98,18 @@ export class ClearingArea implements Area {
     this.fireflyBase = flies.base;
     this.fireflySeed = flies.seed;
     scene.add(this.fireflies);
+
+    for (const enemy of this.enemies) scene.add(enemy.model.root);
   }
 
   applyEnvironment(scene: THREE.Scene): void {
     scene.background = new THREE.Color(PART1.night);
     scene.fog = new THREE.Fog(PART1.night, 20, 46);
+  }
+
+  /** Na batalha, as árvores ficam transparentes para não esconder o inimigo. */
+  setBattleMode(on: boolean): void {
+    this.battle = on;
   }
 
   /** Animações só visuais. Rodam no render, então seguem vivas mesmo com o jogo pausado. */
@@ -118,6 +135,23 @@ export class ClearingArea implements Area {
     }
     pos.needsUpdate = true;
     (this.fireflies.material as THREE.PointsMaterial).opacity = 0.75 + Math.sin(t * 3) * 0.15;
+
+    for (const enemy of this.enemies) enemy.animate(dt);
+
+    const targetOpacity = this.battle ? 0.18 : 1;
+    if (Math.abs(this.treeOpacity - targetOpacity) > 0.001) {
+      this.treeOpacity += (targetOpacity - this.treeOpacity) * Math.min(1, dt * 6);
+      if (Math.abs(this.treeOpacity - targetOpacity) < 0.01) this.treeOpacity = targetOpacity;
+      const transparent = this.treeOpacity < 1;
+      for (const m of this.treeMaterials) {
+        if (m.transparent !== transparent) {
+          m.transparent = transparent;
+          m.depthWrite = !transparent;
+          m.needsUpdate = true;
+        }
+        m.opacity = this.treeOpacity;
+      }
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -233,10 +267,10 @@ export class ClearingArea implements Area {
 
     const group = new THREE.Group();
     group.name = 'Árvores';
-    group.add(
-      merged(foliage, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 0.9 })),
-      merged(trunks, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 1 })),
-    );
+    const leaves = new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 0.9 });
+    const wood = new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 1 });
+    this.treeMaterials.push(leaves, wood);
+    group.add(merged(foliage, leaves), merged(trunks, wood));
     return group;
   }
 

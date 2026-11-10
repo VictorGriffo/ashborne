@@ -22,6 +22,8 @@ export class CameraRig {
   readonly camera: THREE.PerspectiveCamera;
   private readonly offset: THREE.Vector3;
   private readonly target = new THREE.Vector3();
+  private zoom = 1;
+  private targetZoom = 1;
 
   constructor(private readonly config: CameraConfig) {
     this.camera = new THREE.PerspectiveCamera(config.fov, 1, 0.1, 200);
@@ -52,12 +54,19 @@ export class CameraRig {
   }
 
   follow(point: THREE.Vector3, dt: number): void {
-    this.target.lerp(point, damp(this.config.smoothing, dt));
+    const k = damp(this.config.smoothing, dt);
+    this.target.lerp(point, k);
+    this.zoom += (this.targetZoom - this.zoom) * k;
     this.apply();
   }
 
+  /** Aproxima (menor que 1) ou afasta a câmera, sem mudar o ângulo. */
+  setZoom(zoom: number): void {
+    this.targetZoom = zoom;
+  }
+
   private apply(): void {
-    this.camera.position.copy(this.target).add(this.offset);
+    this.camera.position.copy(this.target).addScaledVector(this.offset, this.zoom);
     this.camera.lookAt(this.target.x, this.target.y + this.config.lookHeight, this.target.z);
   }
 }

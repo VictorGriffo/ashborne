@@ -2,6 +2,7 @@ import type config from '../../data/config.json';
 import type { Assets } from '../render/Assets';
 import type { Renderer } from '../render/Renderer';
 import type { Flags } from '../systems/Flags';
+import type { PlayerState } from '../systems/PlayerState';
 import type { DebugHud } from '../ui/DebugHud';
 import type { Input } from './Input';
 import type { StateMachine } from './StateMachine';
@@ -17,6 +18,8 @@ export interface GameContext {
   readonly assets: Assets;
   /** Marcadores de progresso da história. */
   readonly flags: Flags;
+  /** Vida, atributos, inventário, Laços, experiência, Brasas e dificuldade. */
+  readonly player: PlayerState;
   /** Camada HTML por cima do canvas, para menus e textos. */
   readonly ui: HTMLElement;
   readonly debug: DebugHud;

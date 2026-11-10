@@ -1,5 +1,6 @@
 import type * as THREE from 'three';
 import type { CollisionWorld } from './Collision';
+import type { MapEnemy } from './MapEnemy';
 import type { Npc } from './Npc';
 
 /** Ponto de chegada numa área. `yaw` em radianos (0 = olhando para a câmera). */
@@ -29,9 +30,13 @@ export interface Area {
   readonly spawns: Record<string, Spawn>;
   readonly exits: Exit[];
   readonly npcs: Npc[];
+  /** Mobs visíveis no mapa. */
+  readonly enemies: MapEnemy[];
 
   /** Fundo e névoa da cena. */
   applyEnvironment(scene: THREE.Scene): void;
+  /** Ajustes visuais durante uma batalha (ex.: árvores transparentes). */
+  setBattleMode?(on: boolean): void;
   /** Animações só visuais (luzes, partículas, NPCs). */
   animate(dt: number, focus: THREE.Vector3): void;
 }
