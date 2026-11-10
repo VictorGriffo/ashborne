@@ -37,8 +37,9 @@ export class TouchControls {
     buttons.append(this.button('A', 'confirm', 'touch-a'), this.button('B', 'cancel', 'touch-b'));
     const pause = this.button('II', 'pause', 'touch-pause');
     pause.setAttribute('aria-label', 'Pausar');
+    const map = this.button('Mapa', 'map', 'touch-map');
 
-    this.root.append(this.base, buttons, pause);
+    this.root.append(this.base, buttons, pause, map);
     parent.append(this.root);
 
     if (window.matchMedia('(pointer: coarse)').matches) setTouchMode(true);

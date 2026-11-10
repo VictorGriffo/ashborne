@@ -15,7 +15,13 @@ export class MenuList {
   private readonly buttons: HTMLButtonElement[] = [];
   private index = 0;
 
-  constructor(private readonly items: MenuItem[]) {
+  /**
+   * @param onChange chamado quando a seleção muda (para mostrar detalhes ao lado)
+   */
+  constructor(
+    private readonly items: MenuItem[],
+    private readonly onChange?: (index: number) => void,
+  ) {
     this.el = el('ul', 'menu');
     items.forEach((item, i) => {
       const button = el('button', undefined, item.label);
@@ -55,9 +61,16 @@ export class MenuList {
   }
 
   private select(i: number): void {
+    const changed = i !== this.index;
     this.buttons[this.index]?.classList.remove('selected');
     this.index = i;
     this.buttons[i]?.classList.add('selected');
+    if (changed) this.onChange?.(i);
+  }
+
+  /** Seleciona uma opção pelo índice (ex.: manter a posição ao refazer a lista). */
+  selectIndex(i: number): void {
+    this.select(Math.max(0, Math.min(this.items.length - 1, i)));
   }
 
   private activate(): void {

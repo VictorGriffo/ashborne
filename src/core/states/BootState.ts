@@ -1,5 +1,5 @@
 import { el, fadeIn, fadeOut } from '../../ui/dom';
-import { requiredModels } from '../../world/areas';
+import { requiredModels, START } from '../../world/areas';
 import type { GameContext } from '../GameContext';
 import type { GameState } from '../StateMachine';
 import { ExploreState } from './ExploreState';
@@ -24,7 +24,8 @@ export class BootState implements GameState {
     this.ctx.assets
       .load(requiredModels(), (f) => (this.bar.style.width = `${Math.round(f * 100)}%`))
       .then(() => {
-        this.ctx.states.replace(new ExploreState(this.ctx));
+        // A exploração do fundo do título; o título troca por outra ao começar ou continuar.
+        this.ctx.states.replace(new ExploreState(this.ctx, START));
         this.ctx.states.push(new TitleState(this.ctx));
       })
       .catch((err: unknown) => {

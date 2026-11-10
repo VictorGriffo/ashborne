@@ -109,7 +109,7 @@ export class BattleState implements GameState {
   }
 
   focusLost(): void {
-    this.ctx.states.push(new PauseState(this.ctx, { canQuit: false }));
+    this.ctx.states.push(new PauseState(this.ctx));
   }
 
   update(dt: number): void {
@@ -119,7 +119,7 @@ export class BattleState implements GameState {
 
     // P ou Start pausam; Esc fica para "voltar" dentro da batalha.
     if (input.pressed('pause') && !input.pressed('cancel')) {
-      this.ctx.states.push(new PauseState(this.ctx, { canQuit: false }));
+      this.ctx.states.push(new PauseState(this.ctx));
       return;
     }
 
@@ -358,13 +358,17 @@ export class BattleState implements GameState {
     let lines: string[];
     if (how === 'vitoria') {
       const { xp, brasas } = this.data.recompensa;
-      player.xp += xp;
       player.brasas += brasas;
+      const ups = player.gainXp(xp);
       this.host.enemyDefeated();
       lines = [
         `${this.The} se desfaz em brilho.`,
         `Você ganhou ${xp} de experiência e ${plural(brasas, 'Brasa', 'Brasas')}.`,
+        ...ups.map(
+          (u) => `Ryben subiu para o nível ${u.level}! Vida máxima ${u.maxHp}, força ${u.strength}, defesa ${u.defense}.`,
+        ),
       ];
+      this.refreshPlayer();
     } else {
       const { lacos, brasas } = this.data.recompensaPoupar;
       player.lacos += lacos;

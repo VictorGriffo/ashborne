@@ -17,6 +17,8 @@ export type Action =
   | 'confirm'
   | 'cancel'
   | 'pause'
+  | 'map'
+  | 'inventory'
   | 'debug';
 
 const KEYMAP: Record<string, Action[]> = {
@@ -37,6 +39,9 @@ const KEYMAP: Record<string, Action[]> = {
   KeyX: ['cancel'],
   Escape: ['pause', 'cancel'],
   KeyP: ['pause'],
+  KeyM: ['map'],
+  Tab: ['map'],
+  KeyI: ['inventory'],
   F3: ['debug'],
 };
 
@@ -45,6 +50,8 @@ const PAD_BUTTONS: Array<[number, Action]> = [
   [0, 'confirm'], // A / ×
   [1, 'cancel'], // B / ○
   [2, 'run'], // X / □
+  [3, 'inventory'], // Y / △
+  [8, 'map'], // Back / Share
   [9, 'pause'], // Start / Options
   [12, 'up'],
   [13, 'down'],

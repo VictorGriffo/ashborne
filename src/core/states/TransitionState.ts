@@ -2,6 +2,15 @@ import { el } from '../../ui/dom';
 import type { GameContext } from '../GameContext';
 import type { GameState } from '../StateMachine';
 
+export interface TransitionOptions {
+  /** Segundos para escurecer e para clarear. */
+  duration?: number;
+  /** Segundos na tela preta, depois da troca. */
+  hold?: number;
+  /** Texto na tela preta ("Viajando para..."), como uma pequena cutscene. */
+  caption?: string;
+}
+
 /**
  * Escurece a tela, executa a troca (de área, por exemplo) e clareia de novo.
  * É a forma mais simples das "cutscenes para trocar de área" do design.
@@ -10,17 +19,21 @@ export class TransitionState implements GameState {
   readonly name = 'Transição';
   readonly overlay = true;
   private readonly curtain: HTMLDivElement;
+  private readonly duration: number;
+  private readonly holdTime: number;
   private time = 0;
   private phase: 'out' | 'hold' | 'in' = 'out';
 
   constructor(
     private readonly ctx: GameContext,
     private readonly swap: () => void,
-    private readonly duration = 0.35,
-    private readonly holdTime = 0.12,
+    options: TransitionOptions = {},
   ) {
+    this.duration = options.duration ?? 0.35;
+    this.holdTime = options.hold ?? 0.12;
     this.curtain = el('div', 'fade');
     this.curtain.style.opacity = '0';
+    if (options.caption) this.curtain.append(el('p', 'fade-caption', options.caption));
   }
 
   enter(): void {

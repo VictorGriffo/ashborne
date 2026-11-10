@@ -3,8 +3,10 @@ import { Assets } from '../render/Assets';
 import { Renderer } from '../render/Renderer';
 import { Flags } from '../systems/Flags';
 import { PlayerState } from '../systems/PlayerState';
+import { WorldState } from '../systems/WorldState';
 import { DebugHud } from '../ui/DebugHud';
 import { el } from '../ui/dom';
+import { Toast } from '../ui/Toast';
 import { TouchControls } from '../ui/TouchControls';
 import type { GameConfig, GameContext } from './GameContext';
 import { GameLoop } from './GameLoop';
@@ -24,8 +26,10 @@ export class Game implements GameContext {
   readonly assets = new Assets();
   readonly flags = new Flags();
   readonly player = new PlayerState();
+  readonly world = new WorldState();
   readonly debug: DebugHud;
   private readonly loop: GameLoop;
+  private readonly toasts: Toast;
 
   constructor(
     canvasHost: HTMLElement,
@@ -33,6 +37,7 @@ export class Game implements GameContext {
   ) {
     this.renderer = new Renderer(canvasHost);
     this.debug = new DebugHud(ui, import.meta.env.DEV);
+    this.toasts = new Toast(ui);
     new TouchControls(this.input, ui);
 
     // No celular em pé, pede para girar: o jogo é feito para a horizontal.
@@ -57,6 +62,10 @@ export class Game implements GameContext {
 
   start(): void {
     this.loop.start();
+  }
+
+  toast(text: string): void {
+    this.toasts.show(text);
   }
 
   private update(dt: number): void {

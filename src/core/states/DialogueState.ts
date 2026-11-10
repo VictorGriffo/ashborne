@@ -1,27 +1,34 @@
-import { DialogueRunner, type DialogueChoice } from '../../systems/Dialogue';
+import { DialogueRunner, MessageSource, type DialogueChoice, type DialogueSource, type Reward } from '../../systems/Dialogue';
+import { item } from '../../systems/items';
 import { DialogueBox } from '../../ui/DialogueBox';
+
+const itemName = (id: string) => item(id).nome;
 import { CHARACTERS } from '../../world/characters';
 import type { GameContext } from '../GameContext';
 import type { GameState } from '../StateMachine';
 
 /**
- * Conversa com um NPC, por cima da exploração congelada.
+ * Conversa com um NPC (id em data/dialogos.json) ou mensagem simples
+ * (lista de falas), por cima da exploração congelada.
  * Confirmar completa a fala que está sendo digitada; de novo, avança.
  */
 export class DialogueState implements GameState {
   readonly name = 'Diálogo';
   readonly overlay = true;
-  private readonly runner: DialogueRunner;
+  private readonly runner: DialogueSource;
   private readonly box: DialogueBox;
   private pendingChoices?: DialogueChoice[];
   private closed = false;
 
   constructor(
     private readonly ctx: GameContext,
-    dialogueId: string,
+    source: string | string[],
     private readonly onEnd: () => void = () => {},
   ) {
-    this.runner = new DialogueRunner(dialogueId, ctx.flags);
+    this.runner =
+      typeof source === 'string'
+        ? new DialogueRunner(source, ctx.flags, (r) => this.giveReward(r))
+        : new MessageSource(source);
     // Clique ou toque na caixa vale o mesmo que confirmar.
     this.box = new DialogueBox(() => ctx.input.trigger('confirm'));
   }
@@ -73,6 +80,20 @@ export class DialogueState implements GameState {
     const speaker = CHARACTERS[step.speaker]?.nome ?? step.speaker;
     this.box.say(speaker, step.text);
     this.pendingChoices = step.kind === 'choice' ? step.choices : undefined;
+  }
+
+  /** Entrega a recompensa de um nó. O aviso aparece como a próxima fala. */
+  private giveReward(reward: Reward): void {
+    const parts: string[] = [];
+    for (const [id, n] of Object.entries(reward.itens ?? {})) {
+      this.ctx.player.addItem(id, n);
+      parts.push(`${n}× ${itemName(id)}`);
+    }
+    if (reward.brasas) {
+      this.ctx.player.brasas += reward.brasas;
+      parts.push(`${reward.brasas} Brasas`);
+    }
+    if (parts.length) this.ctx.toast(`Recebido: ${parts.join(', ')}`);
   }
 
   private close(): void {

@@ -42,6 +42,7 @@ export class DialogueBox {
   /** Começa uma nova fala. */
   say(speaker: string, text: string): void {
     this.nameEl.textContent = speaker;
+    this.nameEl.hidden = !speaker;
     this.writer.set(text);
     this.clearChoices();
     this.moreEl.hidden = true;
