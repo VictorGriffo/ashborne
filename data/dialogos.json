@@ -992,6 +992,44 @@
     }
   },
 
+  "maren-p2": {
+    "inicio": [{ "se": "maren-contou", "no": "depois" }, { "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "maren",
+        "falas": [
+          "Ryben. Meu filho. Nove anos, e eu ainda reconheço o seu jeito de andar.",
+          "Eu me escondi nas catacumbas do santuário. Aprendi a viver sem luz. Mas voltei, porque a Lyra me disse que você estava restaurando os selos.",
+          "Eu menti para você a vida inteira. Sobre o seu pai."
+        ],
+        "escolhas": [
+          { "texto": "Eu quero saber a verdade, mãe.", "ir": "verdade" },
+          { "texto": "Isso pode esperar. Você está viva.", "ir": "viva" }
+        ]
+      },
+      "viva": {
+        "quem": "maren",
+        "falas": ["Eu estou. E graças a você. Mas a verdade vai pesar mais quanto mais eu demorar. Escute."],
+        "ir": "verdade"
+      },
+      "verdade": {
+        "quem": "maren",
+        "falas": [
+          "Seu pai se chamava Daren. Ele foi guardião do santuário do Coração de Aether, e morreu protegendo-o.",
+          "Vaelor foi companheiro dele. Foi ele quem convenceu Daren de que a magia devia ser livre, e foi ele quem o traiu quando Daren recusou.",
+          "Eu escondi isso para que você nunca virasse a próxima peça de Vaelor. Falhei. Ele chegou até você do mesmo jeito.",
+          "A Insígnia que você carrega era dele. Ela não protege só o corpo. Ela lembra quem somos."
+        ],
+        "marcar": ["maren-contou"],
+        "recompensa": { "itens": { "lagrima-de-aether": 2 }, "brasas": 40 }
+      },
+      "depois": {
+        "quem": "maren",
+        "falas": ["Cuide-se, meu filho. Eu estarei aqui, com a lamparina acesa. Sempre."]
+      }
+    }
+  },
+
   "selo-7-restaurado": {
     "inicio": [{ "no": "a" }],
     "nos": {

@@ -65,7 +65,8 @@
     { "personagem": "refugiado", "pos": [5.6, 6.4], "rot": -40, "dialogo": "refugiado-1", "se": "selo-1" },
     { "personagem": "refugiado", "pos": [-3.4, 7.4], "rot": 30, "dialogo": "refugiado-2", "se": "selo-1" },
     { "personagem": "fazendeiro", "pos": [13.8, -8.2], "rot": 200, "dialogo": "fazendeiro-vila", "se": "selo-1" },
-    { "personagem": "carroceiro", "pos": [4.4, 8.6], "rot": 180, "dialogo": "brum", "se": "selo-1" }
+    { "personagem": "carroceiro", "pos": [4.4, 8.6], "rot": 180, "dialogo": "brum", "se": "selo-1" },
+    { "personagem": "maren", "pos": [1.4, -9.6], "rot": 20, "dialogo": "maren-p2", "se": "selos-ao-menos-3" }
   ],
   "mobs": [
     { "mob": "cinzento", "pos": [-3.2, -6.8] },
