@@ -46,24 +46,28 @@ O jogo é feito para o celular **deitado**. Em pé, aparece um aviso para girar.
 
 Para instalar como app: no Chrome do Android, menu **⋮ → Instalar app** (ou **Adicionar à tela inicial**); no iPhone, **Compartilhar → Adicionar à Tela de Início**. Instalado, o jogo abre em tela cheia e na horizontal.
 
-## O que dá para jogar (M3)
+## O que dá para jogar (M4: a Parte 1 inteira)
 
-- **Missão 1.1, Primeiro dia na Guarda:** fale com o Mestre Orin, vá à Clareira do Altar, acalme um Brotinho de Aether em vez de lutar e volte para contar ao Orin (ele dá uma recompensa). O objetivo aparece em avisos, na pausa e no mapa.
-- **Pontos de save:** o Cristal da Guarda, no salão, e o Altar de Aether, na clareira. Tocar num deles cura o Ryben e abre o menu: **Salvar** e **Viagem rápida** (para outro ponto já visitado, com uma cena curta). Salvar também faz os mobs derrotados voltarem; os poupados continuam poupados.
-- **Salvar e carregar:** o jogo fica salvo no navegador. Com um save, o título mostra **Continuar** e **Novo jogo**.
-- **Experiência e nível:** vencer na espada dá experiência; o Ryben sobe de nível (até o 12 na parte 1) e ganha vida, força e defesa.
-- **Bolsa:** usar itens de cura, trocar equipamento (arma, vestes, amuleto) e ver nível, experiência, vida, ataque, defesa, Laços e Brasas.
-- **Mapa:** regiões descobertas, onde o Ryben está, pontos de save e a missão ativa. Regiões que ainda vão existir aparecem como ???.
-- Um **baú** no salão guarda Ervas-lume e Brasas.
+A Parte 1 vai do primeiro dia na Guarda até a catástrofe, em seis áreas ligadas por trilhas e portas:
 
-### Também desde o M2
+**Vila** → **Salão da Guarda** → **Pátio de Treino** → **Clareira do Altar** → **Estrada do Santuário** → **Santuário do Coração**
 
-- O jogo começa no **Salão da Guarda**. Fale com o **Mestre Orin**: a conversa tem escolhas e muda depois da primeira vez.
-- A porta do norte leva à **Clareira do Altar**, onde dois **Brotinhos de Aether** passeiam. Encostar num deles começa a batalha; chegar por trás pega o Brotinho de surpresa.
-- **Batalha:** Lutar (aperte confirmar quando o cursor passar pelo meio da barra), Agir (Observar, Fazer carinho, Pisar forte), Item (Erva-lume) e Poupar (ou Fugir). No turno do inimigo, desvie das gotas com a brasa.
-- Dois carinhos acalmam o Brotinho, e o botão Poupar acende: poupar rende **Laços**; vencer na espada rende **experiência**. O Brotinho poupado continua passeando, feliz, e não ataca mais.
-- Se a vida acabar, o Mestre Orin leva o Ryben de volta ao salão.
-- A **dificuldade** (Tranquilo, Aventura, Desafio) muda no menu de pausa a qualquer momento.
+| Missão | O que acontece |
+| --- | --- |
+| 1.1 Primeiro dia na Guarda | Maren acorda o Ryben; Kael, Lyra e Tob pela vila; Mestre Orin no salão; bonecos de treino e o treino com o Orin, que ensina a poupar. |
+| 1.2 Os selos enfraquecem | A Lyra nota o Aether falhando; flores murchas e uma runa apagada na clareira; o conselheiro Vaelor chega à vila com uma proposta. |
+| 1.3 A estrada do santuário | Maren entrega o Amuleto de Maren; Tob dá a Lâmina Remendada; lobos na estrada, o Lobo Alfa e um viajante perdido. |
+| 1.4 O santuário | Sentinelas de pedra e o chefe Guardião do Coração, que reconhece o sangue de Guardião do Ryben se for acalmado. |
+| 1.5 A catástrofe | Eclipse, a traição de Vaelor, os selos se partem, a derrota obrigatória e a tela de fim da Parte 1. |
+
+Também há: mercador (Bram) para comprar e vender, Mira na taverna, Vó Hesta com a lenda dos selos, a criança Pip, baús, quatro novos pontos de save, Gato de Telhado, Corvos Curiosos e o ataque em feixe das Sentinelas e do Guardião. Cada inimigo tem um jeito próprio de ser poupado, como no documento de design.
+
+### Sistemas (desde o M2 e o M3)
+
+- **Batalha:** Lutar (barra de precisão), Agir (acalma), Item e Poupar ou Fugir. No turno do inimigo, desvie com a brasa. Poupar rende **Laços**; vencer rende **experiência**. Chefes não deixam fugir.
+- **Pontos de save:** tocar cura o Ryben e abre **Salvar** e **Viagem rápida**. Salvar faz os mobs comuns derrotados voltarem; poupados continuam poupados; elites e chefes vencidos não voltam.
+- **Salvar e carregar** no navegador, com **Continuar** e **Novo jogo** no título.
+- **Nível** de 1 a 12 na Parte 1, **Bolsa** (usar e equipar), **Mapa** com a missão ativa e **dificuldade** trocável na pausa.
 
 ## Estrutura
 
@@ -79,7 +83,9 @@ ashborne/
     progressao.json     tabela de níveis (experiência, vida, força, defesa)
     missoes.json        missões e etapas, concluídas por flags
     mapa.json           regiões e caminhos do mapa-múndi
-    areas/              plantas das salas (peças, colisão, NPCs, mobs, baús, pontos de save, entradas e saídas)
+    lojas.json          o que cada mercador vende
+    cenas.json          cutscenes (passos: evento, espera, diálogo, flag, clarão, batalha, fim)
+    areas/              salas (kit KayKit) e áreas ao ar livre ("tipo": "ar-livre")
   docs/                 documento de design
   public/               ícones e manifesto do app (PWA)
   src/
@@ -117,6 +123,16 @@ ashborne/
 2. Crie os padrões em `data/ataques.json` combinando ondas `chuva`, `cortina`, `leque` e `mira`.
 3. Faça o modelo em `src/render/mobModels.ts` (ou use um GLB) e coloque o mob numa área (`mobs` no JSON da sala, ou `enemies` numa área feita em código).
 
+### Como montar uma área ao ar livre
+
+Crie `data/areas/<id>.json` com `"tipo": "ar-livre"` (veja `vila.json`): `limite` (retângulo andável), `caminhos` e `manchas` (terra, pedra, areia), `vegetacao`, `objetos` (tipos de `src/render/props.ts`, como `casa`, `forja`, `poco`, `lampiao`, `cerca`, `portal`, `pilar`, `coracao`, ou um `modelo` do kit), `npcs`, `mobs`, `interativos` (`bau`, `save`, `examinar`), `entradas` e `saidas` (com `bloqueio` opcional). NPCs, interativos e bloqueios aceitam `se` e `naoSe` com flags. Depois, registre a área em `src/world/areas.ts`.
+
+### Condições, ações e cenas
+
+- **Condições:** `"se": "flag"` (ou lista, todas) e `"naoSe"` controlam quando um NPC aparece, quando um diálogo começa por um nó e quando uma saída abre.
+- **Ações:** um nó de diálogo (ou algo examinado) pode terminar com `"acao": "batalha:<mob>"`, `"loja:<id>"` ou `"cena:<id>"`.
+- **Batalhas:** vencer ou poupar marca `venceu:<mob>` ou `poupou:<mob>`, e as flags do campo `marcar` do mob. Um mob com `roteiro` termina sozinho depois de N turnos (a derrota obrigatória).
+
 ### Como montar uma sala nova
 
 1. Coloque os modelos em `assets/modelos/<pacote>/` e registre a licença em `CREDITOS.md`.
@@ -143,8 +159,8 @@ Se o repositório tiver outro nome, troque `PAGES_BASE` em `vite.config.ts`.
 | M1 | Sala 3D com colisão e um NPC com diálogo, usando modelos de pacotes prontos | Feito |
 | M2 | Menu Lutar/Agir/Item/Poupar, fase de desvio e um inimigo que pode ser poupado (mais suporte a celular deitado) | Feito |
 | M3 | Inventário, experiência e nível, mapa, salvar e carregar, viagem rápida | Feito |
-| M4 | Parte 1 completa: área inicial, mobs, missões 1.1 a 1.5 e a catástrofe | Próximo |
-| M5 | Salto de nove anos: vila em ruínas, resistência e primeiro território | |
+| M4 | Parte 1 completa: área inicial, mobs, missões 1.1 a 1.5 e a catástrofe | Feito |
+| M5 | Salto de nove anos: vila em ruínas, resistência e primeiro território | Próximo |
 | M6 | Os outros seis territórios, com carroça, barco e montaria | |
 | M7 | Kael, santuário final, missões secundárias, arenas e polimento | |
 

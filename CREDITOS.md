@@ -12,8 +12,11 @@ Cada modelo 3D, som ou música de terceiros usado no jogo deve ser registrado aq
 
 | Arquivo | Uso no jogo |
 | --- | --- |
-| `assets/modelos/kaykit-adventurers/Rogue.glb` | Ryben (com a espada do Knight na mão) |
-| `assets/modelos/kaykit-adventurers/Knight.glb` | Mestre Orin, e a espada de treino do Ryben |
+| `assets/modelos/kaykit-adventurers/Rogue.glb` | Ryben (com a espada do Knight na mão) e Mira |
+| `assets/modelos/kaykit-adventurers/Knight.glb` | Mestre Orin, guarda do portão, e a espada de treino do Ryben |
+| `assets/modelos/kaykit-adventurers/Mage.glb` | Lyra, Maren, Vaelor e Vó Hesta (com cores diferentes) |
+| `assets/modelos/kaykit-adventurers/Barbarian.glb` | Tob e Bram, o mercador |
+| `assets/modelos/kaykit-adventurers/Rogue_Hooded.glb` | Kael, Pip e o viajante perdido |
 
 ### KayKit: Dungeon Remastered 1.0
 
@@ -27,7 +30,7 @@ Arquivos em `assets/modelos/kaykit-dungeon/`, usados no Salão da Guarda:
 
 ### Gerados no código
 
-A Clareira do Altar (árvores, pedras, grama, altar de Aether, vaga-lumes e portal) é feita com formas simples do Three.js, sem arquivos de terceiros.
+A Clareira do Altar e as áreas ao ar livre (árvores, pedras, grama, casas, forja, poço, lampiões, cercas, pilares, o Coração de Aether e os pontos de save), além de todos os mobs (Brotinho, Boneco de Treino, Corvo, Gato, Lobos, Sentinela e Guardião), são feitos com formas simples do Three.js, sem arquivos de terceiros.
 
 ## Bibliotecas
 
