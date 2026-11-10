@@ -93,3 +93,15 @@ O M4 também está feito: a Parte 1 inteira. Áreas: Vila (início, na porta da 
 Próximo: o M5 (salto de nove anos: a vila em ruínas, a resistência e o primeiro território com selo e magia). Ao terminar a Parte 1, a flag `parte-1-concluida` é marcada, mas o jogo ainda não salva sozinho nesse momento; o M5 deve decidir como a Parte 2 começa a partir do save. Pendências: o projeto ainda não foi enviado ao GitHub; não há service worker (o jogo não funciona sem internet); o download inicial é de ~20 MB (cada personagem KayKit traz as 75 animações; dá para separar as animações num arquivo só); a vila tem ~390 chamadas de desenho (dá para juntar os objetos estáticos).
 
 Para o conteúdo (personagens, itens, magias, mobs, missões, territórios), consulte `docs/design.md`. Ao criar os JSON em `data/`, siga os nomes e as regras de lá.
+
+## Estado atual (M5 e M6 feitos, M7 pendente)
+
+O celular deixou de ser prioridade (o Victor não vai lançar para celular); o suporte a toque que existe permanece, mas não precisa de mais testes.
+
+**M5 feito:** Parte 2 começa com `startPartTwo` (salva sozinho), vila em ruínas, Campos de Linne, selo 1, magias (`data/magias.json`, `src/systems/spells.ts`; Magia fica dentro de Agir), Aether, níveis 1–30 (`data/progressao.json`).
+
+**M6 feito (commitado, tsc e build passam):** cinco territórios em `data/areas/` (Sylven, Morn, Sahr, Frostveil, Costa de Maré Alta) com generais Thessaly, Gorm, Dravik, Isolde e Brannic, selos 2 a 6 e as magias. Transportes em `data/transportes.json` e `TravelState` (carroça 5 Brasas, barco 10 Brasas, montaria ×1,4). Testado de ponta a ponta com `window.dev` até o selo 6 (Maré Calmante). Ainda não testado: efeito de cada magia em batalha (Florescer, Véu, Lança Solar, Congelar) e o visual de Sylven depois de escurecida.
+
+**Ferramentas de teste (só em `npm run dev`):** `window.dev` em `src/devtools.ts` (`ready, skipToPart2, seals(n), go(area,spawn), talk, mob, battle, pedestal, status, look`). Node fica em `C:\Program Files\nodejs` (não está no PATH do PowerShell/Bash do Claude: `$env:Path = "C:\Program Files\nodejs;" + $env:Path`). Nunca editar arquivos via `Set-Content` (corrompe UTF-8). Scripts de teste longos estouram timeout: dividir em blocos curtos.
+
+**Próximo: M7.** Cidadela de Aetheria Alta + Kael (7º general, selo 7, Luz do Alvorecer), santuário final contra Vaelor com os 3 finais (Cinzas, Renascido, Ruína; Laços decidem), missão "O que Maren escondeu", missões secundárias e arenas (ver `docs/design.md`), polimento e trocar o passo placeholder da missão 2.4. Atualizar README.md e CREDITOS.md para M5/M6.
