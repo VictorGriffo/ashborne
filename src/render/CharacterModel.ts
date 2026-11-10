@@ -65,6 +65,10 @@ export class CharacterModel {
 
     this.mixer = new THREE.AnimationMixer(body);
     for (const clip of gltf.animations) this.actions.set(clip.name, this.mixer.clipAction(clip));
+    // Animações de uma vez só (playOnce) voltam sozinhas para a de parado.
+    this.mixer.addEventListener('finished', (e) => {
+      if (e.action === this.current) this.play(this.data.animacoes.parado, 0.3);
+    });
     this.play(data.animacoes.parado, 0);
   }
 
@@ -93,12 +97,6 @@ export class CharacterModel {
     action.setLoop(THREE.LoopOnce, 1);
     action.clampWhenFinished = true;
     this.play(name);
-    const onFinished = (e: { action: THREE.AnimationAction }) => {
-      if (e.action !== action) return;
-      this.mixer.removeEventListener('finished', onFinished);
-      if (this.current === action) this.play(this.data.animacoes.parado, 0.3);
-    };
-    this.mixer.addEventListener('finished', onFinished);
   }
 
   /**

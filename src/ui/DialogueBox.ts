@@ -23,8 +23,14 @@ export class DialogueBox {
   private wait = 0;
   menu?: MenuList;
 
-  constructor() {
+  /** @param onTap chamado ao clicar ou tocar na caixa, fora das escolhas */
+  constructor(onTap: () => void) {
     this.el = el('div', 'dialogue');
+    this.el.addEventListener('mousedown', (e) => e.preventDefault());
+    this.el.addEventListener('click', () => {
+      // Com escolhas na tela, só um clique numa opção conta (o menu cuida disso).
+      if (!this.menu) onTap();
+    });
     this.nameEl = el('div', 'dialogue-name');
     this.textEl = el('p', 'dialogue-text');
     this.moreEl = el('div', 'dialogue-more');

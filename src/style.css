@@ -360,12 +360,14 @@ body {
   font-size: 13px;
   white-space: nowrap;
   pointer-events: none;
+  cursor: pointer;
   opacity: 0;
   transition: opacity 0.15s;
 }
 
 .interact-prompt.visible {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .interact-prompt kbd {

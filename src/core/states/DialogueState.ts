@@ -12,7 +12,7 @@ export class DialogueState implements GameState {
   readonly name = 'Diálogo';
   readonly overlay = true;
   private readonly runner: DialogueRunner;
-  private readonly box = new DialogueBox();
+  private readonly box: DialogueBox;
   private pendingChoices?: DialogueChoice[];
   private closed = false;
 
@@ -22,6 +22,8 @@ export class DialogueState implements GameState {
     private readonly onEnd: () => void = () => {},
   ) {
     this.runner = new DialogueRunner(dialogueId, ctx.flags);
+    // Clique ou toque na caixa vale o mesmo que confirmar.
+    this.box = new DialogueBox(() => ctx.input.trigger('confirm'));
   }
 
   enter(): void {
