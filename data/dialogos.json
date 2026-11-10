@@ -467,6 +467,8 @@
 
   "lyra-p2": {
     "inicio": [
+      { "se": ["lyra-soube-do-selo", "selos-ao-menos-6"], "no": "quase-la" },
+      { "se": ["lyra-soube-do-selo", "selos-ao-menos-3"], "no": "metade" },
       { "se": "lyra-soube-do-selo", "no": "depois-selo" },
       { "se": "selo-1", "no": "relato-selo" },
       { "se": "entrou-na-resistencia", "no": "lembrete-linne" },
@@ -555,8 +557,24 @@
         "quem": "lyra-adulta",
         "falas": [
           "A vila está voltando à vida. Olha só: já tem lampiões acesos de novo.",
-          "O Tob promete uma lâmina nova. E eu estudo os outros selos. Seis ainda faltam.",
-          "Mas por hoje, descanse. Você merece."
+          "O Tob promete uma lâmina nova. E eu estudo os outros selos. Cinco ainda faltam, fora o último.",
+          "Os caminhos para Sylven, Morn, Sahr e Frostveil estão abertos. Escolha por onde começar. Mas cuidado: cada general guarda um segredo sobre Vaelor."
+        ]
+      },
+      "metade": {
+        "quem": "lyra-adulta",
+        "falas": [
+          "Três selos. Ryben, a vila inteira mudou. Tem gente chegando todo dia, e o Tob quase não consegue dormir de tanta encomenda.",
+          "Mas Vaelor deve ter sentido. Ele não é do tipo que perde o controle sem reagir.",
+          "Siga em frente. Mas volte vivo, está bem?"
+        ]
+      },
+      "quase-la": {
+        "quem": "lyra-adulta",
+        "falas": [
+          "Seis selos. Seis. Eu nunca achei que fosse ver isso.",
+          "Falta o último, o que Kael guarda na Cidadela de Aetheria Alta. Ele é seu amigo. Eu sei.",
+          "...Eu também sei que ele acha que você o abandonou. Quando chegar a hora, fale com ele, antes de lutar."
         ]
       }
     }
@@ -698,11 +716,29 @@
   },
 
   "fazendeiro-vila": {
-    "inicio": [{ "no": "a" }],
+    "inicio": [{ "se": "montaria", "no": "depois" }, { "se": "selos-ao-menos-2", "no": "montaria" }, { "no": "a" }],
     "nos": {
       "a": {
         "quem": "fazendeiro",
         "falas": ["A Orsa deixou eu voltar à vila! Disse que vai replantar os campos. Eu ia desconfiar, mas ela chorou, sabe? Chorou de verdade."]
+      },
+      "montaria": {
+        "quem": "fazendeiro",
+        "falas": [
+          "Ei, Ryben! Me disseram que você já restaurou dois selos. Dois! Eu preciso te dar uma coisa.",
+          "A Cinza, minha égua. Ela sobreviveu à catástrofe, e agora que as plantações voltaram, quer correr de novo.",
+          "Ela é mansa, mas teimosa. Faz o caminho que quiser, mas sempre chega rápido."
+        ],
+        "marcar": ["montaria"],
+        "ir": "aviso"
+      },
+      "aviso": {
+        "quem": "",
+        "falas": ["Você ganhou a Montaria, a égua Cinza. Ela acelera a sua travessia por todas as áreas."]
+      },
+      "depois": {
+        "quem": "fazendeiro",
+        "falas": ["A Cinza está feliz. Quer correr atrás das nuvens. Cuide bem dela."]
       }
     }
   },
@@ -717,6 +753,241 @@
           "Sua vida voltou. O Aether fez o que pôde. Descanse um pouco.",
           "E, Ryben... não morra antes de eu ficar com raiva de você por mais um tempo."
         ]
+      }
+    }
+  },
+
+  "elowen": {
+    "inicio": [{ "se": "elowen-ajudou", "no": "depois" }, { "no": "oi" }],
+    "nos": {
+      "oi": {
+        "quem": "guardiao-da-floresta",
+        "falas": [
+          "Shh! Fale baixo. Os Espíritos estão agitados desde que a Thessaly mudou.",
+          "Eu sou Elowen, guardiã da trilha. Thessaly era minha mestra. Antes de Vaelor, ela curava a floresta com a canção dos Espíritos.",
+          "Agora ela só ouve o selo fechado, que exala um silêncio horrível. As árvores morrem, e ela não percebe.",
+          "Se for até ela, cante. A canção dos Espíritos é o único jeito de fazê-la lembrar. Leve isto, é o que tenho."
+        ],
+        "recompensa": { "itens": { "cha-de-erva-lume": 2, "lagrima-de-aether": 1 } },
+        "marcar": ["elowen-ajudou"]
+      },
+      "depois": {
+        "quem": "guardiao-da-floresta",
+        "falas": ["Cante para ela, Ryben. É a única coisa que a lembra de quem ela era."]
+      }
+    }
+  },
+
+  "dara": {
+    "inicio": [{ "se": "dara-ajudou", "no": "depois" }, { "no": "oi" }],
+    "nos": {
+      "oi": {
+        "quem": "pescador-do-brejo",
+        "falas": [
+          "Fique no caminho! A névoa engole quem sai da trilha, e a lama engole o que a névoa deixa.",
+          "Eu sou a Dara. Pesco enguias para sobreviver. E sim, eu falo sozinha. A névoa não responde, mas também não me interrompe.",
+          "O Gorm, o general, era o coveiro de Morn. Cuidava do cemitério com um carinho que dava dó. Dizem que ele esqueceu todos os nomes.",
+          "Até o da esposa dele. Ada. Eu me lembro do nome dela porque ela me ensinou a remendar redes. Se o Gorm ouvir esse nome, quem sabe..."
+        ],
+        "recompensa": { "itens": { "cha-de-erva-lume": 3 }, "brasas": 15 },
+        "marcar": ["dara-ajudou"]
+      },
+      "depois": {
+        "quem": "pescador-do-brejo",
+        "falas": ["Ada. Diga o nome dela. É a única coisa que a névoa não consegue apagar de verdade."]
+      }
+    }
+  },
+
+  "nomade": {
+    "inicio": [{ "se": "zafi-ajudou", "no": "depois" }, { "no": "oi" }],
+    "nos": {
+      "oi": {
+        "quem": "nomade",
+        "falas": [
+          "Água. Você tem água? Não? Então guarde o fôlego para as dunas.",
+          "Sou a Zafi, caravaneira. Pelo menos era. Minha caravana tentou atravessar as Dunas de Sahr, e o general Dravik a parou.",
+          "Ele não é mau, sabe? É só... orgulhoso demais. Acredita que o selo fechado traria a ele o duelo que nunca teve.",
+          "Se for enfrentá-lo, faça a saudação antiga: punho no peito, palma aberta. Ele vai se lembrar de quando ainda tinha honra."
+        ],
+        "recompensa": { "itens": { "sopa-da-resistencia": 2, "lagrima-de-aether": 1 } },
+        "marcar": ["zafi-ajudou"]
+      },
+      "depois": {
+        "quem": "nomade",
+        "falas": ["Punho no peito, palma aberta. E leve água: o Dravik respeita quem a oferece."]
+      }
+    }
+  },
+
+  "alpinista": {
+    "inicio": [{ "se": "kaj-ajudou", "no": "depois" }, { "no": "oi" }],
+    "nos": {
+      "oi": {
+        "quem": "alpinista",
+        "falas": [
+          "Br-r-r! Ei, você aí! Fique perto da fogueira! Eu sou o Kaj, alpinista. Ou era.",
+          "Os Picos eram bonitos antes da nevasca eterna. A Isolde vivia aqui com a filha pequena. Uma noite, uma avalanche levou a menina.",
+          "Vaelor apareceu depois. Prometeu à Isolde que o gelo apagaria a dor. Agora ela é a rainha do gelo. E a dor... continua lá. Só congelada.",
+          "Você não vai vencê-la no frio. Só no calor. Leve uma brasa. Pode ser a do seu amuleto, se tiver."
+        ],
+        "recompensa": { "itens": { "sopa-da-resistencia": 3 }, "brasas": 30 },
+        "marcar": ["kaj-ajudou"]
+      },
+      "depois": {
+        "quem": "alpinista",
+        "falas": ["Calor. É a única coisa que ela perdeu. Leve uma brasa para ela."]
+      }
+    }
+  },
+
+  "marujo": {
+    "inicio": [{ "se": "tavo-ajudou", "no": "depois" }, { "no": "oi" }],
+    "nos": {
+      "oi": {
+        "quem": "marujo",
+        "falas": [
+          "Pé na areia, garoto! O porto está um caco, mas o mar não mudou.",
+          "Eu sou o Tavo, marujo do capitão Brannic. Sobrevivi ao naufrágio. Ele, não. Ou melhor: ele sobreviveu, e eu não sei qual dos dois deu mais azar.",
+          "O Brannic perdeu o navio e a tripulação numa tempestade que o próprio Vaelor provocou, para depois oferecer a ele uma âncora e um motivo.",
+          "Ele só quer ouvir o mar de novo. Fale do mar. Fale dos nossos. Quem sabe ele escute."
+        ],
+        "recompensa": { "itens": { "cha-de-erva-lume": 3, "lagrima-de-aether": 1 }, "brasas": 40 },
+        "marcar": ["tavo-ajudou"]
+      },
+      "depois": {
+        "quem": "marujo",
+        "falas": ["Fale do mar para ele. O Brannic só precisa lembrar que o mar também chora a gente."]
+      }
+    }
+  },
+
+  "orvil-linne": {
+    "inicio": [
+      { "se": "barco-liberado", "no": "pronto" },
+      { "se": "selos-ao-menos-2", "no": "libera" },
+      { "no": "espera" }
+    ],
+    "nos": {
+      "espera": {
+        "quem": "pescador",
+        "falas": [
+          "Orvil, ao seu dispor. Pescador. E dono do único barco que ainda flutua desta margem.",
+          "Mas a costa lá longe está tomada pela maré brava do general Brannic. Só um garoto com dois selos restaurados atravessa aquelas águas.",
+          "Volte quando o Aether do mundo estiver mais calmo, rapaz."
+        ]
+      },
+      "libera": {
+        "quem": "pescador",
+        "falas": [
+          "Dois selos! Posso sentir o mar mais calmo daqui. Rapaz, o Aether corre em você como a maré corre em mim.",
+          "O barco é seu, quando precisar. Eu remo, você enfrenta o Brannic. Combinado?"
+        ],
+        "marcar": ["barco-liberado"],
+        "ir": "pronto"
+      },
+      "pronto": {
+        "quem": "pescador",
+        "falas": ["Quando quiser atravessar para a Costa de Maré Alta, é só avisar. O barco espera na doca."],
+        "acao": "transporte:barco"
+      }
+    }
+  },
+
+  "orvil-costa": {
+    "inicio": [{ "se": "selo-6", "no": "depois" }, { "no": "oi" }],
+    "nos": {
+      "oi": {
+        "quem": "pescador",
+        "falas": ["Chegamos. Se precisar voltar a Linne, é só falar. O barco fica ancorado aqui."],
+        "acao": "transporte:barco"
+      },
+      "depois": {
+        "quem": "pescador",
+        "falas": ["A maré está calma como nunca, garoto. Os peixes voltaram. Quando quiser voltar a Linne, eu remo."],
+        "acao": "transporte:barco"
+      }
+    }
+  },
+
+  "brum": {
+    "inicio": [{ "no": "oi" }],
+    "nos": {
+      "oi": {
+        "quem": "carroceiro",
+        "falas": ["Ei, Ryben! A carroça do Brum está de volta à ativa. A estrada aguenta mais do que parece."],
+        "acao": "transporte:carroca"
+      }
+    }
+  },
+
+  "selo-2-restaurado": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "",
+        "falas": [
+          "O pedestal brilha em verde-claro. Brotos de luz crescem do chão, e a floresta inteira suspira.",
+          "O segundo selo foi restaurado. O Aether de Sylven corre de novo, e as árvores doentes esverdeiam.",
+          "Você aprendeu uma magia nova: FLORESCER. Em Agir → Magia, ela cura você aos poucos, durante três turnos."
+        ],
+        "recompensa": { "itens": { "lagrima-de-aether": 2 } }
+      }
+    }
+  },
+  "selo-3-restaurado": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "",
+        "falas": [
+          "O pedestal brilha em azul-cinza. A névoa do pântano se ergue, e por um instante você enxerga o horizonte inteiro.",
+          "O terceiro selo foi restaurado. Os nomes esquecidos de Morn sussurram, de volta, baixinho.",
+          "Você aprendeu uma magia nova: VÉU DE NÉVOA. Em Agir → Magia, ela deixa os projéteis do próximo turno menores."
+        ],
+        "recompensa": { "itens": { "lagrima-de-aether": 2 } }
+      }
+    }
+  },
+  "selo-4-restaurado": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "",
+        "falas": [
+          "O pedestal brilha em dourado. A areia ao redor se funde em vidro cristalino, e o sol, por um instante, volta a nascer.",
+          "O quarto selo foi restaurado. As dunas respiram, e ao longe um oásis brota.",
+          "Você aprendeu uma magia nova: LANÇA SOLAR. Em Agir → Magia, ela atravessa o inimigo com luz, sem precisar da barra de ataque."
+        ],
+        "recompensa": { "itens": { "lagrima-de-aether": 2 } }
+      }
+    }
+  },
+  "selo-5-restaurado": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "",
+        "falas": [
+          "O pedestal brilha em azul-gelo. A nevasca se acalma, e flocos caem agora devagar, como pétalas.",
+          "O quinto selo foi restaurado. Os Picos exalam o primeiro vapor quente em nove anos.",
+          "Você aprendeu uma magia nova: CONGELAR. Em Agir → Magia, ela deixa o próximo ataque inimigo bem mais lento."
+        ],
+        "recompensa": { "itens": { "lagrima-de-aether": 2 } }
+      }
+    }
+  },
+  "selo-6-restaurado": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "",
+        "falas": [
+          "O pedestal brilha em verde-água. As ondas se acalmam em ondulações largas, e o horizonte se abre, limpo.",
+          "O sexto selo foi restaurado. A maré de Maré Alta volta ao compasso de sempre.",
+          "Você aprendeu uma magia nova: MARÉ CALMANTE. Em Agir → Magia, ela avança bastante o poupar de qualquer inimigo."
+        ],
+        "recompensa": { "itens": { "lagrima-de-aether": 2 } }
       }
     }
   },

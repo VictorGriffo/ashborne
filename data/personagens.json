@@ -162,6 +162,69 @@
     "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Cheer" },
     "passo": { "andando": 2.6, "correndo": 5.2 }
   },
+  "carroceiro": {
+    "nome": "Brum, o carroceiro",
+    "modelo": "kaykit-adventurers/Barbarian",
+    "escala": 0.74,
+    "acessorios": ["Barbarian_Hat"],
+    "tinta": "#a8885a",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Cheer" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "guardiao-da-floresta": {
+    "nome": "Guardiã Elowen",
+    "modelo": "kaykit-adventurers/Mage",
+    "escala": 0.7,
+    "acessorios": ["Mage_Hat"],
+    "tinta": "#8ad8a0",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "pescador-do-brejo": {
+    "nome": "Dara do Brejo",
+    "modelo": "kaykit-adventurers/Rogue",
+    "escala": 0.7,
+    "acessorios": [],
+    "tinta": "#8aa890",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "nomade": {
+    "nome": "Nômade Zafi",
+    "modelo": "kaykit-adventurers/Rogue_Hooded",
+    "escala": 0.72,
+    "acessorios": [],
+    "tinta": "#d8a860",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "alpinista": {
+    "nome": "Alpinista Kaj",
+    "modelo": "kaykit-adventurers/Barbarian",
+    "escala": 0.74,
+    "acessorios": [],
+    "tinta": "#9ab0d8",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Cheer" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "pescador": {
+    "nome": "Orvil, o pescador",
+    "modelo": "kaykit-adventurers/Barbarian",
+    "escala": 0.72,
+    "acessorios": ["Barbarian_Hat"],
+    "tinta": "#6a9ab0",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "marujo": {
+    "nome": "Marujo Tavo",
+    "modelo": "kaykit-adventurers/Rogue",
+    "escala": 0.7,
+    "acessorios": [],
+    "tinta": "#80a8c0",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Cheer" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
   "intendente": {
     "nome": "Intendente Brisa",
     "modelo": "kaykit-adventurers/Rogue",

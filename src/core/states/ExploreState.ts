@@ -25,6 +25,7 @@ import { PauseState } from './PauseState';
 import { SavePointState, type TravelDestination } from './SavePointState';
 import { ShopState } from './ShopState';
 import { TransitionState } from './TransitionState';
+import { TravelState } from './TravelState';
 
 /** Distância extra, além dos dois raios, para poder interagir. */
 const TALK_REACH = 0.7;
@@ -32,6 +33,8 @@ const TALK_REACH = 0.7;
 const TALK_FACING = 0.2;
 /** Na batalha, a câmera mira um pouco à frente do confronto para ele subir na tela. */
 const BATTLE_FOCUS_SHIFT = new THREE.Vector3(0, 0, 1.3);
+/** Velocidade extra quando o Ryben tem a montaria. */
+const MOUNT_SPEED = 1.4;
 /** Golpe da espada do Ryben quando o Lutar acerta. */
 const ATTACK_ANIMATION = '1H_Melee_Attack_Slice_Diagonal';
 
@@ -201,6 +204,7 @@ export class ExploreState implements GameState {
 
   /** NPCs aparecem e somem conforme as flags (o Vaelor surge na vila, por exemplo). */
   private refreshNpcs(): void {
+    this.deriveFlags();
     this.area.refreshFlags?.(this.ctx.flags);
     for (const npc of this.area.npcs) {
       const active = check(this.ctx.flags, npc.condition);
@@ -382,13 +386,45 @@ export class ExploreState implements GameState {
     );
   }
 
-  /** Ação pedida por um diálogo ou objeto: "batalha:<mob>", "loja:<id>" ou "cena:<id>". */
+  /**
+   * Ação pedida por um diálogo ou objeto:
+   * "batalha:<mob>", "loja:<id>", "cena:<id>", "transporte:<id>" ou "viagem:<área>:<entrada>:<legenda>".
+   */
   private runAction(action: string | undefined, npc?: Npc): void {
     if (!action) return;
-    const [kind, id] = action.split(':');
+    const [kind, id, spawn, ...rest] = action.split(':');
     if (kind === 'loja') this.ctx.states.push(new ShopState(this.ctx, id));
     else if (kind === 'cena') this.startCutscene(id);
     else if (kind === 'batalha' && npc) this.startNpcBattle(id, npc);
+    else if (kind === 'transporte') {
+      this.ctx.states.push(new TravelState(this.ctx, id, this.area.id, (c) => this.travelTo(c)));
+    } else if (kind === 'viagem') {
+      this.travelTo({ area: id, spawn, caption: rest.join(':') });
+    }
+  }
+
+  /** Cena curta de viagem (carroça, barco): escurece, troca de área e clareia. */
+  private travelTo(choice: { area: string; spawn: string; caption: string }): void {
+    this.player.stop();
+    this.ctx.states.push(
+      new TransitionState(this.ctx, () => this.loadArea(choice.area, choice.spawn), {
+        duration: 0.6,
+        hold: 1.4,
+        caption: choice.caption,
+      }),
+    );
+  }
+
+  /**
+   * Flags derivadas dos selos ("selos-2" = pelo menos dois selos restaurados),
+   * para liberar o barco e a montaria sem depender de qual território veio primeiro.
+   */
+  private deriveFlags(): void {
+    const flags = this.ctx.flags;
+    let seals = 0;
+    for (let n = 1; n <= 7; n++) if (flags.has(`selo-${n}`)) seals++;
+    for (let n = 2; n <= 7; n++) if (seals >= n) flags.set(`selos-ao-menos-${n}`);
+    this.player.speedScale = flags.has('montaria') ? MOUNT_SPEED : 1;
   }
 
   private startCutscene(id: string): void {

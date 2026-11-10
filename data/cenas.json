@@ -7,6 +7,11 @@
     { "flag": "selo-1" },
     { "dialogo": "selo-1-restaurado" }
   ],
+  "selo-2": [{ "evento": "selo-restaurado" }, { "clarao": true }, { "esperar": 1.4 }, { "flag": "selo-2" }, { "dialogo": "selo-2-restaurado" }],
+  "selo-3": [{ "evento": "selo-restaurado" }, { "clarao": true }, { "esperar": 1.4 }, { "flag": "selo-3" }, { "dialogo": "selo-3-restaurado" }],
+  "selo-4": [{ "evento": "selo-restaurado" }, { "clarao": true }, { "esperar": 1.4 }, { "flag": "selo-4" }, { "dialogo": "selo-4-restaurado" }],
+  "selo-5": [{ "evento": "selo-restaurado" }, { "clarao": true }, { "esperar": 1.4 }, { "flag": "selo-5" }, { "dialogo": "selo-5-restaurado" }],
+  "selo-6": [{ "evento": "selo-restaurado" }, { "clarao": true }, { "esperar": 1.4 }, { "flag": "selo-6" }, { "dialogo": "selo-6-restaurado" }],
   "catastrofe": [
     { "evento": "coracao-sobe" },
     { "esperar": 1 },

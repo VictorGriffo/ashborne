@@ -64,6 +64,13 @@
   },
   "2.4": {
     "nome": "Os territórios restantes",
-    "etapas": [{ "texto": "Em breve: os outros seis territórios chegam no próximo marco.", "area": "vila-ruinas", "concluida": "marco-seguinte-ainda-nao-existe" }]
+    "etapas": [
+      { "texto": "Restaure o selo da Floresta de Sylven, pela estrada oeste. A Thessaly cede à canção dos Espíritos.", "area": "floresta-de-sylven", "concluida": "selo-2" },
+      { "texto": "Restaure o selo do Pântano de Morn, pela estrada sudoeste. O Gorm esqueceu os nomes.", "area": "pantano-de-morn", "concluida": "selo-3" },
+      { "texto": "Restaure o selo das Dunas de Sahr, pela estrada sudeste. O Dravik respeita a honra.", "area": "dunas-de-sahr", "concluida": "selo-4" },
+      { "texto": "Restaure o selo dos Picos de Frostveil, pela trilha norte. A Isolde só cede ao calor.", "area": "picos-de-frostveil", "concluida": "selo-5" },
+      { "texto": "Cruze de barco, saindo da doca de Linne, e restaure o selo da Costa de Maré Alta. O Brannic ouve o mar.", "area": "costa-de-mare-alta", "concluida": "selo-6" },
+      { "texto": "Em breve: a Cidadela de Aetheria Alta e o Kael (M7).", "area": "vila-ruinas", "concluida": "marco-seguinte-ainda-nao-existe" }
+    ]
   }
 }
