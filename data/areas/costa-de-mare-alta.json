@@ -1,0 +1,118 @@
+{
+  "id": "costa-de-mare-alta",
+  "nome": "Costa de Maré Alta",
+  "tipo": "ar-livre",
+  "ambiente": {
+    "fundo": "#0a2430",
+    "nevoa": [22, 52],
+    "ceu": "#88d0e0",
+    "chao": "#2a5a6a",
+    "luzAmbiente": 2.0,
+    "lua": { "cor": "#d0f0f8", "intensidade": 2.2 },
+    "vagalumes": 0,
+    "cinzas": 30,
+    "grama": ["#a89870", "#c0ae80"]
+  },
+  "limite": { "min": [-20, -24], "max": [20, 10] },
+  "caminhos": [{ "pontos": [[-14, 6], [-8, 1.6], [-1, -3.4], [4, -9], [8, -14], [13, -17.6]], "largura": 2.6, "tipo": "praia" }],
+  "manchas": [
+    { "pos": [-10, 15], "raio": 10, "tipo": "agua" },
+    { "pos": [10, 15], "raio": 8, "tipo": "agua" },
+    { "pos": [13.5, -19.5], "raio": 6, "tipo": "pedra" }
+  ],
+  "vegetacao": {
+    "arvores": 24,
+    "dentro": 4,
+    "pedras": 22,
+    "grama": 50,
+    "flores": 0.04,
+    "semente": 111,
+    "forma": "palmeira",
+    "paleta": ["#3a8a5a", "#4a9a6a", "#5aaa72"],
+    "tronco": "#8a6a42",
+    "pedraCor": ["#a8b0a8", "#6a7a78"],
+    "flor": ["#7fe0d0", "#ffd0d0"]
+  },
+  "objetos": [
+    { "tipo": "poca", "pos": [-10, 15], "tamanho": [20, 16], "cor": "#1a5a78" },
+    { "tipo": "poca", "pos": [10, 15], "tamanho": [16, 12], "cor": "#1a5a78" },
+    { "tipo": "doca", "pos": [-13.6, 6.4], "rot": 0, "comprimento": 5 },
+    { "tipo": "barco", "pos": [-11.2, 8.4], "rot": 90 },
+    { "tipo": "pesca", "pos": [-6, 0.4], "rot": 20 },
+    { "tipo": "caixote", "pos": [-4.6, 1.8] },
+    { "tipo": "caixote", "pos": [-3.8, 2.6] },
+    { "tipo": "juncos", "pos": [3.4, 3.4] },
+    { "tipo": "juncos", "pos": [7.6, 2.4] },
+    { "tipo": "rochedo", "pos": [14, -4], "altura": 2.6, "cor": "#6a7a78" },
+    { "tipo": "rochedo", "pos": [-12, -10], "altura": 3, "cor": "#6a7a78" },
+    { "tipo": "ruina", "pos": [-14.4, -4.4], "rot": 90, "tamanho": [5, 3.6], "altura": 2, "cor": "#6a7a78" },
+    { "tipo": "lampiao", "pos": [-8.6, -0.6] },
+    { "tipo": "pilar-quebrado", "pos": [10.4, -12.6] },
+    { "tipo": "pilar-quebrado", "pos": [16.6, -14.6] },
+    { "tipo": "bandeira", "pos": [9.2, -17.4], "cor": "#3a1f66" },
+    { "tipo": "bandeira", "pos": [17.6, -18.6], "cor": "#3a1f66" },
+    { "tipo": "pedestal-selo", "pos": [14, -19.2], "cor": "#3a9ab0", "acendeSe": "selo-6" }
+  ],
+  "npcs": [
+    { "personagem": "pescador", "pos": [-15.6, 5.2], "rot": 90, "dialogo": "orvil-costa" },
+    { "personagem": "marujo", "pos": [-5.4, -1.6], "rot": 160, "dialogo": "marujo", "naoSe": "selo-6" }
+  ],
+  "mobs": [
+    { "mob": "caranguejo-couracado", "pos": [-2, 2] },
+    { "mob": "caranguejo-couracado", "pos": [3, -5.4] },
+    { "mob": "caranguejo-couracado", "pos": [-9, -8] },
+    { "mob": "gaivota-saqueadora", "pos": [6, -1] },
+    { "mob": "gaivota-saqueadora", "pos": [-4, -10] },
+    { "mob": "gaivota-saqueadora", "pos": [4, -14] },
+    { "mob": "brannic", "pos": [11.2, -15.4] }
+  ],
+  "interativos": [
+    {
+      "tipo": "save",
+      "id": "portal-da-costa",
+      "nome": "Portal de Aether da Costa",
+      "pos": [-10.4, -4.6],
+      "raio": 0.5,
+      "chegada": { "pos": [-9.4, -3.8], "rot": -135 }
+    },
+    {
+      "tipo": "examinar",
+      "id": "barco-costa",
+      "rotulo": "Subir no barco",
+      "pos": [-13.6, 7],
+      "raio": 0.8,
+      "falas": ["O barco balança, esperando. O Orvil acena com a cabeça."],
+      "acao": "transporte:barco"
+    },
+    { "tipo": "bau", "id": "bau-da-costa", "pos": [-17, -10], "raio": 0.8, "conteudo": { "itens": { "lagrima-de-aether": 3, "sopa-da-resistencia": 2 }, "brasas": 70 } },
+    {
+      "tipo": "examinar",
+      "id": "selo-restaurar-6",
+      "rotulo": "Restaurar o selo",
+      "pos": [14, -19.2],
+      "raio": 1.8,
+      "se": "brannic-superado",
+      "naoSe": "selo-6",
+      "falas": ["O pedestal está coberto de sal e conchas. Uma runa de Maré, quase apagada, espera no centro.", "Você coloca a mão sobre a pedra. O mar inteiro suspira."],
+      "acao": "cena:selo-6"
+    },
+    {
+      "tipo": "examinar",
+      "id": "selo-barreira-6",
+      "rotulo": "Examinar",
+      "pos": [14, -19.2],
+      "raio": 1.8,
+      "naoSe": "brannic-superado",
+      "falas": ["Uma onda parada, como vidro, cerca o pedestal.", "O general Brannic guarda o selo."]
+    }
+  ],
+  "entradas": {
+    "doca": { "pos": [-13.6, 4.4], "rot": 180 }
+  },
+  "saidas": [],
+  "colisores": [
+    { "caixa": [-20, 8.4, -9, 12] },
+    { "caixa": [-8, 8.4, 2, 12] },
+    { "caixa": [2, 8.6, 20, 12] }
+  ]
+}

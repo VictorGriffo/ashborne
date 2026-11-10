@@ -1,0 +1,101 @@
+{
+  "id": "floresta-de-sylven",
+  "nome": "Floresta de Sylven",
+  "tipo": "ar-livre",
+  "ambiente": {
+    "fundo": "#0c1a14",
+    "nevoa": [20, 46],
+    "ceu": "#8ac8a8",
+    "chao": "#14281e",
+    "luzAmbiente": 1.55,
+    "lua": { "cor": "#b8e0cc", "intensidade": 1.9 },
+    "vagalumes": 110,
+    "cinzas": 40,
+    "grama": ["#143a2c", "#1f5a42"]
+  },
+  "limite": { "min": [-20, -24], "max": [20, 10] },
+  "caminhos": [{ "pontos": [[-21, 3.2], [-12, 2], [-4, -3], [3, -9], [8, -14], [13, -17.5]], "largura": 2.4, "tipo": "musgo" }],
+  "manchas": [{ "pos": [13.5, -19.5], "raio": 6, "tipo": "musgo" }],
+  "vegetacao": {
+    "arvores": 130,
+    "dentro": 16,
+    "pedras": 14,
+    "grama": 170,
+    "flores": 0.1,
+    "semente": 71,
+    "forma": "redonda",
+    "paleta": ["#1E5A46", "#2a7a5a", "#34906a", "#1a4a3a", "#3aa072"],
+    "tronco": "#4a3a2c",
+    "flor": ["#7fe0a0", "#ffd060", "#b9a6ff"]
+  },
+  "objetos": [
+    { "tipo": "arvore-gigante", "pos": [-9, -6] },
+    { "tipo": "arvore-gigante", "pos": [5, 3] },
+    { "tipo": "arvore-gigante", "pos": [-3, -14] },
+    { "tipo": "arvore-gigante", "pos": [-14, -12] },
+    { "tipo": "arvore-gigante", "pos": [16, -6] },
+    { "tipo": "cogumelos", "pos": [-6.4, 1.2], "cor": "#b9a6ff" },
+    { "tipo": "cogumelos", "pos": [2.6, -5.2], "cor": "#7fe0d0" },
+    { "tipo": "cogumelos", "pos": [-12.2, -3.4], "cor": "#ffb0d0" },
+    { "tipo": "cogumelos", "pos": [8.4, -1.2], "cor": "#b9a6ff" },
+    { "tipo": "cogumelos", "pos": [-1.6, 6.6], "cor": "#7fe0a0" },
+    { "tipo": "poca", "pos": [-8, 6.4], "tamanho": [4, 2.6], "cor": "#2a7a8a" },
+    { "tipo": "juncos", "pos": [-9.6, 5.2] },
+    { "tipo": "juncos", "pos": [-6.6, 7.4] },
+    { "tipo": "pilar-quebrado", "pos": [10.4, -12.6] },
+    { "tipo": "pilar-quebrado", "pos": [16.6, -14.6] },
+    { "tipo": "bandeira", "pos": [9.2, -17.4], "cor": "#3a1f66" },
+    { "tipo": "bandeira", "pos": [17.6, -18.6], "cor": "#3a1f66" },
+    { "tipo": "pedestal-selo", "pos": [14, -19.2], "cor": "#3a8a64", "acendeSe": "selo-2" },
+    { "tipo": "cogumelos", "pos": [11.6, -22], "cor": "#7fe0a0", "se": "selo-2" },
+    { "tipo": "cogumelos", "pos": [16.4, -22], "cor": "#ffb0d0", "se": "selo-2" }
+  ],
+  "npcs": [
+    { "personagem": "guardiao-da-floresta", "pos": [-13.6, 5.2], "rot": 150, "dialogo": "elowen", "naoSe": "selo-2" }
+  ],
+  "mobs": [
+    { "mob": "espirito-de-folhas", "pos": [-6, -1] },
+    { "mob": "espirito-de-folhas", "pos": [4.6, -4.4] },
+    { "mob": "espirito-de-folhas", "pos": [-2, -10.6] },
+    { "mob": "lobo-raiz", "pos": [-10, -8] },
+    { "mob": "lobo-raiz", "pos": [8, 2.4] },
+    { "mob": "lobo-raiz", "pos": [2, -13] },
+    { "mob": "thessaly", "pos": [11.2, -15.4] }
+  ],
+  "interativos": [
+    {
+      "tipo": "save",
+      "id": "portal-de-sylven",
+      "nome": "Portal de Aether de Sylven",
+      "pos": [-15, 2.2],
+      "raio": 0.5,
+      "chegada": { "pos": [-13.9, 2.2], "rot": -90 }
+    },
+    { "tipo": "bau", "id": "bau-de-sylven", "pos": [-16.8, -8.4], "raio": 0.8, "conteudo": { "itens": { "lagrima-de-aether": 2, "sopa-da-resistencia": 1 }, "brasas": 30 } },
+    {
+      "tipo": "examinar",
+      "id": "selo-restaurar-2",
+      "rotulo": "Restaurar o selo",
+      "pos": [14, -19.2],
+      "raio": 1.8,
+      "se": "thessaly-superada",
+      "naoSe": "selo-2",
+      "falas": ["O pedestal está coberto de raízes secas. Uma runa de Vida, quase apagada, espera no centro.", "Você coloca a mão sobre a pedra. A floresta inteira respira."],
+      "acao": "cena:selo-2"
+    },
+    {
+      "tipo": "examinar",
+      "id": "selo-barreira-2",
+      "rotulo": "Examinar",
+      "pos": [14, -19.2],
+      "raio": 1.8,
+      "naoSe": "thessaly-superada",
+      "falas": ["Galhos vivos se fecham em torno do pedestal, formando uma parede.", "A general Thessaly guarda o selo."]
+    }
+  ],
+  "entradas": {
+    "entrada": { "pos": [-17.8, 3.2], "rot": -90 },
+    "carroca": { "pos": [-16.4, 5.4], "rot": -90 }
+  },
+  "saidas": [{ "caixa": [-20, 1.2, -18.4, 5.2], "area": "vila-ruinas", "entrada": "oeste" }]
+}

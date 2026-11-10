@@ -28,7 +28,9 @@
     { "tipo": "ruina", "pos": [15.8, 3.4], "rot": -90, "tamanho": [5, 3.6], "altura": 2.2, "cor": "#5a4e46" },
     { "tipo": "feno", "pos": [-12.6, 0.4] },
     { "tipo": "feno", "pos": [-12.8, -1.5] },
-    { "tipo": "feno", "pos": [14.6, 6.4] },
+    { "tipo": "doca", "pos": [16.4, 8.4], "rot": 90, "comprimento": 6 },
+    { "tipo": "barco", "pos": [18.6, 8.8], "rot": 90 },
+    { "tipo": "feno", "pos": [14.6, 3.6] },
     { "tipo": "carroca", "pos": [-5.4, 5.8], "rot": -20 },
     { "tipo": "escombros", "pos": [8.4, -3] },
     { "tipo": "escombros", "pos": [-6.6, -9.4] },
@@ -42,7 +44,8 @@
     { "tipo": "tenda", "pos": [-14.4, 1], "rot": 90, "cor": "#6a6a52", "se": "selo-1" }
   ],
   "npcs": [
-    { "personagem": "fazendeiro", "pos": [-13.4, 5.4], "rot": 160, "dialogo": "fazendeiro", "naoSe": "selo-1" }
+    { "personagem": "fazendeiro", "pos": [-13.4, 5.4], "rot": 160, "dialogo": "fazendeiro", "naoSe": "selo-1" },
+    { "personagem": "pescador", "pos": [12.2, 7.2], "rot": 90, "dialogo": "orvil-linne" }
   ],
   "mobs": [
     { "mob": "espantalho-vivo", "pos": [-6, -1] },
@@ -62,7 +65,26 @@
       "raio": 0.5,
       "chegada": { "pos": [-13.9, 2.2], "rot": -90 }
     },
-    { "tipo": "bau", "id": "bau-de-linne", "pos": [17.4, 7.4], "raio": 0.8, "conteudo": { "itens": { "lagrima-de-aether": 1, "sopa-da-resistencia": 1 }, "brasas": 15 } },
+    {
+      "tipo": "examinar",
+      "id": "barco-linne",
+      "rotulo": "Subir no barco",
+      "pos": [16, 8.6],
+      "raio": 0.9,
+      "se": "barco-liberado",
+      "falas": ["O barco do Orvil espera, balançando. A maré está boa."],
+      "acao": "transporte:barco"
+    },
+    {
+      "tipo": "examinar",
+      "id": "barco-fechado",
+      "rotulo": "Olhar o barco",
+      "pos": [16, 8.6],
+      "raio": 0.9,
+      "naoSe": "barco-liberado",
+      "falas": ["O barco do Orvil está amarrado à doca. A travessia só é segura com a ajuda de dois selos restaurados.", "Volte quando o Aether do mar estiver mais calmo."]
+    },
+    { "tipo": "bau", "id": "bau-de-linne", "pos": [17.6, -1.4], "raio": 0.8, "conteudo": { "itens": { "lagrima-de-aether": 1, "sopa-da-resistencia": 1 }, "brasas": 15 } },
     {
       "tipo": "examinar",
       "id": "selo-restaurar",
@@ -88,7 +110,9 @@
     }
   ],
   "entradas": {
-    "oeste": { "pos": [-17.8, 3.2], "rot": -90 }
+    "oeste": { "pos": [-17.8, 3.2], "rot": -90 },
+    "carroca": { "pos": [-16.4, 5.4], "rot": -90 },
+    "doca": { "pos": [14, 6.4], "rot": 0 }
   },
   "saidas": [{ "caixa": [-20, 1.4, -18.4, 5], "area": "vila-ruinas", "entrada": "leste" }]
 }

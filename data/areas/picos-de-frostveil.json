@@ -1,0 +1,103 @@
+{
+  "id": "picos-de-frostveil",
+  "nome": "Picos de Frostveil",
+  "tipo": "ar-livre",
+  "ambiente": {
+    "fundo": "#0e1a2c",
+    "nevoa": [20, 48],
+    "ceu": "#b0d0f4",
+    "chao": "#4a5a74",
+    "luzAmbiente": 2.1,
+    "lua": { "cor": "#d8e8ff", "intensidade": 2.3 },
+    "vagalumes": 0,
+    "neve": 200,
+    "grama": ["#c4d0e0", "#dfe8f4"]
+  },
+  "limite": { "min": [-20, -24], "max": [20, 10] },
+  "caminhos": [{ "pontos": [[-21, 3.2], [-12, 2], [-4, -3.4], [3, -9], [8, -14], [13, -17.6]], "largura": 2.4, "tipo": "pedra" }],
+  "manchas": [
+    { "pos": [13.5, -19.5], "raio": 6, "tipo": "pedra" },
+    { "pos": [-4, 5], "raio": 3.2, "tipo": "agua" }
+  ],
+  "vegetacao": {
+    "arvores": 100,
+    "dentro": 12,
+    "pedras": 30,
+    "grama": 20,
+    "flores": 0,
+    "semente": 101,
+    "forma": "pinheiro",
+    "paleta": ["#2a4a5a", "#3a6a7a", "#4a7a8a", "#d8e8f4"],
+    "tronco": "#4a3a30",
+    "pedraCor": ["#a8b8cc", "#7a8aa0"],
+    "flor": ["#9ad8ff", "#ffffff"]
+  },
+  "objetos": [
+    { "tipo": "poca", "pos": [-4, 5], "tamanho": [6, 4], "cor": "#6ab0d0" },
+    { "tipo": "rochedo", "pos": [-9, -6], "altura": 3.6, "cor": "#8a9ab4" },
+    { "tipo": "rochedo", "pos": [6, 2], "altura": 3, "cor": "#8a9ab4" },
+    { "tipo": "rochedo", "pos": [-12, -12], "altura": 4.2, "cor": "#7a8aa4" },
+    { "tipo": "rochedo", "pos": [14, -4], "altura": 3.4, "cor": "#8a9ab4" },
+    { "tipo": "rochedo", "pos": [0, -17], "altura": 3.8, "cor": "#7a8aa4" },
+    { "tipo": "cristal-de-gelo", "pos": [-6, -1] },
+    { "tipo": "cristal-de-gelo", "pos": [3, -6.4] },
+    { "tipo": "cristal-de-gelo", "pos": [-13, 0] },
+    { "tipo": "cristal-de-gelo", "pos": [9, -9] },
+    { "tipo": "cristal-de-gelo", "pos": [-2, 6.6] },
+    { "tipo": "cristal-de-gelo", "pos": [17, -12] },
+    { "tipo": "fogueira", "pos": [-15.6, 6.4] },
+    { "tipo": "tenda", "pos": [-17.4, 8], "rot": 90, "cor": "#6a7a92" },
+    { "tipo": "pilar-quebrado", "pos": [10.4, -12.6] },
+    { "tipo": "pilar-quebrado", "pos": [16.6, -14.6] },
+    { "tipo": "bandeira", "pos": [9.2, -17.4], "cor": "#3a1f66" },
+    { "tipo": "bandeira", "pos": [17.6, -18.6], "cor": "#3a1f66" },
+    { "tipo": "pedestal-selo", "pos": [14, -19.2], "cor": "#7ac8ff", "acendeSe": "selo-5" }
+  ],
+  "npcs": [
+    { "personagem": "alpinista", "pos": [-14, 7.4], "rot": 120, "dialogo": "alpinista", "naoSe": "selo-5" }
+  ],
+  "mobs": [
+    { "mob": "lobo-de-gelo", "pos": [-6, 0] },
+    { "mob": "lobo-de-gelo", "pos": [3, -4.4] },
+    { "mob": "lobo-de-gelo", "pos": [-9, -9] },
+    { "mob": "golem-de-neve", "pos": [8, -2] },
+    { "mob": "golem-de-neve", "pos": [-3, -12.4] },
+    { "mob": "isolde", "pos": [11.2, -15.4] }
+  ],
+  "interativos": [
+    {
+      "tipo": "save",
+      "id": "portal-de-frostveil",
+      "nome": "Portal de Aether de Frostveil",
+      "pos": [-15, 2.2],
+      "raio": 0.5,
+      "chegada": { "pos": [-13.9, 2.2], "rot": -90 }
+    },
+    { "tipo": "bau", "id": "bau-de-frostveil", "pos": [-16.8, -10], "raio": 0.8, "conteudo": { "itens": { "lagrima-de-aether": 3, "sopa-da-resistencia": 2 }, "brasas": 60 } },
+    {
+      "tipo": "examinar",
+      "id": "selo-restaurar-5",
+      "rotulo": "Restaurar o selo",
+      "pos": [14, -19.2],
+      "raio": 1.8,
+      "se": "isolde-superada",
+      "naoSe": "selo-5",
+      "falas": ["O pedestal está sob uma camada de gelo azul. Uma runa de Gelo, quase apagada, espera no centro.", "Você coloca a mão sobre a pedra. O gelo racha e, por baixo, o Aether brilha."],
+      "acao": "cena:selo-5"
+    },
+    {
+      "tipo": "examinar",
+      "id": "selo-barreira-5",
+      "rotulo": "Examinar",
+      "pos": [14, -19.2],
+      "raio": 1.8,
+      "naoSe": "isolde-superada",
+      "falas": ["Uma parede de gelo cerca o pedestal. O frio queima a pele.", "A general Isolde guarda o selo."]
+    }
+  ],
+  "entradas": {
+    "entrada": { "pos": [-17.8, 3.2], "rot": -90 },
+    "carroca": { "pos": [-16.4, 5.4], "rot": -90 }
+  },
+  "saidas": [{ "caixa": [-20, 1.2, -18.4, 5.2], "area": "vila-ruinas", "entrada": "norte" }]
+}

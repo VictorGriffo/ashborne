@@ -35,7 +35,7 @@
     { "tipo": "escombros", "pos": [12.8, -2.2] },
     { "tipo": "bandeira", "pos": [3.8, -8.8], "cor": "#3a1f66" },
     { "tipo": "bandeira", "pos": [-3.6, -9.4], "cor": "#3a1f66" },
-    { "tipo": "carroca", "pos": [6.8, 8.8], "rot": 25 },
+    { "tipo": "carroca", "pos": [6.8, 8.8], "rot": 25, "se": "selo-1" },
     { "tipo": "caixote", "pos": [10.4, 9.4] },
     { "tipo": "forja", "pos": [-8.6, -8], "tamanho": [4.4, 3.4], "cor": "#6a6660", "telhado": "#3a3f4c" },
     { "tipo": "tenda", "pos": [-13, -1.6], "rot": 90, "cor": "#5a6a52" },
@@ -64,7 +64,8 @@
     { "personagem": "intendente", "pos": [-12, 1.2], "rot": 90, "dialogo": "intendente" },
     { "personagem": "refugiado", "pos": [5.6, 6.4], "rot": -40, "dialogo": "refugiado-1", "se": "selo-1" },
     { "personagem": "refugiado", "pos": [-3.4, 7.4], "rot": 30, "dialogo": "refugiado-2", "se": "selo-1" },
-    { "personagem": "fazendeiro", "pos": [13.8, -8.2], "rot": 200, "dialogo": "fazendeiro-vila", "se": "selo-1" }
+    { "personagem": "fazendeiro", "pos": [13.8, -8.2], "rot": 200, "dialogo": "fazendeiro-vila", "se": "selo-1" },
+    { "personagem": "carroceiro", "pos": [4.4, 8.6], "rot": 180, "dialogo": "brum", "se": "selo-1" }
   ],
   "mobs": [
     { "mob": "cinzento", "pos": [-3.2, -6.8] },
@@ -109,7 +110,12 @@
   "entradas": {
     "chegada": { "pos": [0, 11.2], "rot": 180 },
     "acampamento": { "pos": [-7.4, 4.4], "rot": 90 },
-    "leste": { "pos": [15.8, 0.6], "rot": -90 }
+    "leste": { "pos": [15.8, 0.6], "rot": -90 },
+    "oeste": { "pos": [-15.8, 0.6], "rot": -90 },
+    "norte": { "pos": [10.8, -11.2], "rot": 0 },
+    "sul-oeste": { "pos": [-10.4, 10.8], "rot": 180 },
+    "sul-leste": { "pos": [10.6, 11], "rot": 180 },
+    "carroca": { "pos": [3.4, 9], "rot": 180 }
   },
   "saidas": [
     {
@@ -117,6 +123,30 @@
       "area": "campos-de-linne",
       "entrada": "oeste",
       "bloqueio": { "se": "entrou-na-resistencia", "mensagem": "A estrada leste leva aos Campos de Linne. A Lyra disse para falar com ela antes de sair da vila." }
+    },
+    {
+      "caixa": [-19, -1.4, -17.2, 2.6],
+      "area": "floresta-de-sylven",
+      "entrada": "entrada",
+      "bloqueio": { "se": "selo-1", "mensagem": "A estrada oeste leva à Floresta de Sylven. Primeiro restaure o selo de Linne: a Lyra quer você pronto para o que vem depois." }
+    },
+    {
+      "caixa": [-12.4, 12.2, -8.6, 14],
+      "area": "pantano-de-morn",
+      "entrada": "entrada",
+      "bloqueio": { "se": "selo-1", "mensagem": "A estrada sudoeste leva ao Pântano de Morn. Primeiro restaure o selo de Linne." }
+    },
+    {
+      "caixa": [8.6, 12.2, 12.4, 14],
+      "area": "dunas-de-sahr",
+      "entrada": "entrada",
+      "bloqueio": { "se": "selo-1", "mensagem": "A estrada sudeste leva às Dunas de Sahr. Primeiro restaure o selo de Linne." }
+    },
+    {
+      "caixa": [9.4, -14, 12.2, -12.4],
+      "area": "picos-de-frostveil",
+      "entrada": "entrada",
+      "bloqueio": { "se": "selo-1", "mensagem": "A trilha norte leva aos Picos de Frostveil. Primeiro restaure o selo de Linne." }
     }
   ]
 }

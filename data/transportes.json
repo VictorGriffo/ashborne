@@ -1,0 +1,37 @@
+{
+  "_formato": "Cada transporte lista destinos (liberados por flags 'se'), o preço em Brasas e conversas de viagem. A carroça liga a vila aos territórios por terra; o barco liga a doca de Linne à costa.",
+  "carroca": {
+    "nome": "Carroça do Brum",
+    "saudacao": "Sobe aí, garoto! Eu levo para onde a estrada ainda aguenta. É só uma moeda de Brasa por trecho... ou cinco.",
+    "preco": 5,
+    "destinos": [
+      { "nome": "Vila em Ruínas", "area": "vila-ruinas", "spawn": "carroca", "se": "visitou-vila-ruinas" },
+      { "nome": "Campos de Linne", "area": "campos-de-linne", "spawn": "carroca", "se": "selo-1" },
+      { "nome": "Floresta de Sylven", "area": "floresta-de-sylven", "spawn": "carroca", "se": "selo-2" },
+      { "nome": "Pântano de Morn", "area": "pantano-de-morn", "spawn": "carroca", "se": "selo-3" },
+      { "nome": "Dunas de Sahr", "area": "dunas-de-sahr", "spawn": "carroca", "se": "selo-4" },
+      { "nome": "Picos de Frostveil", "area": "picos-de-frostveil", "spawn": "carroca", "se": "selo-5" }
+    ],
+    "conversas": [
+      "\"Sabe por que eu dirijo a carroça? Porque cavalos não me contradizem.\"",
+      "A estrada balança. O brum assobia uma cantiga que o Kael costumava cantar.",
+      "\"Antes da catástrofe, esta estrada tinha taverna a cada légua. Agora só tem a lua.\"",
+      "A carroça passa sobre uma poça de Aether apagado. As rodas deixam um rastro de luz fraca."
+    ]
+  },
+  "barco": {
+    "nome": "Barco do Orvil",
+    "saudacao": "O Orvil é velho, mas o barco é mais velho ainda. A travessia é tranquila, se a maré ajudar.",
+    "preco": 10,
+    "destinos": [
+      { "nome": "Costa de Maré Alta", "area": "costa-de-mare-alta", "spawn": "doca", "se": "barco-liberado" },
+      { "nome": "Doca de Linne", "area": "campos-de-linne", "spawn": "doca", "se": "visitou-campos-de-linne" }
+    ],
+    "conversas": [
+      "A maré sobe devagar. O Orvil remando, os olhos fechados, cantarolando.",
+      "Gaivotas seguem o barco, esperando migalhas que ninguém tem.",
+      "\"Dizem que o mar guarda tudo o que o mundo perde. Será que guarda o meu nome?\"",
+      "Uma onda mansa bate no casco. O Aether do mar canta baixinho."
+    ]
+  }
+}
