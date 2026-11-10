@@ -25,6 +25,8 @@ export interface CharacterData {
   };
   /** Velocidade (m/s) em que as animações de andar e correr batem com os pés. */
   passo: { andando: number; correndo: number };
+  /** Cor multiplicada sobre a textura, para variar personagens que usam o mesmo modelo. */
+  tinta?: string;
 }
 
 /** Malhas que formam o corpo nos modelos KayKit (filhas diretas do "Rig"). */
@@ -54,13 +56,18 @@ export class CharacterModel {
     this.root.add(body);
     this.root.name = data.nome;
 
-    // Esconde os acessórios que não estão na lista.
+    // Esconde os acessórios que não estão na lista e aplica a tinta.
     const keep = new Set(data.acessorios);
+    const tint = data.tinta ? new THREE.Color(data.tinta) : undefined;
     body.traverse((o) => {
       if (!(o instanceof THREE.Mesh)) return;
       o.castShadow = true;
       o.receiveShadow = true;
       if (o.parent?.name !== BODY_PARENT) o.visible = keep.has(o.name);
+      if (tint && o.material instanceof THREE.MeshStandardMaterial) {
+        o.material = o.material.clone();
+        o.material.color.multiply(tint);
+      }
     });
 
     for (const item of data.itens ?? []) this.attachItem(assets, body, item);

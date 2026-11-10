@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { createRandom, range } from '../core/random';
+import { distanceToPolyline, glowSprite, merged, paint } from '../render/geometry';
 import { PART1, PROPS } from '../render/palette';
 import type { Area, Exit, Spawn } from './Area';
 import { CollisionWorld } from './Collision';
@@ -38,10 +38,13 @@ export class ClearingArea implements Area {
   readonly enemies: MapEnemy[] = [
     new MapEnemy('brotinho-de-aether', -5.5, 3, 11),
     new MapEnemy('brotinho-de-aether', 6, -1, 23),
+    new MapEnemy('corvo-curioso', -8, -8, 37),
+    new MapEnemy('corvo-curioso', 8.5, 6.5, 41),
   ];
   readonly spawns: Record<string, Spawn> = {
     centro: { x: 0, z: 7, yaw: 0 },
     'trilha-sul': { x: 0.3, z: 15.2, yaw: Math.PI },
+    'trilha-norte': { x: 1.2, z: -15.2, yaw: 0 },
     'altar-da-clareira': { x: SHRINE.x, z: SHRINE.y + 2.4, yaw: Math.PI },
   };
   /** O próprio altar é um ponto de save. */
@@ -54,10 +57,34 @@ export class ClearingArea implements Area {
       radius: 1.4,
       spawn: this.spawns['altar-da-clareira'],
     },
+    {
+      // Missão 1.2: as flores de Aether murchando e uma runa apagada.
+      kind: 'examinar',
+      id: 'flores-murchas',
+      label: 'Examinar',
+      position: new THREE.Vector3(-3.4, 0, -2.2),
+      radius: 0.6,
+      condition: { se: 'lyra-pediu-ajuda', naoSe: 'viu-flores-murchas' },
+      lines: [
+        'As flores de Aether em volta do altar estão murchas, cinzentas como cinza fria.',
+        'Uma das runas do altar, que sempre brilhou, está apagada.',
+        'Quando você toca a pedra, ela está gelada.',
+      ],
+      marcar: ['viu-flores-murchas'],
+    },
   ];
   private savePulse = 0;
   readonly exits: Exit[] = [
-    { minX: -2.5, maxX: 2.5, minZ: 16.6, maxZ: 19, to: 'salao-da-guarda', spawn: 'porta-norte' },
+    { minX: -2.5, maxX: 2.5, minZ: 16.6, maxZ: 19, to: 'patio', spawn: 'portao-norte' },
+    {
+      minX: -1,
+      maxX: 4,
+      minZ: -19,
+      maxZ: -16.6,
+      to: 'estrada',
+      spawn: 'sul',
+      lock: { se: 'maren-deu-amuleto', mensagem: 'A trilha norte leva à Estrada do Santuário. Ainda não é hora de ir tão longe.' },
+    },
   ];
   /** Ponto livre usado para afastar árvores do caminho de chegada. */
   private readonly spawn = new THREE.Vector2(0, 7);
@@ -492,59 +519,7 @@ export class ClearingArea implements Area {
 }
 
 // -----------------------------------------------------------------------------
-// Utilitários
 
 function distanceToPath(p: THREE.Vector2): number {
-  let best = Infinity;
-  const ab = new THREE.Vector2();
-  const ap = new THREE.Vector2();
-  for (let i = 0; i < PATH.length - 1; i++) {
-    const a = PATH[i];
-    const b = PATH[i + 1];
-    ab.subVectors(b, a);
-    ap.subVectors(p, a);
-    const t = THREE.MathUtils.clamp(ap.dot(ab) / ab.lengthSq(), 0, 1);
-    const dx = a.x + ab.x * t - p.x;
-    const dy = a.y + ab.y * t - p.y;
-    best = Math.min(best, Math.hypot(dx, dy));
-  }
-  return best;
-}
-
-/** Pinta uma geometria inteira com uma cor, sem índice, pronta para juntar com outras. */
-function paint(geo: THREE.BufferGeometry, color: THREE.Color): THREE.BufferGeometry {
-  const flat = geo.index ? geo.toNonIndexed() : geo;
-  if (flat !== geo) geo.dispose();
-  const count = flat.getAttribute('position').count;
-  const colors = new Float32Array(count * 3);
-  for (let i = 0; i < count; i++) color.toArray(colors, i * 3);
-  flat.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  return flat;
-}
-
-/** Junta várias geometrias numa só malha: uma chamada de desenho em vez de centenas. */
-function merged(geos: THREE.BufferGeometry[], material: THREE.Material): THREE.Mesh {
-  const geo = mergeGeometries(geos, false);
-  for (const g of geos) g.dispose();
-  const mesh = new THREE.Mesh(geo, material);
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
-  return mesh;
-}
-
-/** Textura redonda e esfumada para as partículas. */
-function glowSprite(): THREE.Texture {
-  const size = 64;
-  const canvas = document.createElement('canvas');
-  canvas.width = canvas.height = size;
-  const ctx = canvas.getContext('2d')!;
-  const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  g.addColorStop(0, 'rgba(255,255,255,1)');
-  g.addColorStop(0.3, 'rgba(255,255,255,0.6)');
-  g.addColorStop(1, 'rgba(255,255,255,0)');
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, size, size);
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
+  return distanceToPolyline(p, PATH);
 }

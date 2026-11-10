@@ -1,12 +1,13 @@
 import missoes from '../../data/missoes.json';
+import { allSet } from './conditions';
 import type { Flags } from './Flags';
 
 export interface QuestStep {
   texto: string;
   /** Área onde o mapa põe o marcador. */
   area: string;
-  /** Flag que conclui a etapa. */
-  concluida: string;
+  /** Flag (ou flags, todas) que concluem a etapa. */
+  concluida: string | string[];
 }
 
 export interface QuestData {
@@ -26,13 +27,8 @@ export interface ActiveQuest {
 /** A missão ativa: a primeira, em ordem, com alguma etapa pendente. */
 export function activeQuest(flags: Flags): ActiveQuest | null {
   for (const [id, quest] of QUESTS) {
-    const stepIndex = quest.etapas.findIndex((s) => !flags.has(s.concluida));
+    const stepIndex = quest.etapas.findIndex((s) => !allSet(flags, s.concluida));
     if (stepIndex >= 0) return { id, quest, stepIndex, step: quest.etapas[stepIndex] };
   }
   return null;
-}
-
-/** Missões que já terminaram todas as etapas. */
-export function completedQuests(flags: Flags): QuestData[] {
-  return QUESTS.filter(([, q]) => q.etapas.every((s) => flags.has(s.concluida))).map(([, q]) => q);
 }

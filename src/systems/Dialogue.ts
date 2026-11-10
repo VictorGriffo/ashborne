@@ -1,4 +1,5 @@
 import dialogues from '../../data/dialogos.json';
+import { check, type Condition } from './conditions';
 import type { Flags } from './Flags';
 
 /**
@@ -22,6 +23,11 @@ export interface DialogueNode {
   marcar?: string[];
   /** Itens e Brasas entregues quando o nó termina. */
   recompensa?: Reward;
+  /**
+   * O que acontece quando o diálogo fecha, depois deste nó:
+   * "batalha:<mob>", "loja:<id>" ou "cena:<id>".
+   */
+  acao?: string;
 }
 
 export interface Reward {
@@ -32,13 +38,14 @@ export interface Reward {
 /** Quem percorre um diálogo: o da história (JSON) ou uma mensagem simples. */
 export interface DialogueSource {
   readonly step: DialogueStep;
+  /** Ação pedida por algum nó já percorrido (ver DialogueNode.acao). */
+  readonly action?: string;
   advance(): void;
   choose(index: number): void;
 }
 
-export interface DialogueStart {
-  /** Flag que precisa estar marcada. Sem `se`, a regra sempre vale. */
-  se?: string;
+/** Regra de início: o primeiro nó cuja condição vale. Sem condição, sempre vale. */
+export interface DialogueStart extends Condition {
   no: string;
 }
 
@@ -60,6 +67,7 @@ export class DialogueRunner implements DialogueSource {
   private readonly data: DialogueData;
   private node: DialogueNode | undefined;
   private line = 0;
+  action?: string;
 
   constructor(
     readonly id: string,
@@ -69,7 +77,7 @@ export class DialogueRunner implements DialogueSource {
     const data = DIALOGUES[id];
     if (!data) throw new Error(`Diálogo não encontrado: ${id}`);
     this.data = data;
-    const start = data.inicio.find((s) => !s.se || flags.has(s.se));
+    const start = data.inicio.find((s) => check(flags, s));
     this.enter(start?.no);
   }
 
@@ -110,6 +118,7 @@ export class DialogueRunner implements DialogueSource {
   private finishNode(node: DialogueNode): void {
     for (const flag of node.marcar ?? []) this.flags.set(flag);
     if (node.recompensa) this.onReward(node.recompensa);
+    if (node.acao) this.action = node.acao;
   }
 
   private enter(id: string | undefined): void {

@@ -3,6 +3,7 @@ import { mob, type MobData } from '../battle/data';
 import { damp, lerpAngle } from '../core/math';
 import { createRandom, range } from '../core/random';
 import { createMobModel, type MobModel } from '../render/mobModels';
+import type { SavedEnemyState } from '../systems/WorldState';
 import type { CollisionWorld } from './Collision';
 
 /**
@@ -15,6 +16,7 @@ export type EnemyState = 'passeando' | 'batalha' | 'poupado' | 'sumindo' | 'derr
 
 const VANISH_TIME = 0.9;
 const BODY_RADIUS = 0.3;
+const DEFAULT_MAP = { velocidade: 1, raioPasseio: 2, raioToque: 0.45 };
 
 /** Mob visível no mapa. A batalha começa quando o Ryben encosta nele. */
 export class MapEnemy {
@@ -47,6 +49,11 @@ export class MapEnemy {
     this.wait = range(this.rand, 0.5, 2);
   }
 
+  /** Como o mob anda no mapa (com valores padrão para mobs sem esse bloco). */
+  private get map() {
+    return this.data.mapa ?? DEFAULT_MAP;
+  }
+
   /** Lógica de passeio, no passo fixo. */
   update(dt: number, collision?: CollisionWorld): void {
     this.moving = false;
@@ -58,7 +65,7 @@ export class MapEnemy {
     } else if (this.target) {
       const to = this.target.clone().sub(this.position).setY(0);
       const dist = to.length();
-      const speed = this.data.mapa.velocidade * (this.state === 'poupado' ? 0.7 : 1);
+      const speed = this.map.velocidade * (this.state === 'poupado' ? 0.7 : 1);
       if (dist < 0.1) {
         this.target = undefined;
         this.wait = range(this.rand, 1, 3);
@@ -103,7 +110,7 @@ export class MapEnemy {
   /** O Ryben encostou neste mob e ele ainda quer brigar? */
   touches(point: THREE.Vector3, radius: number): boolean {
     if (this.state !== 'passeando') return false;
-    const r = this.data.mapa.raioToque + radius;
+    const r = this.map.raioToque + radius;
     return this.position.distanceToSquared(point) < r * r;
   }
 
@@ -139,16 +146,16 @@ export class MapEnemy {
     this.vanishTime = 0;
   }
 
-  /** Estado que vai para o save. */
-  get savedState(): 'passeando' | 'poupado' | 'derrotado' {
+  /** Estado que vai para o save. Mobs únicos (elites e chefes) vencidos não voltam. */
+  get savedState(): SavedEnemyState {
     if (this.state === 'poupado') return 'poupado';
-    if (this.state === 'derrotado' || this.state === 'sumindo') return 'derrotado';
+    if (this.state === 'derrotado' || this.state === 'sumindo') return this.data.unico ? 'vencido' : 'derrotado';
     return 'passeando';
   }
 
   /** Aplica o estado vindo do save (ou de uma volta à área). */
-  applySaved(state: 'passeando' | 'poupado' | 'derrotado'): void {
-    if (state === 'derrotado') {
+  applySaved(state: SavedEnemyState): void {
+    if (state === 'derrotado' || state === 'vencido') {
       this.state = 'derrotado';
       this.model.root.visible = false;
     } else if (state === 'poupado') {
@@ -170,7 +177,7 @@ export class MapEnemy {
 
   private pickTarget(): void {
     const angle = this.rand() * Math.PI * 2;
-    const r = Math.sqrt(this.rand()) * this.data.mapa.raioPasseio;
+    const r = Math.sqrt(this.rand()) * this.map.raioPasseio;
     this.target = new THREE.Vector3(this.home.x + Math.cos(angle) * r, 0, this.home.z + Math.sin(angle) * r);
   }
 }

@@ -1,5 +1,8 @@
-/** Como cada mob de uma área ficou (pela ordem em que a área os cria). */
-export type SavedEnemyState = 'passeando' | 'poupado' | 'derrotado';
+/**
+ * Como cada mob de uma área ficou (pela ordem em que a área os cria).
+ * "derrotado" volta ao salvar; "vencido" é um mob único (elite, chefe) que não volta.
+ */
+export type SavedEnemyState = 'passeando' | 'poupado' | 'derrotado' | 'vencido';
 
 export interface WorldSave {
   descobertas: string[];

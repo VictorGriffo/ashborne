@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import type { Assets } from '../render/Assets';
 import { SavePointModel } from '../render/SavePointModel';
+import type { Condition } from '../systems/conditions';
 import type { Reward } from '../systems/Dialogue';
 import type { Area, Exit, Spawn } from './Area';
 import type { Interactable } from './Interactable';
@@ -39,7 +40,7 @@ export interface RoomData {
   >;
   /** Caixas extras: [minX, minZ, maxX, maxZ]. */
   colisores: Array<{ caixa: number[] }>;
-  npcs: Array<{ personagem: string; pos: number[]; rot: number; dialogo: string }>;
+  npcs: Array<Condition & { personagem: string; pos: number[]; rot: number; dialogo: string }>;
   /** Mobs visíveis no mapa (opcional). */
   mobs?: Array<{ mob: string; pos: number[] }>;
   /** Baús e pontos de save (opcional). */
@@ -48,7 +49,7 @@ export interface RoomData {
     | { tipo: 'save'; id: string; nome: string; pos: number[]; raio: number; chegada: { pos: number[]; rot: number } }
   >;
   entradas: Record<string, { pos: number[]; rot: number }>;
-  saidas: Array<{ caixa: number[]; area: string; entrada: string }>;
+  saidas: Array<{ caixa: number[]; area: string; entrada: string; bloqueio?: Condition & { mensagem: string } }>;
 }
 
 /** Grade do kit KayKit: pisos de 4 por 4. */
@@ -131,10 +132,10 @@ export class RoomArea implements Area {
     }
 
     for (const n of data.npcs) {
-      const npc = new Npc(assets, n.personagem, n.pos[0] * s, n.pos[1] * s, n.rot * DEG, n.dialogo);
+      // NPCs não entram na colisão fixa: podem aparecer e sumir (a exploração cuida deles).
+      const npc = new Npc(assets, n.personagem, n.pos[0] * s, n.pos[1] * s, n.rot * DEG, n.dialogo, n);
       this.npcs.push(npc);
       this.root.add(npc.model.root);
-      this.collision.addCircle(npc.position.x, npc.position.z, npc.radius);
       this.interactables.push({ kind: 'npc', npc, position: npc.position, radius: npc.radius });
     }
 
@@ -166,7 +167,7 @@ export class RoomArea implements Area {
 
     for (const e of data.saidas) {
       const [x0, z0, x1, z1] = e.caixa;
-      this.exits.push({ minX: x0 * s, minZ: z0 * s, maxX: x1 * s, maxZ: z1 * s, to: e.area, spawn: e.entrada });
+      this.exits.push({ minX: x0 * s, minZ: z0 * s, maxX: x1 * s, maxZ: z1 * s, to: e.area, spawn: e.entrada, lock: e.bloqueio });
     }
   }
 

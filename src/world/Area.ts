@@ -1,4 +1,5 @@
 import type * as THREE from 'three';
+import type { Condition } from '../systems/conditions';
 import type { CollisionWorld } from './Collision';
 import type { Interactable } from './Interactable';
 import type { MapEnemy } from './MapEnemy';
@@ -19,6 +20,8 @@ export interface Exit {
   maxZ: number;
   to: string;
   spawn: string;
+  /** Saída fechada até a condição valer; mostra a mensagem e devolve o Ryben. */
+  lock?: Condition & { mensagem: string };
 }
 
 /** Uma área jogável: sala, clareira, mais tarde vila e territórios. */
@@ -41,6 +44,8 @@ export interface Area {
 
   /** Fundo e névoa da cena. */
   applyEnvironment(scene: THREE.Scene): void;
+  /** Efeitos de cena (eclipse, clarão...), pedidos por uma cutscene. */
+  cutsceneEvent?(name: string): void;
   /** Ajustes visuais durante uma batalha (ex.: árvores transparentes). */
   setBattleMode?(on: boolean): void;
   /** Animações só visuais (luzes, partículas, NPCs). */

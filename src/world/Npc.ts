@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { damp, lerpAngle } from '../core/math';
 import type { Assets } from '../render/Assets';
 import { CharacterModel } from '../render/CharacterModel';
+import type { Condition } from '../systems/conditions';
 import { character } from './characters';
 
 /** Personagem parado no mapa, com quem dá para conversar. */
@@ -10,6 +11,8 @@ export class Npc {
   readonly model: CharacterModel;
   /** Raio de colisão. */
   readonly radius = 0.45;
+  /** Só aparece quando as flags batem (ex.: o Vaelor surge na vila depois de um evento). */
+  active = true;
   private yaw: number;
   private targetYaw: number;
 
@@ -20,6 +23,7 @@ export class Npc {
     z: number,
     private readonly homeYaw: number,
     readonly dialogue: string,
+    readonly condition?: Condition,
   ) {
     this.model = new CharacterModel(assets, character(characterId));
     this.position = new THREE.Vector3(x, 0, z);
@@ -30,6 +34,11 @@ export class Npc {
 
   get name(): string {
     return this.model.data.nome;
+  }
+
+  setActive(active: boolean): void {
+    this.active = active;
+    this.model.root.visible = active;
   }
 
   /** Vira de frente para um ponto (o jogador, no começo da conversa). */
@@ -49,6 +58,7 @@ export class Npc {
   }
 
   animate(dt: number): void {
+    if (!this.active) return;
     this.yaw = lerpAngle(this.yaw, this.targetYaw, damp(8, dt));
     this.model.root.rotation.y = this.yaw;
     this.model.update(dt);
