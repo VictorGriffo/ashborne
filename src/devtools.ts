@@ -100,7 +100,10 @@ export function installDevTools(game: Game): void {
         ok();
       } else if (kind === 'dodge') {
         g.player.hp = g.player.maxHp;
-        for (let n = 0; bs.phase.kind === 'dodge' && n < 3000; n++) step(1);
+        for (let n = 0; bs.phase.kind === 'dodge' && n < 3000; n++) {
+          g.player.hp = g.player.maxHp;
+          step(1);
+        }
       } else if (kind === 'wait') step(60);
       else if (kind === 'fight') {
         while (bs.phase.bar.cursor < 0.5) step(1);

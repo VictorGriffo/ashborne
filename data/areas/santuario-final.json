@@ -1,0 +1,47 @@
+{
+  "id": "santuario-final",
+  "nome": "Santuário do Coração",
+  "tipo": "ar-livre",
+  "ambiente": {
+    "fundo": "#0c0618",
+    "nevoa": [14, 38],
+    "ceu": "#7a4ab8",
+    "chao": "#20163a",
+    "luzAmbiente": 1.7,
+    "lua": { "cor": "#e8d8ff", "intensidade": 2.4 },
+    "vagalumes": 0,
+    "cinzas": 120,
+    "grama": ["#2a2048", "#3a2c60"]
+  },
+  "limite": { "min": [-14, -16], "max": [14, 8] },
+  "caminhos": [{ "pontos": [[0, 8], [0, 0], [0, -6]], "largura": 3, "tipo": "pedra" }],
+  "manchas": [{ "pos": [0, -9], "raio": 6, "tipo": "pedra" }],
+  "vegetacao": { "arvores": 0, "dentro": 0, "pedras": 14, "grama": 20, "flores": 0, "semente": 151, "pedraCor": ["#3a3058", "#5a4a80"] },
+  "objetos": [
+    { "tipo": "pilar-quebrado", "pos": [-5, -4] },
+    { "tipo": "pilar-quebrado", "pos": [5, -4] },
+    { "tipo": "pilar-quebrado", "pos": [-7, -10] },
+    { "tipo": "pilar-quebrado", "pos": [7, -10] },
+    { "tipo": "bandeira", "pos": [-3.4, 3], "cor": "#3a1f66" },
+    { "tipo": "bandeira", "pos": [3.4, 3], "cor": "#3a1f66" },
+    { "tipo": "coracao", "pos": [0, -11] }
+  ],
+  "npcs": [
+    { "personagem": "vaelor", "pos": [0, -7.6], "rot": 0, "dialogo": "vaelor-final" }
+  ],
+  "mobs": [],
+  "interativos": [
+    {
+      "tipo": "save",
+      "id": "altar-final",
+      "nome": "Altar do Santuário",
+      "pos": [-3, 5.2],
+      "raio": 0.5,
+      "chegada": { "pos": [-3, 4.2], "rot": 0 }
+    }
+  ],
+  "entradas": {
+    "entrada": { "pos": [0, 6.4], "rot": 180 }
+  },
+  "saidas": []
+}

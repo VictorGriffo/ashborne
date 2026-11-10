@@ -1,0 +1,96 @@
+{
+  "id": "cidadela",
+  "nome": "Cidadela de Aetheria Alta",
+  "tipo": "ar-livre",
+  "ambiente": {
+    "fundo": "#140c24",
+    "nevoa": [20, 48],
+    "ceu": "#a888d8",
+    "chao": "#2a2040",
+    "luzAmbiente": 1.8,
+    "lua": { "cor": "#e0d0ff", "intensidade": 2.2 },
+    "vagalumes": 0,
+    "cinzas": 90,
+    "grama": ["#3a2f5a", "#4a3a72"]
+  },
+  "limite": { "min": [-20, -24], "max": [20, 10] },
+  "caminhos": [{ "pontos": [[-21, 3.2], [-12, 2], [-4, -3], [3, -9], [8, -14], [13, -17.5]], "largura": 2.8, "tipo": "pedra" }],
+  "manchas": [{ "pos": [13.5, -19.5], "raio": 6, "tipo": "pedra" }],
+  "vegetacao": { "arvores": 8, "dentro": 2, "pedras": 26, "grama": 40, "flores": 0, "semente": 131, "pedraCor": ["#4a4060", "#6a5a88"] },
+  "objetos": [
+    { "tipo": "ruina", "pos": [-12, -9], "rot": 20, "tamanho": [6, 4], "altura": 3, "cor": "#4a4060" },
+    { "tipo": "ruina", "pos": [-5, -17], "rot": -10, "tamanho": [7, 3.6], "altura": 2.6, "cor": "#5a4e78" },
+    { "tipo": "ruina", "pos": [6, 3.6], "rot": 160, "tamanho": [5, 3.6], "altura": 2.2, "cor": "#4a4060" },
+    { "tipo": "pilar-quebrado", "pos": [-8, -2] },
+    { "tipo": "pilar-quebrado", "pos": [2, -6] },
+    { "tipo": "pilar-quebrado", "pos": [10.4, -12.6] },
+    { "tipo": "pilar-quebrado", "pos": [16.6, -14.6] },
+    { "tipo": "escombros", "pos": [-2.6, 1.6] },
+    { "tipo": "escombros", "pos": [8, -7] },
+    { "tipo": "lampiao", "pos": [-9.4, 4.4] },
+    { "tipo": "bandeira", "pos": [-3, -10], "cor": "#3a1f66" },
+    { "tipo": "bandeira", "pos": [9.2, -17.4], "cor": "#3a1f66" },
+    { "tipo": "bandeira", "pos": [17.6, -18.6], "cor": "#3a1f66" },
+    { "tipo": "pedestal-selo", "pos": [14, -19.2], "cor": "#ffe9a8", "acendeSe": "selo-7" }
+  ],
+  "npcs": [
+    { "personagem": "carroceiro", "pos": [-15.6, 5.2], "rot": 90, "dialogo": "brum" }
+  ],
+  "mobs": [
+    { "mob": "guarda-corrompido", "pos": [-7, -1] },
+    { "mob": "guarda-corrompido", "pos": [3.6, -4.4] },
+    { "mob": "guarda-corrompido", "pos": [-1, -12] },
+    { "mob": "armadura-vazia", "pos": [-10, -7] },
+    { "mob": "armadura-vazia", "pos": [7, 2.4] },
+    { "mob": "rato-real", "pos": [0, 5] },
+    { "mob": "estatua-viva", "pos": [2, -14] },
+    { "mob": "kael", "pos": [11.2, -15.4] }
+  ],
+  "interativos": [
+    {
+      "tipo": "save",
+      "id": "portal-da-cidadela",
+      "nome": "Portal de Aether da Cidadela",
+      "pos": [-15, 2.2],
+      "raio": 0.5,
+      "chegada": { "pos": [-13.9, 2.2], "rot": -90 }
+    },
+    { "tipo": "bau", "id": "bau-da-cidadela", "pos": [-16.8, -9], "raio": 0.8, "conteudo": { "itens": { "lagrima-de-aether": 3, "sopa-da-resistencia": 2, "brasa-renascida": 1 }, "brasas": 90 } },
+    {
+      "tipo": "examinar",
+      "id": "selo-restaurar-7",
+      "rotulo": "Restaurar o selo",
+      "pos": [14, -19.2],
+      "raio": 1.8,
+      "se": "kael-superado",
+      "naoSe": "selo-7",
+      "falas": ["O pedestal real está rachado, mas a runa de Luz ainda brilha, fraca, no centro.", "Você coloca a mão sobre a pedra. Lá fora, atrás das nuvens de cinza, algo parecido com o amanhecer tenta chegar."],
+      "acao": "cena:selo-7"
+    },
+    {
+      "tipo": "examinar",
+      "id": "selo-barreira-7",
+      "rotulo": "Examinar",
+      "pos": [14, -19.2],
+      "raio": 1.8,
+      "naoSe": "kael-superado",
+      "falas": ["Uma parede de luz fria impede que você chegue perto do pedestal.", "O general Kael guarda o selo. E ele sabe que você veio."]
+    },
+    {
+      "tipo": "examinar",
+      "id": "portao-do-santuario",
+      "rotulo": "Olhar o portão",
+      "pos": [0, -22.4],
+      "raio": 1.6,
+      "naoSe": "selo-7",
+      "falas": ["Um portão enorme, selado por sete runas. Seis brilham. Uma continua apagada.", "O Coração de Aether está do outro lado. Falta o último selo."]
+    }
+  ],
+  "entradas": {
+    "carroca": { "pos": [-16.4, 5.4], "rot": -90 },
+    "santuario": { "pos": [0, -20.2], "rot": 0 }
+  },
+  "saidas": [
+    { "caixa": [-3, -24, 3, -22.8], "area": "santuario-final", "entrada": "entrada", "bloqueio": { "se": "selo-7", "mensagem": "O portão está selado. Falta restaurar o selo da Cidadela." } }
+  ]
+}

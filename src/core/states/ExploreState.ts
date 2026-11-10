@@ -31,6 +31,9 @@ import { TravelState } from './TravelState';
 const TALK_REACH = 0.7;
 /** Quão de frente o Ryben precisa estar (cosseno do ângulo). */
 const TALK_FACING = 0.2;
+/** Quantos Laços o Ryben precisa ter para enfrentar Vaelor "acompanhado" (ajustar nos testes). */
+const LACOS_ALTOS = 12;
+
 /** Na batalha, a câmera mira um pouco à frente do confronto para ele subir na tela. */
 const BATTLE_FOCUS_SHIFT = new THREE.Vector3(0, 0, 1.3);
 /** Velocidade extra quando o Ryben tem a montaria. */
@@ -424,6 +427,8 @@ export class ExploreState implements GameState {
     let seals = 0;
     for (let n = 1; n <= 7; n++) if (flags.has(`selo-${n}`)) seals++;
     for (let n = 2; n <= 7; n++) if (seals >= n) flags.set(`selos-ao-menos-${n}`);
+    // Laços altos decidem os finais (ver "vaelor-final" em dialogos.json).
+    if (this.ctx.player.lacos >= LACOS_ALTOS) flags.set('lacos-altos');
     this.player.speedScale = flags.has('montaria') ? MOUNT_SPEED : 1;
   }
 
