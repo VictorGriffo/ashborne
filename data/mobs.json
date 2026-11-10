@@ -1,0 +1,50 @@
+{
+  "brotinho-de-aether": {
+    "nome": "Brotinho de Aether",
+    "artigo": "o",
+    "modelo": "brotinho",
+    "vida": 16,
+    "ataque": 3,
+    "defesa": 0,
+    "recompensa": { "xp": 4, "brasas": 3 },
+    "recompensaPoupar": { "lacos": 1, "brasas": 1 },
+    "calmaParaPoupar": 2,
+    "mapa": { "velocidade": 1.1, "raioPasseio": 2.6, "raioToque": 0.45 },
+    "encontro": "Um Brotinho de Aether salta de trás das raízes!",
+    "surpresa": "Você pegou o Brotinho de surpresa! Ele demora a reagir.",
+    "falas": ["Prrr...", "*folhas tremendo*", "...shh! shh!", "brilho... meu..."],
+    "falasCalmo": ["prrr ♪", "*balança as folhas devagar*"],
+    "textos": [
+      "O Brotinho sacode as folhas, nervoso.",
+      "Gotinhas de Aether escorrem das folhas do Brotinho.",
+      "O Brotinho finge que é só uma planta comum."
+    ],
+    "textosCalmo": [
+      "O Brotinho parece calmo o bastante para ser poupado.",
+      "O Brotinho cochila de pé. Dá para poupá-lo."
+    ],
+    "agir": [
+      {
+        "nome": "Observar",
+        "texto": [
+          "BROTINHO DE AETHER: ataque 3, defesa 0.",
+          "Nasceu onde o Aether pinga das árvores. Medroso, não malvado. Talvez goste de carinho."
+        ],
+        "calma": 0
+      },
+      {
+        "nome": "Fazer carinho",
+        "texto": ["Você faz carinho nas folhas do Brotinho.", "Ele treme um pouco... mas não foge."],
+        "textoCalmo": ["Você faz carinho no Brotinho.", "Ele ronrona feito orvalho caindo."],
+        "calma": 1
+      },
+      {
+        "nome": "Pisar forte",
+        "texto": ["Você bate o pé no chão.", "O Brotinho se encolhe, assustado!"],
+        "calma": -1
+      }
+    ],
+    "ataques": ["gotas-lentas", "cortina-de-orvalho"],
+    "ataquesCalmo": ["gotas-suaves"]
+  }
+}

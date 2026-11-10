@@ -50,5 +50,18 @@
         ]
       }
     }
+  },
+  "orin-resgate": {
+    "inicio": [{ "no": "acordar" }],
+    "nos": {
+      "acordar": {
+        "quem": "mestre-orin",
+        "falas": [
+          "Calma, calma. Você está no salão. Te encontrei desmaiado na clareira.",
+          "Nem todo inimigo precisa ser vencido na espada, Ryben. Observe. Escute. Às vezes um gesto gentil basta.",
+          "Descanse um pouco. Sua vida já voltou."
+        ]
+      }
+    }
   }
 }

@@ -1,0 +1,22 @@
+{
+  "erva-lume": {
+    "nome": "Erva-lume",
+    "tipo": "cura",
+    "cura": 10,
+    "preco": 4,
+    "descricao": "Uma erva que brilha fraquinho no escuro. Recupera 10 de vida.",
+    "usar": "Você mastiga a Erva-lume. Tem gosto de hortelã e luar."
+  },
+  "espada-de-treino": {
+    "nome": "Espada de Treino",
+    "tipo": "arma",
+    "ataque": 2,
+    "descricao": "Lâmina sem fio da Guarda. Machuca mais o orgulho do que o corpo."
+  },
+  "tunica-da-guarda-aprendiz": {
+    "nome": "Túnica da Guarda Aprendiz",
+    "tipo": "vestes",
+    "defesa": 1,
+    "descricao": "Verde, com barra de Aether. Ainda grande demais nos ombros."
+  }
+}

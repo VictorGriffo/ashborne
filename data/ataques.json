@@ -1,0 +1,44 @@
+{
+  "_formato": "caixa = [largura, altura] da área de desvio, em unidades lógicas. Cada onda gera projéteis entre 'de' e 'ate' (segundos) a cada 'intervalo'. Tipos: chuva, cortina, leque, mira. Velocidades em unidades por segundo.",
+  "gotas-lentas": {
+    "nome": "Gotas que caem devagar",
+    "duracao": 6,
+    "caixa": [150, 120],
+    "ondas": [
+      { "tipo": "chuva", "de": 0, "ate": 5.2, "intervalo": 0.34, "velocidade": 52, "raio": 4, "balanco": 10 }
+    ]
+  },
+  "cortina-de-orvalho": {
+    "nome": "Cortina de orvalho",
+    "duracao": 6.5,
+    "caixa": [150, 120],
+    "ondas": [
+      { "tipo": "cortina", "de": 0.2, "ate": 5.4, "intervalo": 1.15, "velocidade": 44, "raio": 4, "espaco": 14, "vao": 36 },
+      { "tipo": "chuva", "de": 2.5, "ate": 5.4, "intervalo": 0.9, "velocidade": 60, "raio": 3.5, "balanco": 0 }
+    ]
+  },
+  "gotas-suaves": {
+    "nome": "Gotas suaves",
+    "duracao": 4.5,
+    "caixa": [130, 110],
+    "ondas": [
+      { "tipo": "chuva", "de": 0, "ate": 3.8, "intervalo": 0.7, "velocidade": 40, "raio": 3.5, "balanco": 6 }
+    ]
+  },
+  "leque-de-penas": {
+    "nome": "Penas em leque",
+    "duracao": 6,
+    "caixa": [160, 120],
+    "ondas": [
+      { "tipo": "leque", "de": 0.2, "ate": 5.2, "intervalo": 1.1, "velocidade": 70, "raio": 3.5, "quantidade": 5, "abertura": 70, "origem": [0.5, 0], "mirar": true }
+    ]
+  },
+  "investida-mirada": {
+    "nome": "Investidas em linha reta",
+    "duracao": 6,
+    "caixa": [160, 120],
+    "ondas": [
+      { "tipo": "mira", "de": 0.3, "ate": 5.3, "intervalo": 0.55, "velocidade": 95, "raio": 4 }
+    ]
+  }
+}

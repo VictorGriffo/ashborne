@@ -10,7 +10,10 @@
       "andando": "Walking_A",
       "correndo": "Running_A"
     },
-    "passo": { "andando": 2.6, "correndo": 5.2 }
+    "passo": { "andando": 2.6, "correndo": 5.2 },
+    "atributos": { "nivel": 1, "vida": 20, "forca": 4, "defesa": 0 },
+    "equipamento": { "arma": "espada-de-treino", "vestes": "tunica-da-guarda-aprendiz" },
+    "inventario": { "erva-lume": 2 }
   },
   "mestre-orin": {
     "nome": "Mestre Orin",
