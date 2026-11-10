@@ -53,6 +53,8 @@ const PAD_BUTTONS: Array<[number, Action]> = [
 ];
 
 const STICK_DEADZONE = 0.2;
+/** Comprimento do analógico de toque a partir do qual o Ryben corre. */
+const TOUCH_RUN_THRESHOLD = 0.92;
 
 export interface Vec2 {
   x: number;
@@ -68,6 +70,11 @@ export class Input {
   private readonly padDown = new Set<Action>();
   private padPrev = new Set<Action>();
   private stick: Vec2 = { x: 0, y: 0 };
+
+  /** Botões de toque na tela, segurados agora. */
+  private readonly virtualDown = new Set<Action>();
+  /** Analógico de toque. */
+  private touchStick: Vec2 = { x: 0, y: 0 };
 
   constructor(target: Window = window) {
     target.addEventListener('keydown', this.onKeyDown);
@@ -85,7 +92,9 @@ export class Input {
 
   /** A ação está sendo segurada. */
   down(action: Action): boolean {
-    return this.keysDown.has(action) || this.padDown.has(action);
+    if (this.keysDown.has(action) || this.padDown.has(action) || this.virtualDown.has(action)) return true;
+    // No toque, empurrar o analógico até a borda é correr.
+    return action === 'run' && Math.hypot(this.touchStick.x, this.touchStick.y) > TOUCH_RUN_THRESHOLD;
   }
 
   /** A ação começou neste passo. */
@@ -96,6 +105,21 @@ export class Input {
   /** Dispara uma ação por fora do teclado (cliques e toques na interface). */
   trigger(action: Action): void {
     this.queued.add(action);
+  }
+
+  /** Botão de toque apertado ou solto. */
+  setVirtual(action: Action, down: boolean): void {
+    if (down) {
+      if (!this.virtualDown.has(action)) this.queued.add(action);
+      this.virtualDown.add(action);
+    } else {
+      this.virtualDown.delete(action);
+    }
+  }
+
+  /** Posição do analógico de toque (x para a direita, y para cima, comprimento até 1). */
+  setTouchStick(v: Vec2): void {
+    this.touchStick = v;
   }
 
   /**
@@ -114,6 +138,7 @@ export class Input {
       const len = Math.hypot(x, y);
       return { x: x / len, y: y / len };
     }
+    if (this.touchStick.x !== 0 || this.touchStick.y !== 0) return { ...this.touchStick };
     return { ...this.stick };
   }
 
@@ -144,6 +169,8 @@ export class Input {
   private clear = (): void => {
     this.heldCodes.clear();
     this.keysDown.clear();
+    this.virtualDown.clear();
+    this.touchStick = { x: 0, y: 0 };
   };
 
   private pollGamepad(): void {

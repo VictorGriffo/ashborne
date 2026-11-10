@@ -4,6 +4,8 @@ import { Renderer } from '../render/Renderer';
 import { Flags } from '../systems/Flags';
 import { PlayerState } from '../systems/PlayerState';
 import { DebugHud } from '../ui/DebugHud';
+import { el } from '../ui/dom';
+import { TouchControls } from '../ui/TouchControls';
 import type { GameConfig, GameContext } from './GameContext';
 import { GameLoop } from './GameLoop';
 import { Input } from './Input';
@@ -31,6 +33,12 @@ export class Game implements GameContext {
   ) {
     this.renderer = new Renderer(canvasHost);
     this.debug = new DebugHud(ui, import.meta.env.DEV);
+    new TouchControls(this.input, ui);
+
+    // No celular em pé, pede para girar: o jogo é feito para a horizontal.
+    const rotate = el('div', 'rotate-hint');
+    rotate.append(el('div', 'rotate-phone'), el('p', undefined, 'Gire o celular para jogar na horizontal'));
+    document.body.append(rotate);
     this.loop = new GameLoop(
       {
         update: (dt) => this.update(dt),

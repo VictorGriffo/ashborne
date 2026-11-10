@@ -7,7 +7,8 @@ export type Command = (typeof COMMANDS)[number];
 
 /** Tamanho da caixa no modo texto, em pixels de tela. */
 const TEXT_BOX_MAX_WIDTH = 620;
-const TEXT_BOX_HEIGHT = 148;
+const TEXT_BOX_MAX_HEIGHT = 148;
+const TEXT_BOX_MIN_HEIGHT = 92;
 /** Tempo da animação da caixa mudando de forma (igual ao CSS). */
 export const BOX_MORPH_SECONDS = 0.3;
 
@@ -33,6 +34,9 @@ export class BattleUI {
   private readonly levelText: HTMLSpanElement;
   private readonly buttons: HTMLButtonElement[] = [];
   private readonly flashEl: HTMLDivElement;
+  private readonly bottom: HTMLDivElement;
+  /** Modo atual da caixa, para refazer o tamanho quando a tela gira. */
+  private mode: { kind: 'text' } | { kind: 'dodge'; w: number; h: number } = { kind: 'text' };
 
   /** Pixels de canvas por unidade lógica (inclui a densidade da tela). */
   canvasScale = 1;
@@ -54,6 +58,7 @@ export class BattleUI {
 
     // Baixo: caixa, status e comandos
     const bottom = el('div', 'battle-bottom');
+    this.bottom = bottom;
     this.arena = el('div', 'arena');
     this.arenaText = el('p', 'arena-text');
     this.arenaList = el('div', 'arena-list');
@@ -91,7 +96,18 @@ export class BattleUI {
     this.flashEl = el('div', 'battle-flash');
     this.root.append(plate, this.bubble, bottom, this.flashEl);
     this.textMode();
+    window.addEventListener('resize', this.onResize);
   }
+
+  /** Solta o ouvinte de tamanho de tela. Chamado quando a batalha fecha. */
+  dispose(): void {
+    window.removeEventListener('resize', this.onResize);
+  }
+
+  private onResize = (): void => {
+    if (this.mode.kind === 'text') this.textMode();
+    else this.dodgeMode(this.mode.w, this.mode.h);
+  };
 
   // -- Inimigo e jogador --------------------------------------------------------
 
@@ -136,15 +152,21 @@ export class BattleUI {
 
   /** Caixa larga, para texto, listas e a barra de ataque. */
   textMode(): void {
-    const w = Math.min(TEXT_BOX_MAX_WIDTH, window.innerWidth - 32);
-    this.resizeArena(w, TEXT_BOX_HEIGHT);
+    this.mode = { kind: 'text' };
+    // Usa a largura real da faixa de baixo (no celular ela abre espaço para os botões A e B).
+    const available = this.bottom.clientWidth || window.innerWidth - 32;
+    const w = Math.min(TEXT_BOX_MAX_WIDTH, available);
+    const h = Math.round(Math.min(TEXT_BOX_MAX_HEIGHT, Math.max(TEXT_BOX_MIN_HEIGHT, window.innerHeight * 0.26)));
+    this.resizeArena(w, h);
     this.arena.classList.remove('dodge');
-    this.canvasScale = (this.canvas.width / w) || 1;
+    this.canvasScale = this.canvas.width / w || 1;
   }
 
   /** Caixa da fase de desvio, proporcional ao tamanho lógico do padrão. */
   dodgeMode(logicalW: number, logicalH: number): void {
-    const k = Math.min(2.6, Math.max(1.2, Math.min((window.innerWidth * 0.8) / logicalW, (window.innerHeight * 0.34) / logicalH)));
+    this.mode = { kind: 'dodge', w: logicalW, h: logicalH };
+    const fit = Math.min((window.innerWidth * 0.8) / logicalW, (window.innerHeight * 0.38) / logicalH);
+    const k = Math.min(2.6, Math.max(1.1, fit));
     this.resizeArena(logicalW * k, logicalH * k);
     this.arena.classList.add('dodge');
     this.canvasScale = k * Math.min(window.devicePixelRatio || 1, 2);

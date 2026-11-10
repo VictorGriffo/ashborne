@@ -12,6 +12,7 @@
     "mapa": { "velocidade": 1.1, "raioPasseio": 2.6, "raioToque": 0.45 },
     "encontro": "Um Brotinho de Aether salta de trás das raízes!",
     "surpresa": "Você pegou o Brotinho de surpresa! Ele demora a reagir.",
+    "aoPoupar": "O Brotinho balança as folhas, feliz da vida, e volta a passear.",
     "falas": ["Prrr...", "*folhas tremendo*", "...shh! shh!", "brilho... meu..."],
     "falasCalmo": ["prrr ♪", "*balança as folhas devagar*"],
     "textos": [

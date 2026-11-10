@@ -65,7 +65,7 @@ export class ExploreState implements GameState {
     this.hint.innerHTML =
       '<kbd>WASD</kbd> andar · <kbd>Shift</kbd> correr · <kbd>Enter</kbd> falar · <kbd>Esc</kbd> pausar';
     this.prompt = el('div', 'interact-prompt');
-    this.prompt.innerHTML = '<kbd>Enter</kbd>Falar';
+    this.prompt.innerHTML = '<kbd class="only-keys">Enter</kbd><kbd class="only-touch">A</kbd>Falar';
     // Clicar ou tocar no aviso também começa a conversa.
     this.prompt.addEventListener('mousedown', (e) => e.preventDefault());
     this.prompt.addEventListener('click', () => ctx.input.trigger('confirm'));

@@ -104,6 +104,7 @@ export class BattleState implements GameState {
   }
 
   exit(): void {
+    this.ui.dispose();
     fadeOut(this.ui.root, 350);
   }
 
@@ -371,7 +372,8 @@ export class BattleState implements GameState {
       this.host.enemySpared();
       lines = [
         `Você poupou ${this.the}.`,
-        `+${plural(lacos, 'Laço', 'Laços')} e ${plural(brasas, 'Brasa', 'Brasas')}.`,
+        this.data.aoPoupar,
+        `Você ganhou ${plural(lacos, 'Laço', 'Laços')} e ${plural(brasas, 'Brasa', 'Brasas')}.`,
       ];
     }
     this.ui.showBubble(null);

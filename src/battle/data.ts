@@ -26,6 +26,8 @@ export interface MobData {
   mapa: { velocidade: number; raioPasseio: number; raioToque: number };
   encontro: string;
   surpresa: string;
+  /** Reação ao ser poupado. */
+  aoPoupar: string;
   falas: string[];
   falasCalmo: string[];
   textos: string[];
