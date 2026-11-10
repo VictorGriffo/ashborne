@@ -86,6 +86,8 @@ O M2 também está feito: dois Brotinhos de Aether passeiam pela clareira; encos
 
 **Celular deitado é plataforma principal** (pedido do Victor): há controles de toque (`src/ui/TouchControls.ts`: analógico dinâmico na metade esquerda, botões A, B e pausa), layout compacto para telas baixas (`@media (max-height: 500px)`), aviso para girar em pé, tela cheia com trava na horizontal no primeiro toque, e manifesto PWA com `orientation: landscape`. Toda tela nova precisa funcionar com toque e caber em 844×390.
 
-Próximo: o M3 (inventário, experiência e nível, mapa, salvar e carregar, viagem rápida). Pendências: o projeto ainda não foi enviado ao GitHub, e não há service worker (o jogo ainda não funciona sem internet).
+O M3 também está feito: níveis em `data/progressao.json` (PlayerState.gainXp), Bolsa (`InventoryState`: usar cura, equipar), mapa (`MapState`, `data/mapa.json`), pontos de save (Cristal da Guarda no salão, Altar de Aether na clareira) que curam, salvam no `localStorage` (`src/systems/SaveGame.ts`) e fazem viagem rápida, e título com Continuar/Novo jogo (`src/core/session.ts`). Missões ficam em `data/missoes.json` (etapas concluídas por flags); a 1.1 "Primeiro dia na Guarda" já existe em versão curta. O estado do mundo (áreas descobertas, pontos de save, mobs) fica em `WorldState`. Salvar faz mobs derrotados voltarem; poupados continuam poupados.
+
+Próximo: o M4 (Parte 1 completa: a área inicial com vila, Guarda, floresta, estrada e santuário, os mobs, as missões 1.1 a 1.5 e a catástrofe). As regiões Vila, Estrada do Santuário e Santuário já estão no `data/mapa.json` como `futuro`. Pendências: o projeto ainda não foi enviado ao GitHub, e não há service worker (o jogo ainda não funciona sem internet).
 
 Para o conteúdo (personagens, itens, magias, mobs, missões, territórios), consulte `docs/design.md`. Ao criar os JSON em `data/`, siga os nomes e as regras de lá.
