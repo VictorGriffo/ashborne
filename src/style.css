@@ -1,0 +1,289 @@
+:root {
+  --night: #0e1a2b;
+  --deep: #16324a;
+  --cyan: #7fe0d0;
+  --lilac: #b9a6ff;
+  --ember: #e2704a;
+  --text: #e6eef7;
+  --muted: #9fb2c8;
+  --title-font: 'Cinzel', 'Trajan Pro', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  --ui-font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--night);
+  color: var(--text);
+  font-family: var(--ui-font);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+#app {
+  position: fixed;
+  inset: 0;
+}
+
+#app canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#ui {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Telas cheias (título, pausa) ------------------------------------------- */
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  pointer-events: auto;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.screen.visible {
+  opacity: 1;
+}
+
+/* Título ------------------------------------------------------------------ */
+
+.title-screen {
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(14, 26, 43, 0.15) 0%, rgba(14, 26, 43, 0.75) 60%, rgba(8, 14, 24, 0.95) 100%);
+  cursor: pointer;
+}
+
+.title-screen h1 {
+  margin: 0;
+  font-family: var(--title-font);
+  font-weight: 600;
+  font-size: clamp(44px, 11vw, 128px);
+  letter-spacing: 0.18em;
+  padding-left: 0.18em; /* compensa o espaçamento da última letra */
+  line-height: 1;
+  background: linear-gradient(180deg, #f4fbff 0%, var(--cyan) 55%, var(--lilac) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 18px rgba(127, 224, 208, 0.35)) drop-shadow(0 0 48px rgba(185, 166, 255, 0.25));
+}
+
+.title-screen .tagline {
+  margin: 18px 0 0;
+  font-family: var(--title-font);
+  font-size: clamp(13px, 2.4vw, 18px);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title-screen .ember {
+  width: 10px;
+  height: 10px;
+  margin: 28px 0 0;
+  border-radius: 50%;
+  background: var(--ember);
+  box-shadow: 0 0 12px 3px rgba(226, 112, 74, 0.7);
+  animation: ember 2.4s ease-in-out infinite;
+}
+
+.title-screen .prompt {
+  margin-top: 48px;
+  padding: 10px 22px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: clamp(14px, 2.2vw, 17px);
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  animation: blink 1.8s ease-in-out infinite;
+}
+
+.title-screen .build {
+  position: absolute;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: rgba(159, 178, 200, 0.6);
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes ember {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateY(-6px) scale(1.15);
+    opacity: 1;
+  }
+}
+
+/* Pausa ------------------------------------------------------------------- */
+
+.pause-screen {
+  background: rgba(8, 14, 24, 0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.panel {
+  min-width: min(320px, 100%);
+  padding: 28px 32px;
+  border: 1px solid rgba(127, 224, 208, 0.25);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(22, 50, 74, 0.92), rgba(14, 26, 43, 0.95));
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.panel h2 {
+  margin: 0 0 20px;
+  font-family: var(--title-font);
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--cyan);
+}
+
+/* Menu navegável por teclado, controle e clique */
+
+.menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 8px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 17px;
+  letter-spacing: 0.04em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu button::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 8px solid var(--cyan);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity 0.12s,
+    transform 0.12s;
+}
+
+.menu button.selected {
+  color: var(--text);
+}
+
+.menu button.selected::before {
+  opacity: 1;
+  transform: none;
+}
+
+/* Dica de controles ------------------------------------------------------- */
+
+.controls-hint {
+  position: absolute;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  max-width: calc(100% - 32px);
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(8, 14, 24, 0.55);
+  color: var(--muted);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.3s;
+}
+
+.controls-hint kbd {
+  padding: 1px 6px;
+  border: 1px solid rgba(159, 178, 200, 0.35);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.controls-hint.hidden {
+  opacity: 0;
+}
+
+/* Depuração --------------------------------------------------------------- */
+
+.debug-hud {
+  position: absolute;
+  top: max(10px, env(safe-area-inset-top));
+  left: 10px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #b8f5e9;
+  font:
+    12px/1.5 ui-monospace,
+    'Cascadia Mono',
+    Consolas,
+    monospace;
+  white-space: pre;
+}
+
+.debug-hud[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-screen .prompt,
+  .title-screen .ember {
+    animation: none;
+  }
+}

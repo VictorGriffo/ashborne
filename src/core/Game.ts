@@ -1,0 +1,61 @@
+import config from '../../data/config.json';
+import { Renderer } from '../render/Renderer';
+import { DebugHud } from '../ui/DebugHud';
+import type { GameConfig, GameContext } from './GameContext';
+import { GameLoop } from './GameLoop';
+import { Input } from './Input';
+import { StateMachine } from './StateMachine';
+import { ExploreState } from './states/ExploreState';
+import { TitleState } from './states/TitleState';
+
+/**
+ * Junta as peças: renderizador, entrada, máquina de estados e loop.
+ * A pilha começa com a exploração embaixo e o título por cima.
+ */
+export class Game implements GameContext {
+  readonly config: GameConfig = config;
+  readonly renderer: Renderer;
+  readonly input = new Input();
+  readonly states = new StateMachine();
+  readonly debug: DebugHud;
+  private readonly loop: GameLoop;
+
+  constructor(
+    canvasHost: HTMLElement,
+    readonly ui: HTMLElement,
+  ) {
+    this.renderer = new Renderer(canvasHost);
+    this.debug = new DebugHud(ui, import.meta.env.DEV);
+    this.loop = new GameLoop(
+      {
+        update: (dt) => this.update(dt),
+        render: (alpha, frameDt) => this.render(alpha, frameDt),
+      },
+      config.loop.hz,
+    );
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) this.states.focusLost();
+    });
+    window.addEventListener('blur', () => this.states.focusLost());
+
+    this.states.push(new ExploreState(this));
+    this.states.push(new TitleState(this));
+  }
+
+  start(): void {
+    this.loop.start();
+  }
+
+  private update(dt: number): void {
+    this.input.beginStep();
+    if (this.input.pressed('debug')) this.debug.toggle();
+    this.states.update(dt);
+  }
+
+  private render(alpha: number, frameDt: number): void {
+    this.states.render(alpha, frameDt);
+    this.debug.set('estados', this.states.names().join(' › '));
+    this.debug.frame(frameDt);
+  }
+}
