@@ -632,8 +632,33 @@
   },
 
   "mira-p2": {
-    "inicio": [{ "no": "recusa" }],
+    "inicio": [{ "se": "mira-perdoou", "no": "perdoou-depois" }, { "se": "selos-ao-menos-4", "no": "abre" }, { "no": "recusa" }],
     "nos": {
+      "abre": {
+        "quem": "mira",
+        "falas": [
+          "Quatro selos. A comida voltou a crescer, e as crianças dormem sem tossir.",
+          "Eu ainda estou com raiva de você, Ryben. Mas a raiva está ficando cansada."
+        ],
+        "escolhas": [
+          { "texto": "Eu sinto muito. Por tudo.", "ir": "perdoou" },
+          { "texto": "Eu volto quando você quiser conversar.", "ir": "recusa" }
+        ]
+      },
+      "perdoou": {
+        "quem": "mira",
+        "falas": [
+          "...",
+          "Eu escrevi uma carta pra você, nove anos atrás. Nunca tive coragem de entregar. Leia depois.",
+          "Pode contar comigo. Mas não se atreva a morrer."
+        ],
+        "marcar": ["mira-perdoou"],
+        "recompensa": { "itens": { "sopa-da-resistencia": 2 }, "brasas": 60 }
+      },
+      "perdoou-depois": {
+        "quem": "mira",
+        "falas": ["Anda, Ryben. Come alguma coisa antes de ir. Vai ser longo."]
+      },
       "recusa": {
         "quem": "mira",
         "falas": [
@@ -989,6 +1014,29 @@
         ],
         "recompensa": { "itens": { "lagrima-de-aether": 2 } }
       }
+    }
+  },
+
+  "arena-da-guarda": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "guarda",
+        "falas": [
+          "Arena da Guarda, reaberta pela resistência. Duelos de treino, sem culpa e sem pressa. Você pode lutar ou poupar, tanto faz: o importante é aprender.",
+          "Escolha o seu adversário."
+        ],
+        "escolhas": [
+          { "texto": "Guarda Corrompido (fácil)", "ir": "guarda" },
+          { "texto": "Armadura Vazia (médio)", "ir": "armadura" },
+          { "texto": "Estátua Viva (difícil)", "ir": "estatua" },
+          { "texto": "Hoje não.", "ir": "sair" }
+        ]
+      },
+      "guarda": { "quem": "guarda", "falas": ["Boa sorte!"], "acao": "batalha:guarda-corrompido" },
+      "armadura": { "quem": "guarda", "falas": ["Cuidado com os golpes lentos. Eles doem."], "acao": "batalha:armadura-vazia" },
+      "estatua": { "quem": "guarda", "falas": ["Respeite o rei de pedra."], "acao": "batalha:estatua-viva" },
+      "sair": { "quem": "guarda", "falas": ["A arena fica aberta. Volte quando quiser."] }
     }
   },
 

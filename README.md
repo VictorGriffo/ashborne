@@ -167,3 +167,7 @@ Se o repositório tiver outro nome, troque `PAGES_BASE` em `vite.config.ts`.
 ## Créditos
 
 Veja [`CREDITOS.md`](CREDITOS.md).
+
+## Estado atual
+
+O jogo está completo de ponta a ponta: Parte 1, salto de nove anos, sete territórios com generais, selos e magias, Cidadela com o Kael, santuário final e três finais (Cinzas, Renascido e Ruína). Transportes: carroça, barco e montaria. Em `npm run dev`, `window.dev` (src/devtools.ts) permite pular trechos para testar. Veja o CLAUDE.md para o que ainda falta (missões secundárias extras e balanceamento).
