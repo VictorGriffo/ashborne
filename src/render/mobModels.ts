@@ -471,7 +471,294 @@ class GuardianModel extends SimpleMob {
   }
 }
 
+/** Cinzento: um vulto de cinza, com olhos de brasa, que flutua e se desfaz nas bordas. */
+class AshlingModel extends SimpleMob {
+  private readonly puffs: THREE.Mesh[] = [];
+  private readonly eyes: THREE.Mesh[] = [];
+
+  constructor() {
+    super();
+    const ash = new THREE.MeshStandardMaterial({
+      color: 0x6a6470,
+      emissive: 0xffffff,
+      emissiveIntensity: 0,
+      flatShading: true,
+      roughness: 1,
+      transparent: true,
+      opacity: 0.88,
+    });
+    this.flashable(ash);
+    const body = new THREE.Mesh(new THREE.ConeGeometry(0.34, 1.05, 7), ash);
+    body.position.y = 0.62;
+    const head = new THREE.Mesh(new THREE.IcosahedronGeometry(0.26, 0), ash);
+    head.position.y = 1.22;
+    const eyeMat = new THREE.MeshBasicMaterial({ color: 0xe2704a });
+    for (const s of [1, -1]) {
+      const eye = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.1, 0.04), eyeMat);
+      eye.position.set(0.1 * s, 1.25, 0.23);
+      this.eyes.push(eye);
+      this.rig.add(eye);
+    }
+    for (let i = 0; i < 5; i++) {
+      const puff = new THREE.Mesh(new THREE.IcosahedronGeometry(0.12 + (i % 2) * 0.05, 0), ash);
+      puff.position.set(Math.cos(i * 1.3) * 0.38, 0.2 + i * 0.1, Math.sin(i * 1.3) * 0.3);
+      this.puffs.push(puff);
+      this.rig.add(puff);
+    }
+    this.rig.add(body, head);
+    this.finish();
+  }
+
+  protected pose(_dt: number, mood: MobMood): void {
+    const t = this.time;
+    this.rig.position.y = 0.15 + Math.sin(t * 1.8) * 0.1;
+    this.rig.rotation.z = Math.sin(t * 1.1) * 0.08;
+    this.puffs.forEach((p, i) => {
+      p.position.y = 0.2 + ((t * 0.3 + i * 0.2) % 1) * 1.1;
+      p.scale.setScalar(1 - ((t * 0.3 + i * 0.2) % 1) * 0.7);
+    });
+    const calm = mood === 'happy';
+    for (const e of this.eyes) e.scale.y = calm ? 0.2 : 1 + Math.sin(t * 4) * 0.2;
+  }
+}
+
+/** Soldado de Vaelor: armadura roxa, elmo com crista e lança. */
+class SoldierModel extends SimpleMob {
+  private readonly legs: THREE.Mesh[] = [];
+  private readonly spear = new THREE.Group();
+
+  constructor() {
+    super();
+    const armor = flatMat(0x3a1f66, 0xffffff);
+    const steel = flatMat(0x7a7f90);
+    this.flashable(armor);
+    const body = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.7, 0.34), armor);
+    body.position.y = 1;
+    const head = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.32, 0.3), steel);
+    head.position.y = 1.55;
+    const crest = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.2, 0.34), flatMat(0xb9a6ff, 0xb9a6ff, 0.6));
+    crest.position.y = 1.8;
+    const visor = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.05, 0.04), new THREE.MeshBasicMaterial({ color: 0xe2704a }));
+    visor.position.set(0, 1.56, 0.16);
+    for (const s of [1, -1]) {
+      const leg = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.65, 0.22), armor);
+      leg.position.set(0.15 * s, 0.35, 0);
+      this.legs.push(leg);
+      const pauldron = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.2, 0.34), steel);
+      pauldron.position.set(0.42 * s, 1.28, 0);
+      this.rig.add(leg, pauldron);
+    }
+    this.spear.position.set(0.52, 1, 0.1);
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 2.1, 5), flatMat(0x4b3527));
+    const tip = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.3, 4), steel);
+    tip.position.y = 1.15;
+    this.spear.add(shaft, tip);
+    this.rig.add(body, head, crest, visor, this.spear);
+    this.finish();
+  }
+
+  protected pose(_dt: number, mood: MobMood): void {
+    const t = this.time;
+    const gait = Math.sin(t * 8) * 0.5 * this.moving;
+    this.legs[0].rotation.x = gait;
+    this.legs[1].rotation.x = -gait;
+    this.spear.rotation.z = mood === 'battle' ? Math.sin(t * 5) * 0.2 : 0.05;
+    this.rig.position.y = Math.abs(Math.sin(t * 8)) * 0.04 * this.moving;
+  }
+}
+
+/** Espantalho Vivo: palha, poste nas costas, braços que balançam e andar torto. */
+class ScarecrowModel extends SimpleMob {
+  private readonly armL = new THREE.Group();
+  private readonly armR = new THREE.Group();
+
+  constructor() {
+    super();
+    const straw = flatMat(0xc8a860, 0xffffff);
+    const cloth = flatMat(0x6a4a7a);
+    this.flashable(straw);
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.3, 0.8, 7), cloth);
+    body.position.y = 1;
+    const head = new THREE.Mesh(new THREE.IcosahedronGeometry(0.26, 0), straw);
+    head.position.y = 1.65;
+    const hat = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.32, 6), flatMat(0x4b3527));
+    hat.position.y = 1.98;
+    const brim = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.04, 8), flatMat(0x4b3527));
+    brim.position.y = 1.84;
+    const eyeMat = new THREE.MeshBasicMaterial({ color: 0xe2704a });
+    for (const s of [1, -1]) {
+      const eye = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.06, 0.03), eyeMat);
+      eye.position.set(0.09 * s, 1.68, 0.24);
+      this.rig.add(eye);
+    }
+    for (const [arm, s] of [
+      [this.armL, 1],
+      [this.armR, -1],
+    ] as const) {
+      arm.position.set(0.3 * s, 1.3, 0);
+      const stick = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 0.9, 5), flatMat(0x6b4a33));
+      stick.rotation.z = (Math.PI / 2) * s;
+      stick.position.x = 0.42 * s;
+      const tuft = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.25, 5), straw);
+      tuft.rotation.z = -(Math.PI / 2) * s;
+      tuft.position.x = 0.88 * s;
+      arm.add(stick, tuft);
+      this.rig.add(arm);
+    }
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.5, 5), flatMat(0x6b4a33));
+    pole.position.set(0, 0.75, -0.12);
+    this.rig.add(body, head, hat, brim, pole);
+    this.finish();
+  }
+
+  protected pose(_dt: number, mood: MobMood): void {
+    const t = this.time;
+    const wave = mood === 'battle' ? Math.sin(t * 7) * 0.5 : Math.sin(t * 1.4) * 0.12;
+    this.armL.rotation.z = wave + this.moving * Math.sin(t * 6) * 0.3;
+    this.armR.rotation.z = -wave - this.moving * Math.sin(t * 6) * 0.3;
+    this.rig.rotation.z = Math.sin(t * 5) * 0.08 * this.moving + Math.sin(t * 0.9) * 0.03;
+    this.rig.position.y = Math.abs(Math.sin(t * 5)) * 0.1 * this.moving;
+  }
+}
+
+/** Javali de Cinzas: corpo pesado, presas e fendas de brasa no lombo. */
+class BoarModel extends SimpleMob {
+  private readonly legs: THREE.Mesh[] = [];
+
+  constructor() {
+    super();
+    const hide = flatMat(0x4a4450, 0xffffff);
+    const dark = flatMat(0x2a2630);
+    this.flashable(hide);
+    const body = new THREE.Mesh(new THREE.IcosahedronGeometry(0.5, 0), hide);
+    body.scale.set(0.9, 0.8, 1.35);
+    body.position.y = 0.68;
+    const head = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.4, 0.5), hide);
+    head.position.set(0, 0.68, 0.72);
+    const snout = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.22, 0.26), dark);
+    snout.position.set(0, 0.6, 1.02);
+    const embers = flatMat(0xe2704a, 0xe2704a, 1.6);
+    for (let i = 0; i < 4; i++) {
+      const crack = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.02, 0.28), embers);
+      crack.position.set(((i % 2) - 0.5) * 0.3, 1.08 - Math.abs(i - 1.5) * 0.04, -0.2 + i * 0.22);
+      crack.castShadow = false;
+      this.rig.add(crack);
+    }
+    for (const s of [1, -1]) {
+      const tusk = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.28, 4), flatMat(0xe6e0d0));
+      tusk.position.set(0.18 * s, 0.58, 1.0);
+      tusk.rotation.x = -0.6;
+      const eye = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.04, 0.03), new THREE.MeshBasicMaterial({ color: 0xe2704a }));
+      eye.position.set(0.15 * s, 0.78, 0.96);
+      this.rig.add(tusk, eye);
+    }
+    for (const [x, z] of [
+      [0.22, 0.4],
+      [-0.22, 0.4],
+      [0.22, -0.4],
+      [-0.22, -0.4],
+    ]) {
+      const leg = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.45, 0.16), dark);
+      leg.position.set(x, 0.23, z);
+      this.legs.push(leg);
+      this.rig.add(leg);
+    }
+    this.rig.add(body, head, snout);
+    this.finish();
+  }
+
+  protected pose(_dt: number, mood: MobMood): void {
+    const t = this.time;
+    const gait = Math.sin(t * 9) * 0.5 * this.moving;
+    this.legs[0].rotation.x = gait;
+    this.legs[3].rotation.x = gait;
+    this.legs[1].rotation.x = -gait;
+    this.legs[2].rotation.x = -gait;
+    this.rig.rotation.x = mood === 'battle' ? Math.sin(t * 6) * 0.05 : 0;
+    this.rig.position.y = Math.abs(Math.sin(t * 9)) * 0.05 * this.moving;
+  }
+}
+
+/** Cores e arma de cada general, para reaproveitar o mesmo modelo. */
+interface GeneralStyle {
+  armor: number;
+  trim: number;
+  glow: number;
+  weapon: 'machado' | 'martelo' | 'lanca';
+}
+
+/** General de Vaelor: armadura pesada, elmo com chifres e uma arma enorme. */
+class GeneralModel extends SimpleMob {
+  private readonly weapon = new THREE.Group();
+
+  constructor(style: GeneralStyle) {
+    super();
+    const armor = flatMat(style.armor, 0xffffff);
+    const trim = flatMat(style.trim);
+    const glow = flatMat(style.glow, style.glow, 1.8);
+    this.flashable(armor);
+    const torso = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.95, 0.6), armor);
+    torso.position.y = 1.5;
+    const waist = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.4, 0.5), trim);
+    waist.position.y = 0.95;
+    const head = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.44, 0.46), trim);
+    head.position.y = 2.2;
+    const visor = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.07, 0.04), glow);
+    visor.position.set(0, 2.2, 0.24);
+    const core = new THREE.Mesh(new THREE.OctahedronGeometry(0.13, 0), glow);
+    core.position.set(0, 1.5, 0.34);
+    for (const s of [1, -1]) {
+      const horn = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.5, 5), trim);
+      horn.position.set(0.28 * s, 2.55, 0);
+      horn.rotation.z = -0.5 * s;
+      const shoulder = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.32, 0.6), trim);
+      shoulder.position.set(0.72 * s, 1.95, 0);
+      const arm = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.9, 0.3), armor);
+      arm.position.set(0.78 * s, 1.35, 0);
+      const leg = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.8, 0.4), trim);
+      leg.position.set(0.26 * s, 0.4, 0);
+      this.rig.add(horn, shoulder, arm, leg);
+    }
+    // Arma na mão direita
+    this.weapon.position.set(-0.85, 1.0, 0.2);
+    const haft = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 2.2, 5), flatMat(0x4b3527));
+    haft.position.y = 0.5;
+    this.weapon.add(haft);
+    if (style.weapon === 'martelo') {
+      const headW = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.5, 0.5), trim);
+      headW.position.y = 1.5;
+      this.weapon.add(headW);
+    } else if (style.weapon === 'lanca') {
+      const tip = new THREE.Mesh(new THREE.ConeGeometry(0.14, 0.6, 4), trim);
+      tip.position.y = 1.9;
+      this.weapon.add(tip);
+    } else {
+      const blade = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.55, 0.06), trim);
+      blade.position.set(0.3, 1.45, 0);
+      const edge = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.55, 0.08), glow);
+      edge.position.set(0.66, 1.45, 0);
+      this.weapon.add(blade, edge);
+    }
+    const light = new THREE.PointLight(style.glow, 4, 5, 1.6);
+    light.position.set(0, 1.8, 0.8);
+    this.rig.add(torso, waist, head, visor, core, this.weapon, light);
+    this.finish();
+  }
+
+  protected pose(_dt: number, mood: MobMood): void {
+    const t = this.time;
+    this.rig.position.y = Math.sin(t * 0.9) * 0.03;
+    this.weapon.rotation.z = mood === 'battle' ? Math.sin(t * 2.2) * 0.35 : 0.05;
+    this.rig.rotation.y = mood === 'battle' ? Math.sin(t * 1.4) * 0.12 : 0;
+  }
+}
+
 const FACTORIES: Record<string, () => MobModel> = {
+  cinzento: () => new AshlingModel(),
+  soldado: () => new SoldierModel(),
+  espantalho: () => new ScarecrowModel(),
+  javali: () => new BoarModel(),
+  'general-orsa': () => new GeneralModel({ armor: 0x5a4a2e, trim: 0x8a6a3a, glow: 0x9acd5a, weapon: 'machado' }),
   brotinho: () => new SproutModel(),
   boneco: () => new DummyModel(),
   corvo: () => new CrowModel(),

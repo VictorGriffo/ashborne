@@ -368,7 +368,225 @@ function heart(): PropResult {
 
 const PART2_EMBER = 0xe2704a;
 
+// -- Parte 2: ruínas, acampamento e campos ------------------------------------
+
+/** Casa destruída: paredes quebradas, vigas caídas e sem telhado. */
+function ruin(p: PropParams): PropResult {
+  const [w, d] = p.tamanho ?? [4.5, 3.4];
+  const h = p.altura ?? 2.2;
+  const g = new THREE.Group();
+  const wall = mat(p.cor ?? '#5a5560');
+  const dark = mat(0x2a2630);
+  g.add(mesh(new THREE.BoxGeometry(w + 0.1, 0.3, d + 0.1), mat(PROPS.stoneDark), 0, 0.15, 0));
+  // Paredes com alturas diferentes, como se tivessem caído aos pedaços.
+  const walls: Array<[number, number, number, number, number]> = [
+    [0, -d / 2, w, 0.3, h],
+    [-w / 2, 0, 0.3, d, h * 0.55],
+    [w / 2, 0, 0.3, d, h * 0.8],
+    [-w * 0.3, d / 2, w * 0.4, 0.3, h * 0.5],
+  ];
+  for (const [x, z, sx, sz, sh] of walls) g.add(mesh(new THREE.BoxGeometry(sx, sh, sz), wall, x, sh / 2 + 0.2, z));
+  // Janela vazia e viga caída
+  g.add(mesh(new THREE.BoxGeometry(0.6, 0.6, 0.34), dark, w * 0.2, h * 0.55, -d / 2));
+  const beam = mesh(new THREE.BoxGeometry(0.2, 0.2, d * 0.9), mat(WOOD_DARK), -w * 0.1, h * 0.9, 0);
+  beam.rotation.set(0, 0.2, -0.45);
+  g.add(beam);
+  // Entulho em volta
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 + 0.4;
+    const rock = mesh(
+      new THREE.DodecahedronGeometry(0.22 + (i % 3) * 0.1, 0),
+      mat(i % 2 ? PROPS.stone : PROPS.stoneDark),
+      Math.cos(a) * (w * 0.55),
+      0.15,
+      Math.sin(a) * (d * 0.6),
+    );
+    g.add(rock);
+  }
+  // Brasas ainda acesas num canto
+  const ember = mesh(new THREE.OctahedronGeometry(0.1, 0), mat(PART2_EMBER, PART2_EMBER, 2.4), w * 0.15, 0.4, d * 0.1);
+  ember.castShadow = false;
+  g.add(ember);
+  return { object: g, colliders: [{ kind: 'box', w: w + 0.1, d: d + 0.1 }] };
+}
+
+function rubble(): PropResult {
+  const g = new THREE.Group();
+  const stones = [PROPS.stone, PROPS.stoneDark, 0x6a6470];
+  for (let i = 0; i < 7; i++) {
+    const a = i * 2.1;
+    const r = 0.25 + (i % 3) * 0.14;
+    const s = mesh(new THREE.DodecahedronGeometry(r, 0), mat(stones[i % 3]), Math.cos(a) * 0.55, r * 0.5, Math.sin(a) * 0.45);
+    s.rotation.set(i, a, 0);
+    g.add(s);
+  }
+  g.add(mesh(new THREE.BoxGeometry(1.2, 0.12, 0.2), mat(WOOD_DARK), 0.1, 0.5, 0.1).rotateZ(0.5));
+  return { object: g, colliders: [{ kind: 'circle', r: 0.85 }] };
+}
+
+/** Tenda da resistência: lona remendada com uma bandeira. */
+function tent(p: PropParams): PropResult {
+  const g = new THREE.Group();
+  const cloth = mat(p.cor ?? '#6a6a52');
+  const shape = new THREE.Shape();
+  shape.moveTo(-1.3, 0);
+  shape.lineTo(1.3, 0);
+  shape.lineTo(0, 1.9);
+  shape.closePath();
+  const geo = new THREE.ExtrudeGeometry(shape, { depth: 2.4, bevelEnabled: false });
+  geo.translate(0, 0, -1.2);
+  g.add(mesh(geo, cloth));
+  g.add(mesh(new THREE.BoxGeometry(0.7, 1.1, 0.06), mat(0x1c1a22), 0, 0.55, 1.22));
+  g.add(mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.6, 5), mat(WOOD_DARK), 0, 1.3, -1.25));
+  const flag = mesh(new THREE.BoxGeometry(0.55, 0.32, 0.03), mat(0x2e7d5b, 0x2e7d5b, 0.4), 0.3, 2.35, -1.25);
+  g.add(flag);
+  // Remendo colorido
+  g.add(mesh(new THREE.BoxGeometry(0.5, 0.4, 0.04), mat(0xb9a6ff), -0.5, 0.6, 1.0).rotateZ(0.4));
+  return { object: g, colliders: [{ kind: 'box', w: 2.6, d: 2.4 }] };
+}
+
+/** Bandeira rasgada do exército de Vaelor ou da Guarda caída. */
+function banner(p: PropParams): PropResult {
+  const g = new THREE.Group();
+  g.add(mesh(new THREE.CylinderGeometry(0.05, 0.06, 3, 5), mat(WOOD_DARK), 0, 1.5, 0));
+  const cloth = mesh(new THREE.BoxGeometry(0.9, 1.1, 0.03), mat(p.cor ?? '#3a1f66'), 0.5, 2.3, 0);
+  g.add(cloth);
+  g.add(mesh(new THREE.ConeGeometry(0.25, 0.4, 3), mat(p.cor ?? '#3a1f66'), 0.55, 1.55, 0).rotateZ(Math.PI));
+  const sigil = mesh(new THREE.OctahedronGeometry(0.14, 0), mat(0xb9a6ff, 0xb9a6ff, 1.2), 0.5, 2.35, 0.03);
+  sigil.castShadow = false;
+  g.add(sigil);
+  return {
+    object: g,
+    colliders: [{ kind: 'circle', r: 0.12 }],
+    animate: (_dt, t) => {
+      cloth.rotation.y = Math.sin(t * 1.5) * 0.12;
+    },
+  };
+}
+
+function barn(p: PropParams): PropResult {
+  const result = house({ ...p, tamanho: p.tamanho ?? [6, 4.4], altura: p.altura ?? 2.8, cor: p.cor ?? '#8a4a3a', telhado: p.telhado ?? '#4b3527' });
+  const g = result.object as THREE.Group;
+  // Portão grande de celeiro em X
+  const door = mesh(new THREE.BoxGeometry(1.8, 2, 0.08), mat(WOOD_DARK), 0, 1, (p.tamanho?.[1] ?? 4.4) / 2 + 0.05);
+  g.add(door);
+  for (const s of [1, -1]) {
+    const brace = mesh(new THREE.BoxGeometry(0.1, 2.3, 0.05), mat(WOOD), 0, 1, (p.tamanho?.[1] ?? 4.4) / 2 + 0.1);
+    brace.rotation.z = s * 0.7;
+    g.add(brace);
+  }
+  return result;
+}
+
+function hay(): PropResult {
+  const g = new THREE.Group();
+  const bale = mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.9, 10), mat(0xc8a860), 0, 0.55, 0);
+  bale.rotation.z = Math.PI / 2;
+  g.add(bale);
+  g.add(mesh(new THREE.TorusGeometry(0.56, 0.03, 4, 10), mat(WOOD_DARK), 0.2, 0.55, 0).rotateY(Math.PI / 2));
+  return { object: g, colliders: [{ kind: 'box', w: 0.95, d: 1.1 }] };
+}
+
+/** Fileiras de plantação: terra escura com talos queimados ou brotos verdes. */
+function crops(p: PropParams): PropResult {
+  const [w, d] = p.tamanho ?? [5, 3];
+  const alive = p.luz === true;
+  const g = new THREE.Group();
+  g.add(mesh(new THREE.BoxGeometry(w, 0.14, d), mat(0x3a2e29), 0, 0.07, 0));
+  const stalk = mat(alive ? 0x4a9a64 : 0x3a3026);
+  for (let r = 0; r < Math.floor(d / 0.8); r++) {
+    for (let i = 0; i < Math.floor(w / 0.55); i++) {
+      const h = alive ? 0.5 : 0.25 + ((i + r) % 3) * 0.12;
+      const s = mesh(new THREE.ConeGeometry(0.08, h, 4), stalk, -w / 2 + 0.35 + i * 0.55, 0.14 + h / 2, -d / 2 + 0.45 + r * 0.8);
+      s.castShadow = false;
+      g.add(s);
+    }
+  }
+  return { object: g, colliders: [] };
+}
+
+function cart(): PropResult {
+  const g = new THREE.Group();
+  g.add(mesh(new THREE.BoxGeometry(2.2, 0.15, 1.1), mat(WOOD), 0, 0.7, 0));
+  g.add(mesh(new THREE.BoxGeometry(2.2, 0.5, 0.08), mat(WOOD_DARK), 0, 1, 0.5));
+  g.add(mesh(new THREE.BoxGeometry(2.2, 0.5, 0.08), mat(WOOD_DARK), 0, 1, -0.5));
+  const wheel = (x: number) => {
+    const m = mesh(new THREE.TorusGeometry(0.42, 0.07, 5, 12), mat(WOOD_DARK), x, 0.45, 0.62);
+    g.add(m);
+  };
+  wheel(-0.7);
+  wheel(0.7);
+  // Uma roda no chão, a carroça quebrou
+  const broken = mesh(new THREE.TorusGeometry(0.42, 0.07, 5, 12), mat(WOOD_DARK), 1.5, 0.1, -0.9);
+  broken.rotation.x = Math.PI / 2;
+  g.add(broken);
+  g.add(mesh(new THREE.CylinderGeometry(0.04, 0.04, 1.8, 5), mat(WOOD_DARK), -1.7, 0.6, 0).rotateZ(1.3));
+  return { object: g, colliders: [{ kind: 'box', w: 2.3, d: 1.3 }] };
+}
+
+function cookpot(): PropResult {
+  const g = new THREE.Group();
+  const fire = campfire();
+  g.add(fire.object);
+  const pot = mesh(new THREE.SphereGeometry(0.3, 8, 6, 0, Math.PI * 2, 0, Math.PI * 0.6), mat(0x2a2f3a), 0, 0.75, 0);
+  pot.rotation.x = Math.PI;
+  g.add(pot);
+  for (const s of [-1, 1]) g.add(mesh(new THREE.CylinderGeometry(0.03, 0.03, 1, 4), mat(WOOD_DARK), s * 0.4, 0.5, 0));
+  g.add(mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.9, 4), mat(WOOD_DARK), 0, 1, 0).rotateZ(Math.PI / 2));
+  return { object: g, colliders: [{ kind: 'circle', r: 0.65 }], flicker: fire.flicker };
+}
+
+/**
+ * Pedestal do selo: um círculo de pedra com a runa do território.
+ * Apagado e rachado até o selo ser restaurado; depois acende e gira.
+ */
+function sealPedestal(p: PropParams): PropResult {
+  const color = new THREE.Color(p.cor ?? '#6b8f4e');
+  const g = new THREE.Group();
+  g.add(mesh(new THREE.CylinderGeometry(1.5, 1.7, 0.35, 10), mat(PROPS.stoneDark), 0, 0.17, 0));
+  g.add(mesh(new THREE.CylinderGeometry(0.9, 1.1, 0.5, 10), mat(PROPS.stone), 0, 0.6, 0));
+  const ringMat = new THREE.MeshStandardMaterial({ color: 0x3a3f4c, emissive: color, emissiveIntensity: 0, flatShading: true });
+  const ring = mesh(new THREE.TorusGeometry(1.15, 0.06, 5, 30), ringMat, 0, 0.42, 0);
+  ring.rotation.x = Math.PI / 2;
+  g.add(ring);
+  const crystalMat = new THREE.MeshStandardMaterial({ color: 0x3a3f4c, emissive: color, emissiveIntensity: 0, flatShading: true, roughness: 0.2 });
+  const crystal = mesh(new THREE.OctahedronGeometry(0.4, 0), crystalMat, 0, 1.6, 0);
+  crystal.scale.set(0.8, 1.4, 0.8);
+  crystal.castShadow = false;
+  g.add(crystal);
+  const light = new THREE.PointLight(color, 0, 10, 1.6);
+  light.position.y = 1.8;
+  g.add(light);
+  let power = 0;
+  let target = p.luz === true ? 1 : 0;
+  return {
+    object: g,
+    colliders: [{ kind: 'circle', r: 1.5 }],
+    animate: (dt, t) => {
+      power += (target - power) * Math.min(1, dt * 1.4);
+      ringMat.emissiveIntensity = power * 2;
+      crystalMat.emissiveIntensity = power * 2.2;
+      crystalMat.color.lerpColors(new THREE.Color(0x3a3f4c), color, power);
+      ringMat.color.lerpColors(new THREE.Color(0x3a3f4c), color, power);
+      light.intensity = power * (12 + Math.sin(t * 2.2) * 2);
+      crystal.position.y = 1.6 + Math.sin(t * 1.5) * 0.08 * power;
+      crystal.rotation.y = t * 0.8 * power;
+    },
+    events: { 'selo-restaurado': () => (target = 1) },
+  };
+}
+
 const BUILDERS: Record<string, (p: PropParams) => PropResult> = {
+  ruina: ruin,
+  escombros: rubble,
+  tenda: tent,
+  bandeira: banner,
+  celeiro: barn,
+  feno: hay,
+  plantacao: crops,
+  carroca: cart,
+  panela: cookpot,
+  'pedestal-selo': sealPedestal,
   coracao: heart,
   casa: house,
   forja: forge,

@@ -1,0 +1,23 @@
+{
+  "titulo": "Aetheria, nove anos depois",
+  "_formato": "pos = [x, y] em porcentagem do mapa. Regiões 'futuro' aparecem como ??? até existirem no jogo.",
+  "regioes": [
+    { "id": "vila-ruinas", "nome": "Vila em Ruínas", "pos": [50, 56] },
+    { "id": "campos-de-linne", "nome": "Campos de Linne", "pos": [78, 62] },
+    { "id": "floresta-de-sylven", "nome": "Floresta de Sylven", "pos": [24, 32], "futuro": true },
+    { "id": "pantano-de-morn", "nome": "Pântano de Morn", "pos": [20, 72], "futuro": true },
+    { "id": "dunas-de-sahr", "nome": "Dunas de Sahr", "pos": [48, 90], "futuro": true },
+    { "id": "picos-de-frostveil", "nome": "Picos de Frostveil", "pos": [48, 12], "futuro": true },
+    { "id": "costa-de-mare-alta", "nome": "Costa de Maré Alta", "pos": [90, 86], "futuro": true },
+    { "id": "cidadela", "nome": "Cidadela de Aetheria Alta", "pos": [82, 16], "futuro": true }
+  ],
+  "caminhos": [
+    ["vila-ruinas", "campos-de-linne"],
+    ["vila-ruinas", "floresta-de-sylven"],
+    ["vila-ruinas", "pantano-de-morn"],
+    ["vila-ruinas", "dunas-de-sahr"],
+    ["vila-ruinas", "picos-de-frostveil"],
+    ["campos-de-linne", "costa-de-mare-alta"],
+    ["picos-de-frostveil", "cidadela"]
+  ]
+}

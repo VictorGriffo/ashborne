@@ -1,7 +1,7 @@
 import { el, fadeIn } from '../../ui/dom';
 import type { GameContext } from '../GameContext';
 import type { GameState } from '../StateMachine';
-import { TitleState } from './TitleState';
+import { startPartTwo } from '../session';
 
 const TEXTS: Record<string, { linhas: string[]; titulo: string; aviso: string }> = {
   'parte-1': {
@@ -13,7 +13,7 @@ const TEXTS: Record<string, { linhas: string[]; titulo: string; aviso: string }>
       'Nove anos depois...',
     ],
     titulo: 'Fim da Parte 1',
-    aviso: 'A Parte 2, Exílio, começa no próximo marco (M5).',
+    aviso: 'Parte 2: Exílio',
   },
 };
 
@@ -47,7 +47,7 @@ export class EndOfPartState implements GameState {
       box.append(p);
     }
     this.footer = el('div', 'end-footer');
-    const button = el('button', 'prompt', 'Voltar ao título');
+    const button = el('button', 'prompt', 'Continuar');
     button.type = 'button';
     button.tabIndex = -1;
     button.addEventListener('click', () => this.close());
@@ -85,7 +85,7 @@ export class EndOfPartState implements GameState {
   private close(): void {
     if (this.closed) return;
     this.closed = true;
-    // Volta ao título por cima de tudo; o título troca a pilha ao começar ou continuar.
-    this.ctx.states.push(new TitleState(this.ctx));
+    // A Parte 2 começa dali, com o jogo salvo.
+    startPartTwo(this.ctx);
   }
 }

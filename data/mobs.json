@@ -304,6 +304,163 @@
     "ataquesCalmo": ["feixes-lentos"]
   },
 
+  "cinzento": {
+    "nome": "Cinzento",
+    "artigo": "o",
+    "modelo": "cinzento",
+    "vida": 34,
+    "ataque": 9,
+    "defesa": 1,
+    "recompensa": { "xp": 26, "brasas": 10 },
+    "recompensaPoupar": { "lacos": 1, "brasas": 3 },
+    "calmaParaPoupar": 2,
+    "marcar": ["provou-valor"],
+    "mapa": { "velocidade": 0.9, "raioPasseio": 3, "raioToque": 0.55 },
+    "encontro": "Um Cinzento se ergue da poeira, murmurando coisas que já foram palavras.",
+    "surpresa": "O Cinzento estava olhando para o nada. Ele ainda olha. Você chegou antes.",
+    "aoPoupar": "O Cinzento se desfaz em cinza fina, leve, e o vento leva um pouco de paz.",
+    "falas": ["...volta...", "...casa...", "...onde...", "...frio..."],
+    "falasCalmo": ["...obrigado..."],
+    "textos": ["O Cinzento tenta lembrar o próprio nome.", "A cinza do Cinzento cai e sobe de novo.", "Os olhos de brasa do Cinzento piscam, devagar."],
+    "textosCalmo": ["O Cinzento está quase em paz. Dá para poupá-lo."],
+    "agir": [
+      { "nome": "Observar", "texto": ["CINZENTO: ataque 9, defesa 1.", "O que sobrou de quem a catástrofe pegou. Lembram da vida, mas não conseguem voltar a ela."], "calma": 0 },
+      { "nome": "Ficar em silêncio", "texto": ["Você fica quieto e deixa o Cinzento ficar.", "A cinza dele assenta um pouco."], "calma": 1 },
+      { "nome": "Oferecer uma lembrança", "texto": ["\"Eu também perdi gente\", você diz.", "O Cinzento inclina a cabeça, como quem entende."], "calma": 1 },
+      { "nome": "Erguer a espada", "texto": ["Você ergue a espada.", "O Cinzento recua, com medo. Medo ele ainda sente."], "calma": -1 }
+    ],
+    "ataques": ["nuvens-de-cinza", "cortina-de-cinza"],
+    "ataquesCalmo": ["gotas-suaves"]
+  },
+
+  "soldado-de-vaelor": {
+    "nome": "Soldado de Vaelor",
+    "artigo": "o",
+    "modelo": "soldado",
+    "vida": 40,
+    "ataque": 10,
+    "defesa": 2,
+    "recompensa": { "xp": 34, "brasas": 14 },
+    "recompensaPoupar": { "lacos": 2, "brasas": 6 },
+    "calmaParaPoupar": 3,
+    "marcar": ["provou-valor"],
+    "mapa": { "velocidade": 1.1, "raioPasseio": 3, "raioToque": 0.6 },
+    "encontro": "Um Soldado de Vaelor barra o caminho. \"Em nome do novo conselho: parado!\"",
+    "surpresa": "O soldado estava ajeitando o elmo. Você pegou ele de calças curtas, por assim dizer.",
+    "aoPoupar": "O soldado larga a lança, tira o elmo e ficamos ali, olhando um para o outro. Ele vai embora sem dizer nada.",
+    "falas": ["Em nome de Vaelor!", "Sem passagem!", "Ordem é ordem!"],
+    "falasCalmo": ["...eu só queria voltar para casa."],
+    "textos": ["O soldado mantém a lança firme, mas as mãos tremem.", "O soldado olha para os lados, procurando o sargento."],
+    "textosCalmo": ["O soldado hesita. Talvez ele desista. Dá para poupá-lo."],
+    "agir": [
+      { "nome": "Observar", "texto": ["SOLDADO DE VAELOR: ataque 10, defesa 2.", "Recrutado à força. Trocou a fazenda pela lança e não gostou da troca."], "calma": 0 },
+      { "nome": "Conversar", "texto": ["\"De onde você é?\", você pergunta.", "\"...de Linne\", ele responde, sem querer."], "calma": 1 },
+      { "nome": "Lembrar da família", "texto": ["\"Alguém espera por você, não espera?\"", "O soldado abaixa a lança um pouco."], "calma": 1 },
+      { "nome": "Baixar a espada", "texto": ["Você baixa a espada devagar.", "O soldado engole em seco."], "calma": 1 }
+    ],
+    "ataques": ["espadas-em-onda"],
+    "ataquesCalmo": ["investida-lenta"]
+  },
+
+  "espantalho-vivo": {
+    "nome": "Espantalho Vivo",
+    "artigo": "o",
+    "modelo": "espantalho",
+    "vida": 44,
+    "ataque": 10,
+    "defesa": 2,
+    "recompensa": { "xp": 38, "brasas": 14 },
+    "recompensaPoupar": { "lacos": 1, "brasas": 5 },
+    "calmaParaPoupar": 2,
+    "mapa": { "velocidade": 1.0, "raioPasseio": 3.2, "raioToque": 0.55 },
+    "encontro": "Um Espantalho Vivo desce do poste, rangendo, e vem na sua direção.",
+    "surpresa": "O Espantalho estava de costas, espantando corvos que nunca vieram.",
+    "aoPoupar": "O Espantalho ajeita o chapéu, volta ao poste e fica ali, de guarda, mas em paz.",
+    "falas": ["Fora das plantações!", "Corvo! Corvo!", "Proteger! Proteger!"],
+    "falasCalmo": ["...as plantações estão bem?"],
+    "textos": ["O Espantalho gira a cabeça mais do que devia.", "Palha cai dos braços do Espantalho.", "O Espantalho aponta para o chão: \"Minhas plantações!\""],
+    "textosCalmo": ["O Espantalho está mais tranquilo. Dá para poupá-lo."],
+    "agir": [
+      { "nome": "Observar", "texto": ["ESPANTALHO VIVO: ataque 10, defesa 2.", "O Aether dos Campos o despertou para proteger o que restou. O chapéu dele está torto."], "calma": 0 },
+      { "nome": "Consertar o chapéu", "texto": ["Você ajeita o chapéu do Espantalho.", "Ele fica imóvel, de olhos arregalados."], "textoCalmo": ["Você alisa a aba do chapéu.", "O Espantalho respira. Ou chia. Difícil saber."], "calma": 2 },
+      { "nome": "Mostrar a plantação", "texto": ["Você aponta para os brotos que ainda sobraram.", "O Espantalho olha. Vira a cabeça. Olha de novo."], "calma": 1 },
+      { "nome": "Fingir que é um corvo", "texto": ["\"Cróc cróc!\"", "O Espantalho fica furioso!"], "calma": -1 }
+    ],
+    "ataques": ["palha-girando", "palha-e-feixe"],
+    "ataquesCalmo": ["palha-ao-vento"]
+  },
+
+  "javali-de-cinzas": {
+    "nome": "Javali de Cinzas",
+    "artigo": "o",
+    "modelo": "javali",
+    "vida": 48,
+    "ataque": 11,
+    "defesa": 3,
+    "recompensa": { "xp": 42, "brasas": 16 },
+    "recompensaPoupar": { "lacos": 1, "brasas": 6 },
+    "calmaParaPoupar": 2,
+    "mapa": { "velocidade": 1.7, "raioPasseio": 3.6, "raioToque": 0.7 },
+    "encontro": "Um Javali de Cinzas raspa o chão com a pata e investe!",
+    "surpresa": "O Javali estava fuçando uma raiz queimada. Distraído de dar dó.",
+    "aoPoupar": "O Javali funga, amistoso, e volta a fuçar o chão em busca de raízes, agora sem pressa.",
+    "falas": ["*bufa*", "*raspa o chão*", "*grunhido grave*"],
+    "falasCalmo": ["*fareja a erva, desconfiado*"],
+    "textos": ["O Javali solta brasa pelas narinas.", "O Javali balança as presas.", "O lombo do Javali brilha em rachaduras de brasa."],
+    "textosCalmo": ["O Javali baixou a cabeça. Dá para poupá-lo."],
+    "agir": [
+      { "nome": "Observar", "texto": ["JAVALI DE CINZAS: ataque 11, defesa 3.", "Faminto, desde que os campos secaram. Tudo o que quer é comer."], "calma": 0 },
+      { "nome": "Oferecer uma erva", "texto": ["Você deixa um punhado de ervas no chão.", "O Javali fareja. Hesita."], "textoCalmo": ["Você deixa mais ervas.", "O Javali come, devagar, de olho em você."], "calma": 2 },
+      { "nome": "Ficar parado", "texto": ["Você fica imóvel como uma pedra.", "O Javali circula, desconfiado."], "calma": 1 },
+      { "nome": "Encarar", "texto": ["Você o encara.", "O Javali interpreta como desafio. Não foi uma boa ideia."], "calma": -1 }
+    ],
+    "ataques": ["investidas-laterais", "uivo-em-cortina"],
+    "ataquesCalmo": ["investida-lenta"]
+  },
+
+  "orsa-vell": {
+    "nome": "General Orsa Vell",
+    "artigo": "a",
+    "modelo": "general-orsa",
+    "vida": 150,
+    "ataque": 12,
+    "defesa": 4,
+    "unico": true,
+    "chefe": true,
+    "recompensa": { "xp": 160, "brasas": 70 },
+    "recompensaPoupar": { "lacos": 3, "brasas": 30 },
+    "calmaParaPoupar": 4,
+    "marcar": ["orsa-superada"],
+    "mapa": { "velocidade": 0, "raioPasseio": 0, "raioToque": 1.2 },
+    "encontro": "A general Orsa Vell crava o machado no chão. \"Mais um garoto querendo bancar o herói? Vai ter que passar por mim e pelas minhas raízes.\"",
+    "surpresa": "A general não esperava você pelas costas. Ela rosna, mas leva um segundo a mais para se virar.",
+    "aoVencer": "Orsa Vell cai de joelhos e o machado se parte ao meio. \"...Era mais fácil quando eu só plantava.\"",
+    "aoPoupar": "Orsa Vell baixa o machado e olha, pela primeira vez em nove anos, para a terra queimada. \"Eu... eu só queria proteger os campos. Vaelor disse que os selos seriam a única forma.\"",
+    "recusaPoupar": "\"Poupar? Eu? Eu sou a general! Prove primeiro que tem coragem de ouvir.\"",
+    "falas": ["Raízes, levantem!", "A terra obedece a mim!", "Cresça, e cresça forte!", "Ninguém pisa nos meus campos!"],
+    "falasCalmo": ["...a terra está quieta. Por que está quieta?"],
+    "textos": ["Raízes escuras rastejam em volta dos pés de Orsa Vell.", "A general pesa o machado com uma mão só.", "Folhas queimadas giram ao redor de Orsa Vell."],
+    "textosCalmo": ["A general respira fundo. Os olhos dela amoleceram. Dá para poupá-la."],
+    "agir": [
+      { "nome": "Observar", "texto": ["GENERAL ORSA VELL: ataque 12, defesa 4.", "Antes da catástrofe, era a melhor fazendeira de Linne. Vaelor prometeu que as colheitas voltariam."], "calma": 0 },
+      {
+        "nome": "Falar dos campos",
+        "texto": ["\"Eu me lembro dos campos de Linne, Orsa. Eram verdes até o horizonte.\"", "Orsa franze a testa. \"Eram, é verdade.\""],
+        "textoCalmo": ["\"Eles podem ser verdes de novo.\"", "Orsa fica quieta."],
+        "calma": 1
+      },
+      { "nome": "Elogiar o trabalho dela", "texto": ["\"Dizem que ninguém plantava como você.\"", "Orsa desvia o olhar. Ainda tem orgulho."], "calma": 1 },
+      {
+        "nome": "Dizer que Vaelor mentiu",
+        "texto": ["\"Vaelor não traz colheita nenhuma. Ele só quer o Aether.\"", "Orsa congela. A raiz aos pés dela estremece."],
+        "calma": 2
+      },
+      { "nome": "Zombar", "texto": ["\"Plantar era mais seu estilo, hein?\"", "Orsa ruge, furiosa!"], "calma": -2 }
+    ],
+    "ataques": ["raizes-que-sobem", "foice-giratoria", "semeadura"],
+    "ataquesCalmo": ["feixes-lentos"]
+  },
+
   "vaelor": {
     "nome": "Vaelor",
     "artigo": "o",

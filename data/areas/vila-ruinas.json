@@ -1,0 +1,122 @@
+{
+  "id": "vila-ruinas",
+  "nome": "Vila em Ruínas",
+  "tipo": "ar-livre",
+  "_comentario": "A mesma vila da Parte 1, nove anos depois. Objetos com 'se' só aparecem quando a flag está marcada: a vila é reconstruída conforme os territórios são libertados.",
+  "ambiente": {
+    "fundo": "#18122a",
+    "nevoa": [24, 52],
+    "ceu": "#9a88c8",
+    "chao": "#2c2644",
+    "luzAmbiente": 2.0,
+    "lua": { "cor": "#c4b4ec", "intensidade": 2.2 },
+    "vagalumes": 0,
+    "cinzas": 110,
+    "grama": ["#1c3b3a", "#2b4a4a"]
+  },
+  "limite": { "min": [-18, -13], "max": [18, 13] },
+  "caminhos": [
+    { "pontos": [[0, 14], [0.4, 7], [0, 0], [-0.3, -7], [0, -14]], "largura": 2.6 },
+    { "pontos": [[-19, 1], [-9, 0.6], [0, 0], [9, -0.4], [19, 0.6]], "largura": 2.2 }
+  ],
+  "manchas": [{ "pos": [0, 0], "raio": 4.2, "tipo": "pedra" }],
+  "vegetacao": { "arvores": 50, "dentro": 0, "pedras": 20, "grama": 70, "flores": 0.01, "semente": 51 },
+  "objetos": [
+    { "tipo": "ruina", "pos": [0, -16.6], "tamanho": [10, 5.5], "altura": 3.4, "cor": "#4a4658" },
+    { "tipo": "poco", "pos": [0, 0] },
+    { "tipo": "ruina", "pos": [8.6, -7], "tamanho": [5, 3.6], "altura": 2.4, "cor": "#5a4a48" },
+    { "tipo": "ruina", "pos": [-11.5, 7], "rot": 90, "tamanho": [4, 3.2], "altura": 2, "cor": "#58525c" },
+    { "tipo": "ruina", "pos": [11.5, 6.4], "rot": -90, "tamanho": [4, 3.2], "altura": 2, "cor": "#4e4a58" },
+    { "tipo": "ruina", "pos": [14.6, -10.6], "tamanho": [3.4, 2.8], "altura": 1.8, "cor": "#544e58", "naoSe": "selo-1" },
+    { "tipo": "escombros", "pos": [5, 3.4] },
+    { "tipo": "escombros", "pos": [-3.4, 4.8] },
+    { "tipo": "escombros", "pos": [3, -3.4] },
+    { "tipo": "escombros", "pos": [-5.5, -4.6] },
+    { "tipo": "escombros", "pos": [12.8, -2.2] },
+    { "tipo": "bandeira", "pos": [3.8, -8.8], "cor": "#3a1f66" },
+    { "tipo": "bandeira", "pos": [-3.6, -9.4], "cor": "#3a1f66" },
+    { "tipo": "carroca", "pos": [6.8, 8.8], "rot": 25 },
+    { "tipo": "caixote", "pos": [10.4, 9.4] },
+    { "tipo": "forja", "pos": [-8.6, -8], "tamanho": [4.4, 3.4], "cor": "#6a6660", "telhado": "#3a3f4c" },
+    { "tipo": "tenda", "pos": [-13, -1.6], "rot": 90, "cor": "#5a6a52" },
+    { "tipo": "tenda", "pos": [-13, 3.4], "rot": 90, "cor": "#6a5a52" },
+    { "tipo": "tenda", "pos": [-9.4, 5.6], "cor": "#52606a" },
+    { "tipo": "panela", "pos": [-9.4, 0.8] },
+    { "tipo": "bandeira", "pos": [-7, -3], "cor": "#2e7d5b" },
+    { "tipo": "banco", "pos": [-9.8, 4.4] },
+    { "tipo": "caixote", "pos": [-15.4, 7.2] },
+    { "tipo": "caixote", "pos": [-14.6, 7.8] },
+
+    { "tipo": "casa", "pos": [14.6, -10.6], "tamanho": [3.4, 2.8], "cor": "#a8a090", "telhado": "#6a3b33", "se": "selo-1" },
+    { "tipo": "barraca", "pos": [5, 8.4], "cor": "#8a3b4a", "se": "selo-1" },
+    { "tipo": "tenda", "pos": [-5.4, 8.6], "cor": "#6a6a52", "se": "selo-1" },
+    { "tipo": "lampiao", "pos": [2.6, -2.6], "se": "selo-1" },
+    { "tipo": "lampiao", "pos": [-2.8, 2.8], "se": "selo-1" },
+    { "tipo": "lampiao", "pos": [3, 9], "se": "selo-1" },
+    { "tipo": "canteiro", "pos": [-5.8, -1.2], "tamanho": [2.6, 1.4], "se": "selo-1" }
+  ],
+  "npcs": [
+    { "personagem": "sobrevivente", "pos": [2.2, 8.4], "rot": 160, "dialogo": "sobrevivente" },
+    { "personagem": "lyra-adulta", "pos": [-10.6, 0.2], "rot": 70, "dialogo": "lyra-p2" },
+    { "personagem": "tob-adulto", "pos": [-8.6, -5.2], "rot": 0, "dialogo": "tob-p2" },
+    { "personagem": "mira", "pos": [8.4, -4.2], "rot": 0, "dialogo": "mira-p2" },
+    { "personagem": "pip-orfa", "pos": [-5.6, 3.2], "rot": 40, "dialogo": "pip-p2" },
+    { "personagem": "intendente", "pos": [-12, 1.2], "rot": 90, "dialogo": "intendente" },
+    { "personagem": "refugiado", "pos": [5.6, 6.4], "rot": -40, "dialogo": "refugiado-1", "se": "selo-1" },
+    { "personagem": "refugiado", "pos": [-3.4, 7.4], "rot": 30, "dialogo": "refugiado-2", "se": "selo-1" },
+    { "personagem": "fazendeiro", "pos": [13.8, -8.2], "rot": 200, "dialogo": "fazendeiro-vila", "se": "selo-1" }
+  ],
+  "mobs": [
+    { "mob": "cinzento", "pos": [-3.2, -6.8] },
+    { "mob": "cinzento", "pos": [6.4, 2.4] },
+    { "mob": "soldado-de-vaelor", "pos": [1.6, -10.6] }
+  ],
+  "interativos": [
+    {
+      "tipo": "save",
+      "id": "fogueira-da-resistencia",
+      "nome": "Fogueira da Resistência",
+      "pos": [-9.4, 2.4],
+      "raio": 0.5,
+      "chegada": { "pos": [-8.3, 2.4], "rot": -90 }
+    },
+    { "tipo": "bau", "id": "bau-da-resistencia", "pos": [-15.8, 5.6], "raio": 0.8, "conteudo": { "itens": { "cha-de-erva-lume": 2 }, "brasas": 12 } },
+    {
+      "tipo": "examinar",
+      "id": "ruina-da-guarda",
+      "rotulo": "Olhar",
+      "pos": [0, -12.6],
+      "raio": 1.6,
+      "falas": [
+        "O Salão da Guarda é um monte de pedra caída. O estandarte azul ainda pende de uma viga, em frangalhos.",
+        "Nove anos. E você ainda ouve a voz do Mestre Orin: \"Uma lâmina que sabe parar...\""
+      ]
+    },
+    {
+      "tipo": "examinar",
+      "id": "casa-da-maren",
+      "rotulo": "Olhar",
+      "pos": [-9.4, 7],
+      "raio": 1.6,
+      "falas": [
+        "A casa onde você cresceu. O telhado afundou e a porta está pendurada numa dobradiça.",
+        "Não há ninguém. Mas a cama da sua mãe está arrumada. Alguém ainda cuida de algo aqui.",
+        "Uma pista... para mais tarde."
+      ],
+      "marcar": ["viu-casa-da-maren"]
+    }
+  ],
+  "entradas": {
+    "chegada": { "pos": [0, 11.2], "rot": 180 },
+    "acampamento": { "pos": [-7.4, 4.4], "rot": 90 },
+    "leste": { "pos": [15.8, 0.6], "rot": -90 }
+  },
+  "saidas": [
+    {
+      "caixa": [16.9, -1.4, 19, 2.6],
+      "area": "campos-de-linne",
+      "entrada": "oeste",
+      "bloqueio": { "se": "entrou-na-resistencia", "mensagem": "A estrada leste leva aos Campos de Linne. A Lyra disse para falar com ela antes de sair da vila." }
+    }
+  ]
+}

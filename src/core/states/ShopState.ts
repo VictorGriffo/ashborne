@@ -1,17 +1,24 @@
 import lojas from '../../../data/lojas.json';
+import { check, type Condition } from '../../systems/conditions';
 import { item } from '../../systems/items';
 import { el, fadeIn, fadeOut } from '../../ui/dom';
 import { MenuList, type MenuItem } from '../../ui/MenuList';
 import type { GameContext } from '../GameContext';
 import type { GameState } from '../StateMachine';
 
+/** Um item à venda: só o id, ou o id com condições por flags. */
+type ShopEntry = string | ({ id: string } & Condition);
+
 interface ShopData {
   nome: string;
   saudacao: string;
-  itens: string[];
+  itens: ShopEntry[];
 }
 
-const SHOPS = lojas as Record<string, ShopData>;
+const SHOPS = Object.fromEntries(Object.entries(lojas).filter(([id]) => !id.startsWith('_'))) as unknown as Record<
+  string,
+  ShopData
+>;
 
 /** Loja: comprar e vender com Brasas. A venda paga metade do preço. */
 export class ShopState implements GameState {
@@ -70,12 +77,19 @@ export class ShopState implements GameState {
     ]);
   }
 
+  /** Itens à venda agora, de acordo com as flags. */
+  private available(): string[] {
+    return this.data.itens
+      .filter((e) => typeof e === 'string' || check(this.ctx.flags, e))
+      .map((e) => (typeof e === 'string' ? e : e.id));
+  }
+
   private buyList(keep = 0): void {
     this.mode = 'comprar';
     const player = this.ctx.player;
     this.setMenu(
       [
-        ...this.data.itens.map((id) => {
+        ...this.available().map((id) => {
           const data = item(id);
           const price = data.preco ?? 0;
           return {
@@ -83,6 +97,10 @@ export class ShopState implements GameState {
             action: () => {
               if (player.brasas < price) {
                 this.message.textContent = 'Brasas insuficientes. O Bram cruza os braços.';
+                return;
+              }
+              if (data.tipo !== 'cura' && data.tipo !== 'aether' && player.itemCount(id) > 0) {
+                this.message.textContent = 'Você já tem um desses.';
                 return;
               }
               player.brasas -= price;

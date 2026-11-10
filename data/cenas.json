@@ -1,4 +1,12 @@
 {
+  "salto": [{ "esperar": 0.8 }, { "dialogo": "salto-narracao" }],
+  "selo-1": [
+    { "evento": "selo-restaurado" },
+    { "clarao": true },
+    { "esperar": 1.4 },
+    { "flag": "selo-1" },
+    { "dialogo": "selo-1-restaurado" }
+  ],
   "catastrofe": [
     { "evento": "coracao-sobe" },
     { "esperar": 1 },

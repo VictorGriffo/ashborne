@@ -1,7 +1,27 @@
 {
+  "_formato": "'itens' aceita um id ou { id, se, naoSe } para liberar itens conforme as flags (a forja melhora quando um território é libertado).",
   "mercador": {
     "nome": "Bram, o mercador",
     "saudacao": "Ervas, chás e uma lâmina que o Tob jura que está boa. Pague em Brasas!",
     "itens": ["erva-lume", "cha-de-erva-lume", "lamina-remendada"]
+  },
+  "resistencia": {
+    "nome": "Acampamento da Resistência",
+    "saudacao": "Não é muito, mas é o que sobrou. Tudo à base de Brasas.",
+    "itens": [
+      "erva-lume",
+      "cha-de-erva-lume",
+      "sopa-da-resistencia",
+      { "id": "lagrima-de-aether", "se": "selo-1" }
+    ]
+  },
+  "forja-do-tob": {
+    "nome": "Forja do Tob",
+    "saudacao": "Reconstruí a forja com o que dava. Cada território libertado, eu aprendo uma coisa nova!",
+    "itens": [
+      "lamina-remendada",
+      { "id": "capa-da-resistencia", "se": "selo-1" },
+      { "id": "lamina-de-brasa", "se": "selo-1" }
+    ]
   }
 }

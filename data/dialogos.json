@@ -430,6 +430,313 @@
     }
   },
 
+  "salto-narracao": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "",
+        "falas": [
+          "Nove anos.",
+          "A estrada até a vila ainda tem a marca das rodas. Mas ninguém passa por ela.",
+          "Ryben tem 24 anos agora. Carrega um capuz, uma espada e a culpa de cada pessoa que ficou para trás.",
+          "Ele não sabe se tem direito de voltar. Mas voltou."
+        ]
+      }
+    }
+  },
+
+  "sobrevivente": {
+    "inicio": [{ "se": "falou-com-sobrevivente", "no": "depois" }, { "no": "oi" }],
+    "nos": {
+      "oi": {
+        "quem": "sobrevivente",
+        "falas": [
+          "Ei! Você aí, de capuz! Não se aproxime dos Cinzentos! Eles atacam quem parece... perdido.",
+          "...Você tem cara de quem conhece este lugar. Nunca o vi por aqui.",
+          "O que aconteceu aqui foi na noite do eclipse. A luz roxa engoliu tudo, e os selos se partiram no céu como brasas.",
+          "Alguns de nós se juntaram a oeste, em volta de uma fogueira. A Lyra, a curandeira, comanda. Siga a fumaça."
+        ],
+        "marcar": ["falou-com-sobrevivente"]
+      },
+      "depois": {
+        "quem": "sobrevivente",
+        "falas": ["O acampamento é a oeste. Siga a fumaça. E mantenha o capuz: os soldados de Vaelor procuram um garoto de nome Ryben."]
+      }
+    }
+  },
+
+  "lyra-p2": {
+    "inicio": [
+      { "se": "lyra-soube-do-selo", "no": "depois-selo" },
+      { "se": "selo-1", "no": "relato-selo" },
+      { "se": "entrou-na-resistencia", "no": "lembrete-linne" },
+      { "se": "provou-valor", "no": "aceita" },
+      { "se": "falou-com-tob-p2", "no": "prova" },
+      { "se": "falou-com-lyra", "no": "va-ao-tob" },
+      { "no": "reencontro" }
+    ],
+    "nos": {
+      "reencontro": {
+        "quem": "lyra-adulta",
+        "falas": [
+          "...",
+          "Eu sabia que você ia aparecer. Eu só não sabia se queria que aparecesse.",
+          "Nove anos, Ryben. Você sumiu. E eu fiquei aqui, juntando o que sobrou."
+        ],
+        "escolhas": [
+          { "texto": "Lyra, eu... sinto muito.", "ir": "sinto" },
+          { "texto": "Eu vim ajudar.", "ir": "ajudar" }
+        ]
+      },
+      "sinto": {
+        "quem": "lyra-adulta",
+        "falas": [
+          "Sente muito. É? Foi isso que você veio dizer?",
+          "...Tudo bem. Eu também senti, por muito tempo. Mas sentir não conserta nada.",
+          "A resistência precisa de gente que sabe segurar uma espada. Se você é um deles, prove."
+        ],
+        "ir": "orienta"
+      },
+      "ajudar": {
+        "quem": "lyra-adulta",
+        "falas": [
+          "Ajudar. Hmm.",
+          "Eu ouvi falar de um garoto, uma vez. Disseram que era um herói.",
+          "Hoje ele pode ser o garoto que abriu a porta. Mas isso a gente decide depois. Primeiro, você precisa provar que está do nosso lado."
+        ],
+        "ir": "orienta"
+      },
+      "orienta": {
+        "quem": "lyra-adulta",
+        "falas": ["O Tob está na forja improvisada, ao norte do acampamento. Ele vai querer te ver. Fale com ele. Depois falamos de novo."],
+        "marcar": ["falou-com-lyra"]
+      },
+      "va-ao-tob": {
+        "quem": "lyra-adulta",
+        "falas": ["O Tob está na forja, ao norte do acampamento. Vá vê-lo."]
+      },
+      "prova": {
+        "quem": "lyra-adulta",
+        "falas": [
+          "O Tob contou que você apareceu. E que está vivo. Ele chorou. Não conte que eu contei.",
+          "Mas o acampamento não aceita ninguém sem uma prova. Nada pessoal.",
+          "Cinzentos e soldados de Vaelor andam pelas ruínas. Enfrente um deles, e eu decido o resto.",
+          "E, Ryben... poupar vale tanto quanto vencer. Mais, às vezes."
+        ]
+      },
+      "aceita": {
+        "quem": "lyra-adulta",
+        "falas": [
+          "Eu vi de longe. Você poupou, ou venceu? ...Não importa. Você enfrentou, e voltou inteiro.",
+          "Está bem. Você está dentro. Mas se nos trair, eu mesma te viro para a parede.",
+          "Agora, ao que interessa: os sete selos se partiram na noite do eclipse. Cada um deles prendia uma magia, e a magia agora se espalha, corrompida.",
+          "Aos Campos de Linne, a leste daqui, a general Orsa Vell guarda o primeiro selo. Ela era a melhor fazendeira da região. Agora serve a Vaelor.",
+          "Se você restaurar o selo, o Aether volta a responder a você. Ele não responde desde a catástrofe, não é?"
+        ],
+        "recompensa": { "itens": { "sopa-da-resistencia": 2 } },
+        "marcar": ["entrou-na-resistencia"]
+      },
+      "lembrete-linne": {
+        "quem": "lyra-adulta",
+        "falas": ["Siga a estrada leste da vila até os Campos de Linne. A general Orsa Vell guarda o primeiro selo. Se precisar, a Intendente Brisa vende o que podemos."]
+      },
+      "relato-selo": {
+        "quem": "lyra-adulta",
+        "falas": [
+          "Você voltou. E... o Aether está diferente em você. Eu sinto daqui.",
+          "Você restaurou o selo? ...Você restaurou o selo.",
+          "Eu juro que, por um instante, achei que você não fosse conseguir. Mas aí lembrei de quem você era.",
+          "Os refugiados já voltam a Linne. A vila vai precisar de gente para reconstruir, e agora temos esperança. Obrigada, Ryben."
+        ],
+        "recompensa": { "itens": { "lagrima-de-aether": 2 }, "brasas": 20 },
+        "marcar": ["lyra-soube-do-selo"]
+      },
+      "depois-selo": {
+        "quem": "lyra-adulta",
+        "falas": [
+          "A vila está voltando à vida. Olha só: já tem lampiões acesos de novo.",
+          "O Tob promete uma lâmina nova. E eu estudo os outros selos. Seis ainda faltam.",
+          "Mas por hoje, descanse. Você merece."
+        ]
+      }
+    }
+  },
+
+  "tob-p2": {
+    "inicio": [{ "se": "selo-1", "no": "forja-nova" }, { "se": "falou-com-tob-p2", "no": "forja" }, { "no": "reencontro" }],
+    "nos": {
+      "reencontro": {
+        "quem": "tob-adulto",
+        "falas": [
+          "RYBEN?!",
+          "É você mesmo! Eu... Eu achei que você tinha... O Kael disse... Esquece o que o Kael disse!",
+          "Você está vivo. Cara. Você está VIVO.",
+          "Sabe que eu ainda tenho aquela lâmina que você levou? A que eu remendei? ...Não. Claro que não tenho. Você levou."
+        ],
+        "escolhas": [
+          { "texto": "Ainda tenho ela, Tob.", "ir": "tem" },
+          { "texto": "Perdi na estrada.", "ir": "perdeu" }
+        ]
+      },
+      "tem": {
+        "quem": "tob-adulto",
+        "falas": ["Que bom! Então vem cá. Eu tenho umas ideias para melhorar. Umas ideias boas, desta vez!"],
+        "ir": "ofertas"
+      },
+      "perdeu": {
+        "quem": "tob-adulto",
+        "falas": ["Tudo bem, tudo bem! Eu faço outra. Melhor. Eu aprendi umas coisas desde então. Quase não explode mais."],
+        "ir": "ofertas"
+      },
+      "ofertas": {
+        "quem": "tob-adulto",
+        "falas": [
+          "Montei esta forja com o que sobrou. Quando a vila for sendo libertada, eu consigo fazer coisas melhores. A Lyra disse que isso depende de você.",
+          "Veja o que tenho."
+        ],
+        "marcar": ["falou-com-tob-p2"],
+        "acao": "loja:forja-do-tob"
+      },
+      "forja": {
+        "quem": "tob-adulto",
+        "falas": ["Fala, chefe! Quer ver o que tenho?"],
+        "acao": "loja:forja-do-tob"
+      },
+      "forja-nova": {
+        "quem": "tob-adulto",
+        "falas": [
+          "A Lyra me contou que você restaurou o selo! Eu fiquei tão animado que acendi a forja inteira. E acho que desmaiei um pouco.",
+          "Com o Aether de volta, consigo trabalhar o metal direito. Veja: capa nova, e uma lâmina de brasa de verdade!"
+        ],
+        "acao": "loja:forja-do-tob"
+      }
+    }
+  },
+
+  "mira-p2": {
+    "inicio": [{ "no": "recusa" }],
+    "nos": {
+      "recusa": {
+        "quem": "mira",
+        "falas": [
+          "...",
+          "Não. Eu não sirvo você.",
+          "Você sumiu quando mais precisavam de você. Eu vi o que o seu 'herói' deixou para trás.",
+          "Se quiser comida, fale com a Intendente. Comigo, não."
+        ]
+      }
+    }
+  },
+
+  "pip-p2": {
+    "inicio": [{ "se": "selo-1", "no": "depois" }, { "no": "oi" }],
+    "nos": {
+      "oi": {
+        "quem": "pip-orfa",
+        "falas": [
+          "...Você tem uma espada. Me ensina a poupar?",
+          "O Kael dizia que poupar é mais difícil que lutar. Mas o Kael sumiu. Todo mundo some."
+        ]
+      },
+      "depois": {
+        "quem": "pip-orfa",
+        "falas": ["A Vó Hesta voltou? Eu vi a fumaça da chaminé da casa dela ontem. Acho que voltou!"]
+      }
+    }
+  },
+
+  "intendente": {
+    "inicio": [{ "no": "oi" }],
+    "nos": {
+      "oi": {
+        "quem": "intendente",
+        "falas": ["Intendente Brisa, ao seu dispor. A resistência não tem muito, mas divide o que tem. Quer ver?"],
+        "acao": "loja:resistencia"
+      }
+    }
+  },
+
+  "refugiado-1": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "refugiado",
+        "falas": ["Disseram que os campos de Linne estavam verdes de novo. Eu vim ver com meus próprios olhos. E acredita que era verdade?"]
+      }
+    }
+  },
+
+  "refugiado-2": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "refugiado",
+        "falas": ["Voltei para ajudar a reconstruir. Ainda tem muito entulho. Mas dá para ver de novo o contorno das casas."]
+      }
+    }
+  },
+
+  "fazendeiro": {
+    "inicio": [{ "se": "ruan-ajudou", "no": "depois" }, { "no": "oi" }],
+    "nos": {
+      "oi": {
+        "quem": "fazendeiro",
+        "falas": [
+          "Ei! Psiu! Aqui atrás do feno! Não faça barulho, os espantalhos têm ouvido bom.",
+          "Eu sou o Ruan. Estes campos eram meus, antes de tudo isso. Agora são da Orsa Vell, que antes era minha vizinha.",
+          "Se você está indo atrás dela, tome cuidado. Ela ficou diferente depois que Vaelor apareceu. Antes ela cantava para as plantas.",
+          "Leve isto. É o que eu consegui salvar."
+        ],
+        "recompensa": { "itens": { "cha-de-erva-lume": 2, "lagrima-de-aether": 1 } },
+        "marcar": ["ruan-ajudou"]
+      },
+      "depois": {
+        "quem": "fazendeiro",
+        "falas": ["Se a Orsa te ouvir de verdade, talvez ela lembre quem era. Fale dos campos."]
+      }
+    }
+  },
+
+  "fazendeiro-vila": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "fazendeiro",
+        "falas": ["A Orsa deixou eu voltar à vila! Disse que vai replantar os campos. Eu ia desconfiar, mas ela chorou, sabe? Chorou de verdade."]
+      }
+    }
+  },
+
+  "resgate-resistencia": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "lyra-adulta",
+        "falas": [
+          "Calma! Calma. Os rapazes te trouxeram do campo. Você estava desacordado.",
+          "Sua vida voltou. O Aether fez o que pôde. Descanse um pouco.",
+          "E, Ryben... não morra antes de eu ficar com raiva de você por mais um tempo."
+        ]
+      }
+    }
+  },
+
+  "selo-1-restaurado": {
+    "inicio": [{ "no": "a" }],
+    "nos": {
+      "a": {
+        "quem": "",
+        "falas": [
+          "O pedestal brilha em verde. Raízes de luz sobem pelas pernas do Ryben, firmes, quentes.",
+          "O primeiro selo foi restaurado. O Aether, calado por nove anos, corre de novo pelas veias dele.",
+          "Você aprendeu uma magia nova: RAIZ FIRME. Use-a em Agir → Magia. Ela reduz à metade o dano do próximo ataque inimigo.",
+          "Na pedra do pedestal, entre as runas, uma brasa pequena, que não apaga. Você a guarda: é a BRASA RENASCIDA."
+        ],
+        "recompensa": { "itens": { "brasa-renascida": 1, "lagrima-de-aether": 1 } }
+      }
+    }
+  },
+
   "catastrofe-eclipse": {
     "inicio": [{ "no": "a" }],
     "nos": {

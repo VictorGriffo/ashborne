@@ -1,4 +1,5 @@
-import mapa from '../../../data/mapa.json';
+import mapa1 from '../../../data/mapa.json';
+import mapa2 from '../../../data/mapa-parte2.json';
 import { activeQuest } from '../../systems/Quests';
 import { el, fadeIn, fadeOut } from '../../ui/dom';
 import { savePointArea } from '../../world/areas';
@@ -28,6 +29,8 @@ export class MapState implements GameState {
     private readonly ctx: GameContext,
     currentArea: string,
   ) {
+    // A Parte 2 tem outro mapa: a mesma geografia, transformada, com sete territórios.
+    const mapa = ctx.flags.has('parte-2') ? mapa2 : mapa1;
     this.screen = el('div', 'screen menu-screen');
     const panel = el('div', 'panel wide map-panel');
     const close = el('button', 'panel-close', '×');

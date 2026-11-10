@@ -136,6 +136,89 @@
     ]
   },
 
+  "nuvens-de-cinza": {
+    "nome": "Nuvens de cinza",
+    "duracao": 6.5,
+    "caixa": [160, 120],
+    "ondas": [
+      { "tipo": "leque", "de": 0.2, "ate": 5.8, "intervalo": 1.0, "velocidade": 52, "raio": 4, "quantidade": 7, "abertura": 360, "origem": [0.5, 0.15], "mirar": false },
+      { "tipo": "chuva", "de": 1, "ate": 5.8, "intervalo": 0.7, "velocidade": 45, "raio": 3.5, "balanco": 12 }
+    ]
+  },
+  "cortina-de-cinza": {
+    "nome": "Cortina de cinza",
+    "duracao": 6.5,
+    "caixa": [160, 120],
+    "ondas": [
+      { "tipo": "cortina", "de": 0.2, "ate": 5.6, "intervalo": 1.0, "velocidade": 54, "raio": 4, "espaco": 14, "vao": 36 },
+      { "tipo": "mira", "de": 2, "ate": 5.6, "intervalo": 0.9, "velocidade": 80, "raio": 3.5 }
+    ]
+  },
+  "espadas-em-onda": {
+    "nome": "Espadas e escudos em onda",
+    "duracao": 6.5,
+    "caixa": [160, 120],
+    "ondas": [
+      { "tipo": "cortina", "de": 0.2, "ate": 5.8, "intervalo": 1.1, "velocidade": 66, "raio": 4.5, "espaco": 15, "vao": 34 },
+      { "tipo": "mira", "de": 1.2, "ate": 5.8, "intervalo": 0.7, "velocidade": 95, "raio": 4 }
+    ]
+  },
+  "palha-girando": {
+    "nome": "Palha girando",
+    "duracao": 6.5,
+    "caixa": [160, 120],
+    "ondas": [
+      { "tipo": "leque", "de": 0.2, "ate": 5.8, "intervalo": 0.9, "velocidade": 60, "raio": 3.5, "quantidade": 9, "abertura": 360, "origem": [0.5, 0.5], "mirar": false },
+      { "tipo": "chuva", "de": 1.5, "ate": 5.8, "intervalo": 0.8, "velocidade": 55, "raio": 3.5, "balanco": 14 }
+    ]
+  },
+  "palha-e-feixe": {
+    "nome": "Palha e feixe",
+    "duracao": 6.5,
+    "caixa": [160, 120],
+    "ondas": [
+      { "tipo": "chuva", "de": 0.2, "ate": 5.8, "intervalo": 0.55, "velocidade": 58, "raio": 3.5, "balanco": 18 },
+      { "tipo": "feixe", "de": 1.2, "ate": 5.8, "intervalo": 1.4, "velocidade": 0, "raio": 0, "orientacao": "alterna", "espessura": 14, "aviso": 0.8, "disparo": 0.35 }
+    ]
+  },
+  "investidas-laterais": {
+    "nome": "Investidas laterais",
+    "duracao": 6.5,
+    "caixa": [170, 120],
+    "ondas": [
+      { "tipo": "mira", "de": 0.2, "ate": 5.8, "intervalo": 0.5, "velocidade": 115, "raio": 4.5 },
+      { "tipo": "feixe", "de": 1, "ate": 5.8, "intervalo": 1.3, "velocidade": 0, "raio": 0, "orientacao": "v", "espessura": 16, "aviso": 0.75, "disparo": 0.35 }
+    ]
+  },
+  "raizes-que-sobem": {
+    "nome": "Raízes que sobem",
+    "duracao": 7,
+    "caixa": [170, 125],
+    "ondas": [
+      { "tipo": "feixe", "de": 0.2, "ate": 6.2, "intervalo": 0.75, "velocidade": 0, "raio": 0, "orientacao": "alterna", "espessura": 16, "aviso": 0.7, "disparo": 0.4 },
+      { "tipo": "chuva", "de": 0.6, "ate": 6.2, "intervalo": 0.45, "velocidade": 66, "raio": 4, "balanco": 16 }
+    ]
+  },
+  "foice-giratoria": {
+    "nome": "Foice giratória",
+    "duracao": 7,
+    "caixa": [170, 125],
+    "ondas": [
+      { "tipo": "leque", "de": 0.2, "ate": 6.2, "intervalo": 0.85, "velocidade": 78, "raio": 4, "quantidade": 11, "abertura": 360, "origem": [0.5, 0.2], "mirar": false },
+      { "tipo": "mira", "de": 1.2, "ate": 6.2, "intervalo": 0.65, "velocidade": 110, "raio": 4 }
+    ]
+  },
+  "semeadura": {
+    "nome": "Semeadura",
+    "duracao": 7,
+    "caixa": [170, 125],
+    "ondas": [
+      { "tipo": "cortina", "de": 0.2, "ate": 6.2, "intervalo": 1.0, "velocidade": 62, "raio": 4.5, "espaco": 15, "vao": 34 },
+      { "tipo": "feixe", "de": 1, "ate": 6.2, "intervalo": 1.2, "velocidade": 0, "raio": 0, "orientacao": "h", "espessura": 16, "aviso": 0.7, "disparo": 0.4 },
+      { "tipo": "leque", "de": 2, "ate": 6.2, "intervalo": 1.6, "velocidade": 70, "raio": 4, "quantidade": 7, "abertura": 360, "origem": [0.5, 0.2], "mirar": false }
+    ]
+  },
+
   "aether-sombrio": {
     "nome": "Aether sombrio",
     "duracao": 6,

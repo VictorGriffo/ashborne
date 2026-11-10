@@ -9,7 +9,7 @@ import { activeQuest } from '../../systems/Quests';
 import { buildSave, writeSave } from '../../systems/SaveGame';
 import { el } from '../../ui/dom';
 import { exitAt, type Area } from '../../world/Area';
-import { allSavePoints, areaName, createArea, PLAYER_CHARACTER, RESCUE } from '../../world/areas';
+import { allSavePoints, areaName, createArea, PLAYER_CHARACTER, RESCUE, RESCUE_PART_TWO } from '../../world/areas';
 import { character } from '../../world/characters';
 import { chestFlag, promptHeight, promptLabel, type Interactable } from '../../world/Interactable';
 import type { MapEnemy } from '../../world/MapEnemy';
@@ -39,6 +39,8 @@ const ATTACK_ANIMATION = '1H_Melee_Attack_Slice_Diagonal';
 export interface ExploreStart {
   area: string;
   spawn: string;
+  /** Cutscene que abre assim que a exploração começa (a Parte 2 começa com o "salto"). */
+  cena?: string;
 }
 
 /**
@@ -73,6 +75,8 @@ export class ExploreState implements GameState {
   private grace = 0;
   /** Diálogo a abrir assim que a exploração voltar ao topo. */
   private pendingDialogue?: string;
+  /** Cutscene a abrir assim que a exploração estiver no topo. */
+  private pendingScene?: string;
   private readonly focus = new THREE.Vector3();
   /** Etapa de missão já anunciada, para avisar quando mudar. */
   private questKey?: string;
@@ -81,8 +85,11 @@ export class ExploreState implements GameState {
     private readonly ctx: GameContext,
     start: ExploreStart,
   ) {
-    const model = new CharacterModel(ctx.assets, character(PLAYER_CHARACTER));
+    // Aos 24 anos, o Ryben usa capuz e esconde o rosto.
+    const hero = ctx.flags.has('parte-2') ? 'ryben-exilio' : PLAYER_CHARACTER;
+    const model = new CharacterModel(ctx.assets, character(hero));
     this.player = new Player(ctx.config.player, model);
+    this.pendingScene = start.cena;
     this.scene.add(this.player.object);
 
     this.rig = new CameraRig(ctx.config.camera);
@@ -136,6 +143,12 @@ export class ExploreState implements GameState {
     }
     this.announceQuest();
 
+    if (this.pendingScene) {
+      const id = this.pendingScene;
+      this.pendingScene = undefined;
+      this.startCutscene(id);
+      return;
+    }
     if (this.pendingDialogue) {
       const id = this.pendingDialogue;
       this.pendingDialogue = undefined;
@@ -188,6 +201,7 @@ export class ExploreState implements GameState {
 
   /** NPCs aparecem e somem conforme as flags (o Vaelor surge na vila, por exemplo). */
   private refreshNpcs(): void {
+    this.area.refreshFlags?.(this.ctx.flags);
     for (const npc of this.area.npcs) {
       const active = check(this.ctx.flags, npc.condition);
       if (active !== npc.active) npc.setActive(active);
@@ -560,8 +574,10 @@ export class ExploreState implements GameState {
           () => {
             // Derrota: alguém da Guarda leva o Ryben para o salão.
             this.ctx.player.restore();
-            this.loadArea(RESCUE.area, RESCUE.spawn);
-            this.pendingDialogue = 'orin-resgate';
+            const part2 = this.ctx.flags.has('parte-2');
+            const rescue = part2 ? RESCUE_PART_TWO : RESCUE;
+            this.loadArea(rescue.area, rescue.spawn);
+            this.pendingDialogue = part2 ? 'resgate-resistencia' : 'orin-resgate';
           },
           { duration: 0.8, hold: 0.6 },
         ),

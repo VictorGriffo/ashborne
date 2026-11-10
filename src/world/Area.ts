@@ -1,5 +1,6 @@
 import type * as THREE from 'three';
 import type { Condition } from '../systems/conditions';
+import type { Flags } from '../systems/Flags';
 import type { CollisionWorld } from './Collision';
 import type { Interactable } from './Interactable';
 import type { MapEnemy } from './MapEnemy';
@@ -44,6 +45,8 @@ export interface Area {
 
   /** Fundo e névoa da cena. */
   applyEnvironment(scene: THREE.Scene): void;
+  /** Reavalia o que depende de flags (objetos que aparecem, pedestais que acendem). */
+  refreshFlags?(flags: Flags): void;
   /** Efeitos de cena (eclipse, clarão...), pedidos por uma cutscene. */
   cutsceneEvent?(name: string): void;
   /** Ajustes visuais durante uma batalha (ex.: árvores transparentes). */

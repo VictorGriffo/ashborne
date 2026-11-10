@@ -5,7 +5,8 @@ import { distanceToPolyline, glowSprite, merged, paint, vertexMaterial } from '.
 import { PART1, PROPS } from '../render/palette';
 import { buildProp, isProp, type PropParams, type PropResult } from '../render/props';
 import { SavePointModel } from '../render/SavePointModel';
-import type { Condition } from '../systems/conditions';
+import { check, type Condition } from '../systems/conditions';
+import type { Flags } from '../systems/Flags';
 import type { Reward } from '../systems/Dialogue';
 import type { Area, Exit, Spawn } from './Area';
 import { characterModels } from './characters';
@@ -31,6 +32,8 @@ export interface OutdoorData {
     luzAmbiente: number;
     lua: { cor: string; intensidade: number };
     vagalumes?: number;
+    /** Cinzas caindo (Parte 2): quantidade de partículas. */
+    cinzas?: number;
     grama?: string[];
   };
   /** Retângulo onde se pode andar: { min: [x, z], max: [x, z] }. */
@@ -39,7 +42,16 @@ export interface OutdoorData {
   manchas?: Array<{ pos: Vec; raio: number; tipo?: GroundKind }>;
   vegetacao?: { arvores?: number; dentro?: number; pedras?: number; grama?: number; flores?: number; semente?: number };
   objetos?: Array<
-    (PropParams & { tipo: string; pos: Vec; rot?: number; colisor?: 'nenhum' }) | { modelo: string; pos: Vec; rot?: number; escala?: number; colisor?: 'nenhum' }
+    | (PropParams &
+        Condition & {
+          tipo: string;
+          pos: Vec;
+          rot?: number;
+          colisor?: 'nenhum';
+          /** Acende (evento "selo-restaurado") quando esta flag estiver marcada. */
+          acendeSe?: string;
+        })
+    | { modelo: string; pos: Vec; rot?: number; escala?: number; colisor?: 'nenhum' }
   >;
   npcs?: Array<Condition & { personagem: string; pos: Vec; rot: number; dialogo: string }>;
   mobs?: Array<{ mob: string; pos: Vec }>;
@@ -90,6 +102,16 @@ export class OutdoorArea implements Area {
   private readonly events = new Map<string, () => void>();
   private readonly exclusions: Array<{ x: number; z: number; r: number }> = [];
   private fireflies?: { points: THREE.Points; base: Float32Array; seed: Float32Array };
+  private ash?: { points: THREE.Points; speed: Float32Array; top: number; bottom: number };
+  /** Objetos que só existem (ou só acendem) quando as flags batem. */
+  private readonly conditional: Array<{
+    object: THREE.Object3D;
+    colliders: Array<{ enabled?: boolean }>;
+    cond: Condition;
+    lightFlag?: string;
+    light?: () => void;
+    lit: boolean;
+  }> = [];
   private fog: THREE.Color;
   private background: THREE.Color;
   private time = 0;
@@ -145,6 +167,7 @@ export class OutdoorArea implements Area {
     this.root.add(this.buildGround(rand));
     this.buildVegetation(rand);
     if (amb.vagalumes) this.buildFireflies(rand, amb.vagalumes);
+    if (amb.cinzas) this.buildAsh(rand, amb.cinzas);
     this.buildBounds();
     this.buildCharacters(assets);
     this.buildInteractables();
@@ -175,6 +198,7 @@ export class OutdoorArea implements Area {
       f.light.intensity = f.base * (1 + Math.sin(t * 9 + f.seed) * 0.07 + Math.sin(t * 23 + f.seed * 3) * 0.05);
     }
     this.updateFade(dt);
+    this.updateAsh(dt, t);
     for (const a of this.animated) a.update(dt, t);
     for (const sp of this.savePoints.values()) sp.animate(dt);
     for (const npc of this.npcs) npc.animate(dt);
@@ -430,7 +454,22 @@ export class OutdoorArea implements Area {
       prop.object.position.set(x, 0, z);
       prop.object.rotation.y = rot;
       this.root.add(prop.object);
-      if (o.colisor !== 'nenhum') this.addPropColliders(prop, x, z, rot);
+      const colliders = o.colisor !== 'nenhum' ? this.addPropColliders(prop, x, z, rot) : [];
+      if (o.se || o.naoSe || o.acendeSe) {
+        const hidden = Boolean(o.se || o.naoSe);
+        if (hidden) {
+          prop.object.visible = false;
+          for (const c of colliders) c.enabled = false;
+        }
+        this.conditional.push({
+          object: prop.object,
+          colliders,
+          cond: { se: o.se, naoSe: o.naoSe },
+          lightFlag: o.acendeSe,
+          light: prop.events?.['selo-restaurado'],
+          lit: false,
+        });
+      }
       for (const light of prop.flicker ?? []) this.flickers.push({ light, base: light.intensity, seed: this.flickers.length * 1.7 });
       if (prop.animate) this.animated.push({ update: prop.animate });
       for (const [name, fn] of Object.entries(prop.events ?? {})) this.events.set(name, fn);
@@ -440,21 +479,38 @@ export class OutdoorArea implements Area {
   }
 
   /** Converte os obstáculos locais do objeto (girado em múltiplos de 90°) para o mundo. */
-  private addPropColliders(prop: PropResult, x: number, z: number, rot: number): void {
+  private addPropColliders(prop: PropResult, x: number, z: number, rot: number): Array<{ enabled?: boolean }> {
     const cos = Math.cos(rot);
     const sin = Math.sin(rot);
     const quarter = Math.abs(Math.round(rot / (Math.PI / 2))) % 2 === 1;
+    const made: Array<{ enabled?: boolean }> = [];
     for (const c of prop.colliders) {
       const lx = c.x ?? 0;
       const lz = c.z ?? 0;
       const wx = x + lx * cos + lz * sin;
       const wz = z - lx * sin + lz * cos;
       if (c.kind === 'circle') {
-        this.collision.addCircle(wx, wz, c.r);
+        made.push(this.collision.addCircle(wx, wz, c.r));
       } else {
         const w = quarter ? c.d : c.w;
         const d = quarter ? c.w : c.d;
-        this.collision.addBox(wx - w / 2, wz - d / 2, wx + w / 2, wz + d / 2);
+        made.push(this.collision.addBox(wx - w / 2, wz - d / 2, wx + w / 2, wz + d / 2));
+      }
+    }
+    return made;
+  }
+
+  /** Mostra, esconde e acende objetos conforme as flags (a vila se reconstrói aos poucos). */
+  refreshFlags(flags: Flags): void {
+    for (const c of this.conditional) {
+      if (c.cond.se || c.cond.naoSe) {
+        const show = check(flags, c.cond);
+        c.object.visible = show;
+        for (const col of c.colliders) col.enabled = show;
+      }
+      if (c.lightFlag && !c.lit && flags.has(c.lightFlag)) {
+        c.lit = true;
+        c.light?.();
       }
     }
   }
@@ -533,6 +589,46 @@ export class OutdoorArea implements Area {
         spark.scale.setScalar(0.8 + Math.sin(t * 5) * 0.25);
       },
     });
+  }
+
+  /** Cinzas caindo devagar do céu, como neve suja: o mundo depois da catástrofe. */
+  private buildAsh(rand: () => number, count: number): void {
+    const { min, max } = this.data.limite;
+    const top = 11;
+    const bottom = 0;
+    const pos = new Float32Array(count * 3);
+    const speed = new Float32Array(count);
+    for (let i = 0; i < count; i++) {
+      pos.set([range(rand, min[0] - 3, max[0] + 3), range(rand, bottom, top), range(rand, min[1] - 3, max[1] + 3)], i * 3);
+      speed[i] = range(rand, 0.25, 0.7);
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const points = new THREE.Points(
+      geo,
+      new THREE.PointsMaterial({
+        size: 0.16,
+        map: glowSprite(),
+        color: 0xb0a8b8,
+        transparent: true,
+        opacity: 0.55,
+        depthWrite: false,
+      }),
+    );
+    points.frustumCulled = false;
+    this.root.add(points);
+    this.ash = { points, speed, top, bottom };
+  }
+
+  private updateAsh(dt: number, t: number): void {
+    if (!this.ash) return;
+    const arr = (this.ash.points.geometry.getAttribute('position') as THREE.BufferAttribute).array as Float32Array;
+    for (let i = 0; i < arr.length; i += 3) {
+      arr[i + 1] -= this.ash.speed[i / 3] * dt;
+      arr[i] += Math.sin(t * 0.6 + i) * dt * 0.25;
+      if (arr[i + 1] < this.ash.bottom) arr[i + 1] = this.ash.top;
+    }
+    (this.ash.points.geometry.getAttribute('position') as THREE.BufferAttribute).needsUpdate = true;
   }
 
   private buildFireflies(rand: () => number, count: number): void {

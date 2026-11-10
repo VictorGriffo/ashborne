@@ -1,0 +1,94 @@
+{
+  "id": "campos-de-linne",
+  "nome": "Campos de Linne",
+  "tipo": "ar-livre",
+  "ambiente": {
+    "fundo": "#141f10",
+    "nevoa": [22, 50],
+    "ceu": "#a0a078",
+    "chao": "#2a3a22",
+    "luzAmbiente": 1.9,
+    "lua": { "cor": "#d8d4b0", "intensidade": 2.1 },
+    "vagalumes": 0,
+    "cinzas": 80,
+    "grama": ["#2F4A2A", "#3f5e32"]
+  },
+  "limite": { "min": [-20, -22], "max": [20, 10] },
+  "caminhos": [{ "pontos": [[-21, 3.4], [-12, 2.6], [-4, -1], [3, -6], [9, -12], [13, -17]], "largura": 2.6 }],
+  "manchas": [{ "pos": [13.5, -19], "raio": 6.5, "tipo": "pedra" }],
+  "vegetacao": { "arvores": 40, "dentro": 6, "pedras": 18, "grama": 160, "flores": 0.02, "semente": 61 },
+  "objetos": [
+    { "tipo": "plantacao", "pos": [-10, -6], "tamanho": [7, 4], "naoSe": "selo-1" },
+    { "tipo": "plantacao", "pos": [-9, -13], "tamanho": [8, 4] },
+    { "tipo": "plantacao", "pos": [5, 4.4], "tamanho": [7, 3.6], "naoSe": "selo-1" },
+    { "tipo": "plantacao", "pos": [-2, -14], "tamanho": [6, 3.6] },
+    { "tipo": "cerca", "pos": [-10, -3.6], "comprimento": 7.4 },
+    { "tipo": "cerca", "pos": [5, 2.4], "comprimento": 7.6 },
+    { "tipo": "celeiro", "pos": [-15.6, -9.4], "rot": 90, "tamanho": [6, 4.4], "altura": 2.8, "cor": "#6a4a42", "telhado": "#3a3026" },
+    { "tipo": "ruina", "pos": [15.8, 3.4], "rot": -90, "tamanho": [5, 3.6], "altura": 2.2, "cor": "#5a4e46" },
+    { "tipo": "feno", "pos": [-12.6, 0.4] },
+    { "tipo": "feno", "pos": [-12.8, -1.5] },
+    { "tipo": "feno", "pos": [14.6, 6.4] },
+    { "tipo": "carroca", "pos": [-5.4, 5.8], "rot": -20 },
+    { "tipo": "escombros", "pos": [8.4, -3] },
+    { "tipo": "escombros", "pos": [-6.6, -9.4] },
+    { "tipo": "bandeira", "pos": [10.6, -14.6], "cor": "#3a1f66" },
+    { "tipo": "bandeira", "pos": [16.6, -15.4], "cor": "#3a1f66" },
+    { "tipo": "pilar-quebrado", "pos": [10.2, -19.6] },
+    { "tipo": "pilar-quebrado", "pos": [17, -21] },
+    { "tipo": "pedestal-selo", "pos": [14, -19.2], "cor": "#9acd5a", "acendeSe": "selo-1" },
+    { "tipo": "plantacao", "pos": [5, 4.4], "tamanho": [7, 3.6], "luz": true, "se": "selo-1" },
+    { "tipo": "plantacao", "pos": [-10, -6], "tamanho": [7, 4], "luz": true, "se": "selo-1" },
+    { "tipo": "tenda", "pos": [-14.4, 1], "rot": 90, "cor": "#6a6a52", "se": "selo-1" }
+  ],
+  "npcs": [
+    { "personagem": "fazendeiro", "pos": [-13.4, 5.4], "rot": 160, "dialogo": "fazendeiro", "naoSe": "selo-1" }
+  ],
+  "mobs": [
+    { "mob": "espantalho-vivo", "pos": [-6, -1] },
+    { "mob": "espantalho-vivo", "pos": [2.6, -9.6] },
+    { "mob": "espantalho-vivo", "pos": [-3.6, -11.4] },
+    { "mob": "javali-de-cinzas", "pos": [7.4, 1] },
+    { "mob": "javali-de-cinzas", "pos": [-11, -7.6] },
+    { "mob": "cinzento", "pos": [0, 6] },
+    { "mob": "orsa-vell", "pos": [11.2, -15.6] }
+  ],
+  "interativos": [
+    {
+      "tipo": "save",
+      "id": "marco-de-linne",
+      "nome": "Marco de Linne",
+      "pos": [-15, 2.2],
+      "raio": 0.5,
+      "chegada": { "pos": [-13.9, 2.2], "rot": -90 }
+    },
+    { "tipo": "bau", "id": "bau-de-linne", "pos": [17.4, 7.4], "raio": 0.8, "conteudo": { "itens": { "lagrima-de-aether": 1, "sopa-da-resistencia": 1 }, "brasas": 15 } },
+    {
+      "tipo": "examinar",
+      "id": "selo-restaurar",
+      "rotulo": "Restaurar o selo",
+      "pos": [14, -19.2],
+      "raio": 1.8,
+      "se": "orsa-superada",
+      "naoSe": "selo-1",
+      "falas": [
+        "O pedestal está frio e rachado. Uma runa de Terra, quase apagada, espera no centro.",
+        "Você coloca a mão sobre a pedra. O Aether, que há nove anos não responde, hesita... e responde."
+      ],
+      "acao": "cena:selo-1"
+    },
+    {
+      "tipo": "examinar",
+      "id": "selo-barreira",
+      "rotulo": "Examinar",
+      "pos": [14, -19.2],
+      "raio": 1.8,
+      "naoSe": "orsa-superada",
+      "falas": ["Raízes escuras brotam da pedra, impedindo que você toque na runa.", "A general Orsa Vell guarda este selo."]
+    }
+  ],
+  "entradas": {
+    "oeste": { "pos": [-17.8, 3.2], "rot": -90 }
+  },
+  "saidas": [{ "caixa": [-20, 1.4, -18.4, 5], "area": "vila-ruinas", "entrada": "leste" }]
+}

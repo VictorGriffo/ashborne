@@ -37,5 +37,33 @@
   "1.5": {
     "nome": "A catástrofe",
     "etapas": [{ "texto": "O eclipse começou.", "area": "santuario", "concluida": "parte-1-concluida" }]
+  },
+  "2.1": {
+    "nome": "Cinzas de Aetheria",
+    "etapas": [
+      { "texto": "Procure sobreviventes entre as ruínas da vila.", "area": "vila-ruinas", "concluida": "falou-com-sobrevivente" },
+      { "texto": "Siga a fumaça até o acampamento, no lado oeste da vila.", "area": "vila-ruinas", "concluida": "falou-com-lyra" }
+    ]
+  },
+  "2.2": {
+    "nome": "A resistência",
+    "etapas": [
+      { "texto": "Fale com o Tob na forja improvisada.", "area": "vila-ruinas", "concluida": "falou-com-tob-p2" },
+      { "texto": "Prove seu valor à resistência: enfrente um Cinzento ou um soldado de Vaelor. Poupar vale tanto quanto vencer.", "area": "vila-ruinas", "concluida": "provou-valor" },
+      { "texto": "Volte à Lyra. Ela decide se você entra.", "area": "vila-ruinas", "concluida": "entrou-na-resistencia" }
+    ]
+  },
+  "2.3": {
+    "nome": "O primeiro selo",
+    "etapas": [
+      { "texto": "Siga a estrada leste da vila até os Campos de Linne.", "area": "campos-de-linne", "concluida": "visitou-campos-de-linne" },
+      { "texto": "Enfrente a general Orsa Vell, no fim dos campos.", "area": "campos-de-linne", "concluida": "orsa-superada" },
+      { "texto": "Restaure o selo no pedestal.", "area": "campos-de-linne", "concluida": "selo-1" },
+      { "texto": "Volte à vila e conte à Lyra o que aconteceu.", "area": "vila-ruinas", "concluida": "lyra-soube-do-selo" }
+    ]
+  },
+  "2.4": {
+    "nome": "Os territórios restantes",
+    "etapas": [{ "texto": "Em breve: os outros seis territórios chegam no próximo marco.", "area": "vila-ruinas", "concluida": "marco-seguinte-ainda-nao-existe" }]
   }
 }

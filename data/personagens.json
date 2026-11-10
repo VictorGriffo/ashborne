@@ -107,6 +107,79 @@
     "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A" },
     "passo": { "andando": 2.6, "correndo": 5.2 }
   },
+  "ryben-exilio": {
+    "nome": "Ryben",
+    "modelo": "kaykit-adventurers/Rogue_Hooded",
+    "escala": 0.74,
+    "acessorios": ["Rogue_Cape"],
+    "tinta": "#9aa4b8",
+    "itens": [{ "modelo": "kaykit-adventurers/Knight", "malha": "1H_Sword", "osso": "handslotr" }],
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "lyra-adulta": {
+    "nome": "Lyra",
+    "modelo": "kaykit-adventurers/Mage",
+    "escala": 0.76,
+    "acessorios": ["Mage_Cape", "Spellbook"],
+    "tinta": "#8ad8c0",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "tob-adulto": {
+    "nome": "Tob",
+    "modelo": "kaykit-adventurers/Barbarian",
+    "escala": 0.8,
+    "acessorios": ["1H_Axe"],
+    "tinta": "#c8a07a",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Cheer" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "sobrevivente": {
+    "nome": "Sobrevivente",
+    "modelo": "kaykit-adventurers/Rogue_Hooded",
+    "escala": 0.68,
+    "acessorios": [],
+    "tinta": "#8a8296",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "refugiado": {
+    "nome": "Refugiado",
+    "modelo": "kaykit-adventurers/Barbarian",
+    "escala": 0.7,
+    "acessorios": [],
+    "tinta": "#a89478",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "pip-orfa": {
+    "nome": "Pip",
+    "modelo": "kaykit-adventurers/Rogue_Hooded",
+    "escala": 0.5,
+    "acessorios": [],
+    "tinta": "#d8c0a0",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Cheer" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "intendente": {
+    "nome": "Intendente Brisa",
+    "modelo": "kaykit-adventurers/Rogue",
+    "escala": 0.72,
+    "acessorios": [],
+    "tinta": "#d0a888",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
+  "fazendeiro": {
+    "nome": "Fazendeiro Ruan",
+    "modelo": "kaykit-adventurers/Barbarian",
+    "escala": 0.74,
+    "acessorios": ["Barbarian_Hat"],
+    "tinta": "#b89a6a",
+    "animacoes": { "parado": "Idle", "andando": "Walking_A", "correndo": "Running_A", "falando": "Interact" },
+    "passo": { "andando": 2.6, "correndo": 5.2 }
+  },
   "viajante": {
     "nome": "Viajante perdido",
     "modelo": "kaykit-adventurers/Rogue_Hooded",

@@ -1,7 +1,12 @@
 import * as THREE from 'three';
 
+/** Todo colisor pode ser desligado (objetos que só existem depois de uma flag). */
+interface Switchable {
+  enabled?: boolean;
+}
+
 /** Caixa alinhada aos eixos, vista de cima (plano XZ). */
-export interface BoxCollider {
+export interface BoxCollider extends Switchable {
   kind: 'box';
   minX: number;
   maxX: number;
@@ -10,7 +15,7 @@ export interface BoxCollider {
 }
 
 /** Círculo no chão. */
-export interface CircleCollider {
+export interface CircleCollider extends Switchable {
   kind: 'circle';
   x: number;
   z: number;
@@ -38,12 +43,16 @@ const ITERATIONS = 4;
 export class CollisionWorld {
   readonly colliders: Collider[] = [];
 
-  addBox(minX: number, minZ: number, maxX: number, maxZ: number): void {
-    this.colliders.push({ kind: 'box', minX, maxX, minZ, maxZ });
+  addBox(minX: number, minZ: number, maxX: number, maxZ: number): BoxCollider {
+    const c: BoxCollider = { kind: 'box', minX, maxX, minZ, maxZ };
+    this.colliders.push(c);
+    return c;
   }
 
-  addCircle(x: number, z: number, r: number): void {
-    this.colliders.push({ kind: 'circle', x, z, r });
+  addCircle(x: number, z: number, r: number): CircleCollider {
+    const c: CircleCollider = { kind: 'circle', x, z, r };
+    this.colliders.push(c);
+    return c;
   }
 
   addBoundary(x: number, z: number, r: number): void {
@@ -66,6 +75,7 @@ export class CollisionWorld {
     for (let i = 0; i < ITERATIONS; i++) {
       let moved = false;
       for (const c of this.colliders) {
+        if ('enabled' in c && c.enabled === false) continue;
         if (c.kind === 'box') moved = pushOutOfBox(pos, radius, c) || moved;
         else if (c.kind === 'circle') moved = pushOutOfCircle(pos, radius, c) || moved;
         else moved = keepInside(pos, radius, c) || moved;

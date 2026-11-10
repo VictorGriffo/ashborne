@@ -1,8 +1,10 @@
+import camposDeLinne from '../../data/areas/campos-de-linne.json';
 import estrada from '../../data/areas/estrada.json';
 import patio from '../../data/areas/patio.json';
 import salaoDaGuarda from '../../data/areas/salao-da-guarda.json';
 import santuario from '../../data/areas/santuario.json';
 import vila from '../../data/areas/vila.json';
+import vilaRuinas from '../../data/areas/vila-ruinas.json';
 import type { Assets } from '../render/Assets';
 import type { Area } from './Area';
 import { characterModels } from './characters';
@@ -21,6 +23,8 @@ const OUTDOORS: Record<string, OutdoorData> = {
   patio: patio as unknown as OutdoorData,
   estrada: estrada as unknown as OutdoorData,
   santuario: santuario as unknown as OutdoorData,
+  'vila-ruinas': vilaRuinas as unknown as OutdoorData,
+  'campos-de-linne': camposDeLinne as unknown as OutdoorData,
 };
 
 /** Áreas feitas em código: nome e pontos de save, para o mapa e a viagem rápida. */
@@ -31,8 +35,12 @@ const CODE_AREAS: Record<string, { name: string; savePoints: Record<string, stri
 /** Onde um jogo novo começa: na porta de casa, com a Maren. */
 export const START = { area: 'vila', spawn: 'casa' };
 
-/** Para onde o Ryben é levado quando perde uma batalha. */
+/** Onde a Parte 2 começa: na estrada, diante da vila em ruínas. */
+export const START_PART_TWO = { area: 'vila-ruinas', spawn: 'chegada', cena: 'salto' };
+
+/** Para onde o Ryben é levado quando perde uma batalha (por parte). */
 export const RESCUE = { area: 'salao-da-guarda', spawn: 'inicio' };
+export const RESCUE_PART_TWO = { area: 'vila-ruinas', spawn: 'acampamento' };
 
 /** O personagem controlado pelo jogador. */
 export const PLAYER_CHARACTER = 'ryben';
