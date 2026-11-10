@@ -576,7 +576,195 @@ function sealPedestal(p: PropParams): PropResult {
   };
 }
 
+// -- Biomas: floresta, pântano, deserto, montanha e costa -----------------------
+
+/** Árvore antiga e gigante: tronco largo com raízes, copa enorme e luz de Aether. */
+function giantTree(p: PropParams): PropResult {
+  const g = new THREE.Group();
+  const bark = mat(p.cor ?? '#4a3a2c');
+  g.add(mesh(new THREE.CylinderGeometry(0.9, 1.3, 3.4, 8), bark, 0, 1.7, 0));
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    const root = mesh(new THREE.ConeGeometry(0.34, 1.2, 4), bark, Math.cos(a) * 1.2, 0.35, Math.sin(a) * 1.2);
+    root.rotation.set(Math.sin(a) * 1.1, 0, -Math.cos(a) * 1.1);
+    g.add(root);
+  }
+  const leaves = [mat(0x1f5a3a), mat(0x2a7a4a), mat(0x1a4a32)];
+  for (let i = 0; i < 4; i++) {
+    const crown = mesh(new THREE.IcosahedronGeometry(2.1 - i * 0.25, 0), leaves[i % 3], Math.cos(i * 1.7) * 0.8, 4.2 + i * 0.5, Math.sin(i * 1.7) * 0.8);
+    crown.scale.y = 0.8;
+    g.add(crown);
+  }
+  // Fendas brilhando no tronco
+  const glow = mat(PART1.aetherCyan, PART1.aetherCyan, 1.6);
+  for (let i = 0; i < 3; i++) {
+    const crack = mesh(new THREE.BoxGeometry(0.06, 0.8, 0.04), glow, Math.cos(i * 2.1) * 0.95, 1.3 + i * 0.5, Math.sin(i * 2.1) * 0.95);
+    crack.rotation.y = -i * 2.1;
+    crack.castShadow = false;
+    g.add(crack);
+  }
+  const light = new THREE.PointLight(PART1.aetherCyan, 6, 9, 1.6);
+  light.position.set(0, 1.6, 1.4);
+  g.add(light);
+  return { object: g, colliders: [{ kind: 'circle', r: 1.4 }], flicker: [light] };
+}
+
+/** Cogumelos de luz: chapéus coloridos que brilham no escuro. */
+function mushrooms(p: PropParams): PropResult {
+  const g = new THREE.Group();
+  const color = new THREE.Color(p.cor ?? '#b9a6ff');
+  const stem = mat(0xe8e0d0);
+  const cap = mat(color, color, 1.4);
+  for (let i = 0; i < 5; i++) {
+    const h = 0.3 + (i % 3) * 0.22;
+    const x = Math.cos(i * 2.3) * 0.5;
+    const z = Math.sin(i * 2.3) * 0.4;
+    g.add(mesh(new THREE.CylinderGeometry(0.05, 0.07, h, 5), stem, x, h / 2, z));
+    const top = mesh(new THREE.SphereGeometry(0.2 + (i % 2) * 0.08, 7, 5, 0, Math.PI * 2, 0, Math.PI / 2), cap, x, h, z);
+    top.castShadow = false;
+    g.add(top);
+  }
+  const light = new THREE.PointLight(color, 2.2, 4, 1.6);
+  light.position.y = 0.7;
+  g.add(light);
+  return { object: g, colliders: [{ kind: 'circle', r: 0.55 }], flicker: [light] };
+}
+
+function reeds(): PropResult {
+  const g = new THREE.Group();
+  const stalk = mat(0x6a7a3a);
+  for (let i = 0; i < 9; i++) {
+    const h = 0.8 + (i % 4) * 0.3;
+    const s = mesh(new THREE.CylinderGeometry(0.02, 0.03, h, 4), stalk, Math.cos(i * 1.9) * 0.45, h / 2, Math.sin(i * 1.9) * 0.35);
+    s.rotation.z = Math.sin(i) * 0.15;
+    s.castShadow = false;
+    g.add(s);
+    if (i % 3 === 0) g.add(mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.28, 5), mat(0x5a3a22), Math.cos(i * 1.9) * 0.45, h + 0.1, Math.sin(i * 1.9) * 0.35));
+  }
+  return { object: g, colliders: [] };
+}
+
+/** Poça ou lago raso: disco de água, sem colisão. */
+function pond(p: PropParams): PropResult {
+  const [w, d] = p.tamanho ?? [4, 3];
+  const g = new THREE.Group();
+  const water = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.5, 0.5, 0.06, 20),
+    new THREE.MeshStandardMaterial({ color: p.cor ?? '#1a4a60', roughness: 0.2, metalness: 0.2, emissive: p.cor ?? '#1a4a60', emissiveIntensity: 0.25 }),
+  );
+  water.scale.set(w, 1, d);
+  water.position.y = 0.04;
+  water.receiveShadow = true;
+  g.add(water);
+  return { object: g, colliders: [] };
+}
+
+function cactus(): PropResult {
+  const g = new THREE.Group();
+  const green = mat(0x4a7a4a);
+  g.add(mesh(new THREE.CylinderGeometry(0.2, 0.24, 1.7, 6), green, 0, 0.85, 0));
+  for (const s of [1, -1]) {
+    g.add(mesh(new THREE.CylinderGeometry(0.12, 0.14, 0.6, 5), green, 0.4 * s, 0.9 + (s > 0 ? 0.2 : 0), 0).rotateZ((Math.PI / 2) * 0));
+    g.add(mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.55, 5), green, 0.38 * s, 1.18 + (s > 0 ? 0.2 : 0), 0));
+  }
+  return { object: g, colliders: [{ kind: 'circle', r: 0.4 }] };
+}
+
+/** Duna: monte de areia suave. */
+function dune(p: PropParams): PropResult {
+  const [w, d] = p.tamanho ?? [6, 4];
+  const m = mesh(new THREE.SphereGeometry(0.5, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), mat(p.cor ?? '#b89a6a'), 0, 0, 0);
+  m.scale.set(w, (p.altura ?? 1.2) * 2, d);
+  return { object: m, colliders: [{ kind: 'circle', r: Math.min(w, d) * 0.3 }] };
+}
+
+/** Rocha grande ou pico: cone irregular. */
+function bigRock(p: PropParams): PropResult {
+  const g = new THREE.Group();
+  const color = p.cor ?? '#6a7080';
+  const h = p.altura ?? 2.4;
+  g.add(mesh(new THREE.ConeGeometry(1.3, h, 5), mat(color), 0, h / 2, 0));
+  g.add(mesh(new THREE.ConeGeometry(0.8, h * 0.7, 5), mat(color), 0.9, h * 0.35, 0.4));
+  g.add(mesh(new THREE.ConeGeometry(0.6, h * 0.5, 4), mat(color), -0.8, h * 0.25, -0.5));
+  return { object: g, colliders: [{ kind: 'circle', r: 1.4 }] };
+}
+
+/** Cristal de gelo: prisma azul translúcido que brilha. */
+function iceCrystal(): PropResult {
+  const g = new THREE.Group();
+  const ice = new THREE.MeshStandardMaterial({ color: 0x9ad8ff, emissive: 0x4aa8e8, emissiveIntensity: 0.9, flatShading: true, roughness: 0.1, transparent: true, opacity: 0.88 });
+  for (let i = 0; i < 4; i++) {
+    const h = 0.9 + (i % 3) * 0.6;
+    const c = mesh(new THREE.ConeGeometry(0.2 + (i % 2) * 0.08, h, 5), ice, Math.cos(i * 1.7) * 0.4, h / 2, Math.sin(i * 1.7) * 0.4);
+    c.rotation.set(Math.sin(i) * 0.25, 0, Math.cos(i) * 0.25);
+    c.castShadow = false;
+    g.add(c);
+  }
+  const light = new THREE.PointLight(0x7ac8ff, 3, 5, 1.6);
+  light.position.y = 0.8;
+  g.add(light);
+  return { object: g, colliders: [{ kind: 'circle', r: 0.6 }] };
+}
+
+/** Doca de madeira avançando sobre a água. */
+function dock(p: PropParams): PropResult {
+  const len = p.comprimento ?? 8;
+  const g = new THREE.Group();
+  const plank = mat(WOOD);
+  g.add(mesh(new THREE.BoxGeometry(2.2, 0.14, len), plank, 0, 0.5, 0));
+  for (let i = 0; i < Math.round(len / 1.6) + 1; i++) {
+    const z = -len / 2 + i * 1.6;
+    for (const s of [1, -1]) g.add(mesh(new THREE.CylinderGeometry(0.1, 0.12, 1.4, 6), mat(WOOD_DARK), s * 1.05, 0.25, z));
+  }
+  return { object: g, colliders: [] };
+}
+
+/** Barco a remo ancorado ao lado da doca. */
+function boat(): PropResult {
+  const g = new THREE.Group();
+  const hull = mesh(new THREE.BoxGeometry(1.4, 0.5, 3.2), mat(0x6b4a33), 0, 0.3, 0);
+  g.add(hull);
+  g.add(mesh(new THREE.ConeGeometry(0.7, 0.8, 4), mat(0x6b4a33), 0, 0.3, 2).rotateX(Math.PI / 2));
+  g.add(mesh(new THREE.BoxGeometry(1.2, 0.08, 0.3), mat(0x8a6a4a), 0, 0.6, 0.2));
+  g.add(mesh(new THREE.BoxGeometry(1.2, 0.08, 0.3), mat(0x8a6a4a), 0, 0.6, -0.8));
+  const mast = mesh(new THREE.CylinderGeometry(0.05, 0.06, 2.4, 5), mat(WOOD_DARK), 0, 1.6, 0.4);
+  g.add(mast);
+  const sail = mesh(new THREE.BoxGeometry(0.04, 1.6, 1.1), mat(0xe8e0d0), 0, 1.7, 1);
+  g.add(sail);
+  return {
+    object: g,
+    colliders: [{ kind: 'box', w: 1.5, d: 3.3 }],
+    animate: (_dt, t) => {
+      g.position.y = Math.sin(t * 1.2) * 0.04;
+      g.rotation.z = Math.sin(t * 0.9) * 0.03;
+    },
+  };
+}
+
+/** Rede de pesca pendurada e caixotes de peixe. */
+function fishing(): PropResult {
+  const g = new THREE.Group();
+  g.add(mesh(new THREE.BoxGeometry(0.1, 1.6, 0.1), mat(WOOD_DARK), -0.9, 0.8, 0));
+  g.add(mesh(new THREE.BoxGeometry(0.1, 1.6, 0.1), mat(WOOD_DARK), 0.9, 0.8, 0));
+  g.add(mesh(new THREE.BoxGeometry(1.9, 0.08, 0.08), mat(WOOD_DARK), 0, 1.55, 0));
+  const net = mesh(new THREE.PlaneGeometry(1.7, 1.2, 6, 4), new THREE.MeshStandardMaterial({ color: 0x8a8070, wireframe: true }), 0, 0.95, 0);
+  g.add(net);
+  g.add(mesh(new THREE.BoxGeometry(0.6, 0.4, 0.45), mat(WOOD), 0.9, 0.2, 0.7));
+  return { object: g, colliders: [{ kind: 'box', w: 2, d: 0.4 }, { kind: 'box', w: 0.7, d: 0.5, x: 0.9, z: 0.7 }] };
+}
+
 const BUILDERS: Record<string, (p: PropParams) => PropResult> = {
+  'arvore-gigante': giantTree,
+  cogumelos: mushrooms,
+  juncos: reeds,
+  poca: pond,
+  cacto: cactus,
+  duna: dune,
+  rochedo: bigRock,
+  'cristal-de-gelo': iceCrystal,
+  doca: dock,
+  barco: boat,
+  pesca: fishing,
   ruina: ruin,
   escombros: rubble,
   tenda: tent,

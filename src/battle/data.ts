@@ -21,7 +21,8 @@ export interface MobData {
   ataque: number;
   defesa: number;
   recompensa: { xp: number; brasas: number };
-  recompensaPoupar: { lacos: number; brasas: number };
+  /** Poupar rende Laços e Brasas, e um pouco de experiência (opcional, na Parte 2). */
+  recompensaPoupar: { lacos: number; brasas: number; xp?: number };
   calmaParaPoupar: number;
   /** Como anda no mapa. Mobs que só aparecem em batalhas de história não precisam. */
   mapa?: { velocidade: number; raioPasseio: number; raioToque: number };

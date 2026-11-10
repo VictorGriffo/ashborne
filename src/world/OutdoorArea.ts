@@ -34,13 +34,32 @@ export interface OutdoorData {
     vagalumes?: number;
     /** Cinzas caindo (Parte 2): quantidade de partículas. */
     cinzas?: number;
+    /** Neve caindo: quantidade de partículas. */
+    neve?: number;
     grama?: string[];
   };
   /** Retângulo onde se pode andar: { min: [x, z], max: [x, z] }. */
   limite: { min: Vec; max: Vec };
   caminhos?: Array<{ pontos: Vec[]; largura: number; tipo?: GroundKind }>;
   manchas?: Array<{ pos: Vec; raio: number; tipo?: GroundKind }>;
-  vegetacao?: { arvores?: number; dentro?: number; pedras?: number; grama?: number; flores?: number; semente?: number };
+  vegetacao?: {
+    arvores?: number;
+    dentro?: number;
+    pedras?: number;
+    grama?: number;
+    flores?: number;
+    semente?: number;
+    /** Formato das árvores: mista (padrão), pinheiro, redonda, seca (galhos nus) ou nenhuma. */
+    forma?: 'mista' | 'pinheiro' | 'redonda' | 'seca' | 'palmeira' | 'nenhuma';
+    /** Cores das copas (hex). */
+    paleta?: string[];
+    /** Cor do tronco. */
+    tronco?: string;
+    /** Cores das pedras [clara, escura]. */
+    pedraCor?: string[];
+    /** Cor das flores/brotos (padrão: ciano e lilás de Aether). */
+    flor?: string[];
+  };
   objetos?: Array<
     | (PropParams &
         Condition & {
@@ -65,12 +84,17 @@ export interface OutdoorData {
   colisores?: Array<{ caixa: Vec }>;
 }
 
-type GroundKind = 'terra' | 'pedra' | 'areia';
+type GroundKind = 'terra' | 'pedra' | 'areia' | 'neve' | 'lama' | 'musgo' | 'praia' | 'agua';
 
 const GROUND_COLORS: Record<GroundKind, [number, number]> = {
   terra: [PROPS.dirtDark, PROPS.dirt],
   pedra: [0x4d5466, 0x5d6578],
   areia: [0x8a7a5c, 0x9c8b6a],
+  neve: [0xc4d0e0, 0xdfe8f4],
+  lama: [0x3a3326, 0x4a4230],
+  musgo: [0x2a4a32, 0x3a5e40],
+  praia: [0xa89870, 0xc0ae80],
+  agua: [0x1a4a60, 0x2a6a80],
 };
 
 interface Animated {
@@ -102,7 +126,7 @@ export class OutdoorArea implements Area {
   private readonly events = new Map<string, () => void>();
   private readonly exclusions: Array<{ x: number; z: number; r: number }> = [];
   private fireflies?: { points: THREE.Points; base: Float32Array; seed: Float32Array };
-  private ash?: { points: THREE.Points; speed: Float32Array; top: number; bottom: number };
+  private readonly ash: Array<{ points: THREE.Points; speed: Float32Array; top: number; bottom: number }> = [];
   /** Objetos que só existem (ou só acendem) quando as flags batem. */
   private readonly conditional: Array<{
     object: THREE.Object3D;
@@ -167,7 +191,8 @@ export class OutdoorArea implements Area {
     this.root.add(this.buildGround(rand));
     this.buildVegetation(rand);
     if (amb.vagalumes) this.buildFireflies(rand, amb.vagalumes);
-    if (amb.cinzas) this.buildAsh(rand, amb.cinzas);
+    if (amb.cinzas) this.buildAsh(rand, amb.cinzas, 0xb0a8b8, 0.25, 0.7);
+    if (amb.neve) this.buildAsh(rand, amb.neve, 0xf4f8ff, 0.5, 1.2);
     this.buildBounds();
     this.buildCharacters(assets);
     this.buildInteractables();
@@ -343,16 +368,43 @@ export class OutdoorArea implements Area {
     const tufts: THREE.BufferGeometry[] = [];
     const flowers: THREE.BufferGeometry[] = [];
     const placed: THREE.Vector2[] = [];
-    const greens = [PART1.forest, PART1.leaf, 0x24584a, 0x1d4a44, 0x2f6b55];
+    const greens = (v.paleta ?? ['#1F4D3A', '#2E7D5B', '#24584a', '#1d4a44', '#2f6b55']).map((c) => new THREE.Color(c));
+    const trunkColor = new THREE.Color(v.tronco ?? PROPS.trunk);
+    const shape = v.forma ?? 'mista';
 
     const addTree = (x: number, z: number, inside: boolean) => {
+      if (shape === 'nenhuma') return;
       const scale = range(rand, 0.85, 1.45);
       const y = this.height(x, z) - 0.1;
-      const color = new THREE.Color(greens[Math.floor(rand() * greens.length)]);
+      const color = greens[Math.floor(rand() * greens.length)].clone();
       const trunk = new THREE.CylinderGeometry(0.16 * scale, 0.24 * scale, 1.1 * scale, 6);
       trunk.translate(x, y + 0.55 * scale, z);
-      trunks.push(paint(trunk, PROPS.trunk));
-      if (rand() < 0.65) {
+      trunks.push(paint(trunk, trunkColor));
+      if (shape === 'seca') {
+        // Árvore morta: tronco alto e três galhos nus.
+        const tall = new THREE.CylinderGeometry(0.1 * scale, 0.2 * scale, 1.6 * scale, 5);
+        tall.translate(x, y + 1.3 * scale, z);
+        trunks.push(paint(tall, trunkColor));
+        for (let b = 0; b < 3; b++) {
+          const branch = new THREE.CylinderGeometry(0.03 * scale, 0.07 * scale, 0.9 * scale, 4);
+          branch.rotateZ(0.9);
+          branch.rotateY((b / 3) * Math.PI * 2 + rand());
+          branch.translate(x, y + (1.7 + b * 0.25) * scale, z);
+          trunks.push(paint(branch, trunkColor));
+        }
+      } else if (shape === 'palmeira') {
+        const tall = new THREE.CylinderGeometry(0.1 * scale, 0.15 * scale, 2.2 * scale, 5);
+        tall.rotateZ(0.12);
+        tall.translate(x, y + 1.1 * scale, z);
+        trunks.push(paint(tall, trunkColor));
+        for (let b = 0; b < 6; b++) {
+          const frond = new THREE.ConeGeometry(0.16 * scale, 1.3 * scale, 3);
+          frond.rotateZ(1.2);
+          frond.rotateY((b / 6) * Math.PI * 2);
+          frond.translate(x + 0.2, y + 2.25 * scale, z);
+          foliage.push(paint(frond, color));
+        }
+      } else if (shape === 'pinheiro' || (shape === 'mista' && rand() < 0.65)) {
         const layers = rand() < 0.5 ? 3 : 2;
         for (let l = 0; l < layers; l++) {
           const cone = new THREE.ConeGeometry((1.25 - l * 0.3) * scale, (1.4 - l * 0.15) * scale, 7);
@@ -399,11 +451,12 @@ export class OutdoorArea implements Area {
       rock.scale(range(rand, 1, 1.5), range(rand, 0.55, 0.85), range(rand, 1, 1.3));
       rock.rotateY(rand() * Math.PI);
       rock.translate(x, this.height(x, z) + size * 0.2, z);
-      rocks.push(paint(rock, new THREE.Color(PROPS.rock).lerp(new THREE.Color(PROPS.rockDark), rand())));
+      const [rockLight, rockDark] = v.pedraCor ?? [`#${PROPS.rock.toString(16)}`, `#${PROPS.rockDark.toString(16)}`];
+      rocks.push(paint(rock, new THREE.Color(rockLight).lerp(new THREE.Color(rockDark), rand())));
       if (size > 0.35 && this.outside(x, z) === 0) this.collision.addCircle(x, z, size * 1.2);
     }
 
-    const glow = [PART1.aetherCyan, PART1.aetherLilac];
+    const glow = (v.flor ?? ['#7fe0d0', '#b9a6ff']).map((c) => new THREE.Color(c));
     for (let i = 0; i < (v.grama ?? 200); i++) {
       const x = range(rand, min[0] - 4, max[0] + 4);
       const z = range(rand, min[1] - 4, max[1] + 4);
@@ -419,7 +472,7 @@ export class OutdoorArea implements Area {
       if (rand() < (v.flores ?? 0.08)) {
         const bloom = new THREE.OctahedronGeometry(0.07, 0);
         bloom.translate(x + 0.2, y + 0.28, z);
-        flowers.push(paint(bloom, glow[Math.floor(rand() * 2)]));
+        flowers.push(paint(bloom, glow[Math.floor(rand() * glow.length)]));
       }
     }
 
@@ -592,7 +645,7 @@ export class OutdoorArea implements Area {
   }
 
   /** Cinzas caindo devagar do céu, como neve suja: o mundo depois da catástrofe. */
-  private buildAsh(rand: () => number, count: number): void {
+  private buildAsh(rand: () => number, count: number, color: number, minSpeed: number, maxSpeed: number): void {
     const { min, max } = this.data.limite;
     const top = 11;
     const bottom = 0;
@@ -600,7 +653,7 @@ export class OutdoorArea implements Area {
     const speed = new Float32Array(count);
     for (let i = 0; i < count; i++) {
       pos.set([range(rand, min[0] - 3, max[0] + 3), range(rand, bottom, top), range(rand, min[1] - 3, max[1] + 3)], i * 3);
-      speed[i] = range(rand, 0.25, 0.7);
+      speed[i] = range(rand, minSpeed, maxSpeed);
     }
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
@@ -609,26 +662,28 @@ export class OutdoorArea implements Area {
       new THREE.PointsMaterial({
         size: 0.16,
         map: glowSprite(),
-        color: 0xb0a8b8,
+        color,
         transparent: true,
-        opacity: 0.55,
+        opacity: 0.6,
         depthWrite: false,
       }),
     );
     points.frustumCulled = false;
     this.root.add(points);
-    this.ash = { points, speed, top, bottom };
+    this.ash.push({ points, speed, top, bottom });
   }
 
   private updateAsh(dt: number, t: number): void {
-    if (!this.ash) return;
-    const arr = (this.ash.points.geometry.getAttribute('position') as THREE.BufferAttribute).array as Float32Array;
-    for (let i = 0; i < arr.length; i += 3) {
-      arr[i + 1] -= this.ash.speed[i / 3] * dt;
-      arr[i] += Math.sin(t * 0.6 + i) * dt * 0.25;
-      if (arr[i + 1] < this.ash.bottom) arr[i + 1] = this.ash.top;
+    for (const layer of this.ash) {
+      const attr = layer.points.geometry.getAttribute('position') as THREE.BufferAttribute;
+      const arr = attr.array as Float32Array;
+      for (let i = 0; i < arr.length; i += 3) {
+        arr[i + 1] -= layer.speed[i / 3] * dt;
+        arr[i] += Math.sin(t * 0.6 + i) * dt * 0.25;
+        if (arr[i + 1] < layer.bottom) arr[i + 1] = layer.top;
+      }
+      attr.needsUpdate = true;
     }
-    (this.ash.points.geometry.getAttribute('position') as THREE.BufferAttribute).needsUpdate = true;
   }
 
   private buildFireflies(rand: () => number, count: number): void {

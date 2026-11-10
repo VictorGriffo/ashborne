@@ -29,6 +29,8 @@ export class Player {
   private yaw = 0;
   private previousYaw = 0;
   private running = false;
+  /** Multiplicador de velocidade (a montaria acelera a travessia). */
+  speedScale = 1;
 
   constructor(
     readonly config: PlayerConfig,
@@ -81,7 +83,7 @@ export class Player {
     this.previousYaw = this.yaw;
     this.running = running;
 
-    const top = running ? this.config.runSpeed : this.config.walkSpeed;
+    const top = (running ? this.config.runSpeed : this.config.walkSpeed) * this.speedScale;
     // "Para cima" na tela é -Z no mundo, porque a câmera fica do lado +Z.
     const targetX = move.x * top;
     const targetZ = -move.y * top;

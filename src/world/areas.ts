@@ -1,6 +1,11 @@
 import camposDeLinne from '../../data/areas/campos-de-linne.json';
+import costaDeMareAlta from '../../data/areas/costa-de-mare-alta.json';
+import dunasDeSahr from '../../data/areas/dunas-de-sahr.json';
 import estrada from '../../data/areas/estrada.json';
+import florestaDeSylven from '../../data/areas/floresta-de-sylven.json';
+import pantanoDeMorn from '../../data/areas/pantano-de-morn.json';
 import patio from '../../data/areas/patio.json';
+import picosDeFrostveil from '../../data/areas/picos-de-frostveil.json';
 import salaoDaGuarda from '../../data/areas/salao-da-guarda.json';
 import santuario from '../../data/areas/santuario.json';
 import vila from '../../data/areas/vila.json';
@@ -25,6 +30,11 @@ const OUTDOORS: Record<string, OutdoorData> = {
   santuario: santuario as unknown as OutdoorData,
   'vila-ruinas': vilaRuinas as unknown as OutdoorData,
   'campos-de-linne': camposDeLinne as unknown as OutdoorData,
+  'floresta-de-sylven': florestaDeSylven as unknown as OutdoorData,
+  'pantano-de-morn': pantanoDeMorn as unknown as OutdoorData,
+  'dunas-de-sahr': dunasDeSahr as unknown as OutdoorData,
+  'picos-de-frostveil': picosDeFrostveil as unknown as OutdoorData,
+  'costa-de-mare-alta': costaDeMareAlta as unknown as OutdoorData,
 };
 
 /** Áreas feitas em código: nome e pontos de save, para o mapa e a viagem rápida. */

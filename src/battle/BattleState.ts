@@ -505,15 +505,20 @@ export class BattleState implements GameState {
       ];
       this.refreshPlayer();
     } else {
-      const { lacos, brasas } = this.data.recompensaPoupar;
+      const { lacos, brasas, xp = 0 } = this.data.recompensaPoupar;
       player.lacos += lacos;
       player.brasas += brasas;
+      const ups = xp > 0 ? player.gainXp(xp) : [];
       this.host.enemySpared();
       lines = [
         `Você poupou ${this.the}.`,
         this.data.aoPoupar,
-        `Você ganhou ${plural(lacos, 'Laço', 'Laços')} e ${plural(brasas, 'Brasa', 'Brasas')}.`,
+        `Você ganhou ${plural(lacos, 'Laço', 'Laços')}${xp > 0 ? `, ${xp} de experiência` : ''} e ${plural(brasas, 'Brasa', 'Brasas')}.`,
+        ...ups.map(
+          (u) => `Ryben subiu para o nível ${u.level}! Vida máxima ${u.maxHp}, força ${u.strength}, defesa ${u.defense}.`,
+        ),
       ];
+      this.refreshPlayer();
     }
     this.ui.showBubble(null);
     this.ui.setCommandsActive(false);

@@ -14,4 +14,6 @@ if (import.meta.env.DEV) {
   const w = window as unknown as { game: Game; session: typeof session };
   w.game = game;
   w.session = session;
+  // Ferramentas de teste (window.dev). Só entram no modo de desenvolvimento.
+  void import('./devtools').then((m) => m.installDevTools(game));
 }
