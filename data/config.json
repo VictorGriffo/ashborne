@@ -1,0 +1,18 @@
+{
+  "loop": {
+    "hz": 60
+  },
+  "player": {
+    "walkSpeed": 4.2,
+    "runSpeed": 7,
+    "acceleration": 12,
+    "turnSpeed": 14,
+    "radius": 0.35
+  },
+  "camera": {
+    "fov": 38,
+    "offset": [0, 15, 11],
+    "lookHeight": 0.8,
+    "smoothing": 7
+  }
+}

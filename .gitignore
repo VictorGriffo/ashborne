@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.local
+*.log
+.DS_Store
+Thumbs.db
+
+# Configuração local do Claude Code (caminhos desta máquina)
+.claude/
