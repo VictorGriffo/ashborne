@@ -126,3 +126,14 @@ O Victor pediu para o jogo deixar de ser geométrico e ficar "como um novo Zelda
 - **Visual:** céu em shader com nuvens, lua ou eclipse e serras no horizonte (`src/render/Sky.ts`; o eclipse fica no céu da Parte 2 até o selo 7); bloom (`Renderer`); sombreamento liso com quinas preservadas (`toCreasedNormals` em `geometry.ts`); chão liso com manchas; vegetação da Quaternius em instâncias com vento (`src/render/nature.ts`), só perto da área jogável (máx. 48 árvores detalhadas por área), árvores leves ao longe.
 - **Desempenho (GPU integrada Intel UHD do Victor):** no máximo 4 luzes pontuais acesas, as mais perto do Ryben (`LightBudget`); resolução dinâmica no `Renderer` (baixa até 50% se o quadro passar de 22 ms); sombra 1024 px.
 - **Ainda não reformulado:** a Clareira do Altar (`ClearingArea`, feita em código) ganhou o céu novo, mas não a vegetação da Quaternius; os personagens e mobs continuam os mesmos modelos (só com sombreamento liso).
+
+## Próximo passo: versão 2.0 (a partir de 2026-11-11)
+
+A versão 1.0 está marcada na tag `v1.0`. **Antes de qualquer trabalho visual, leia `docs/plano-2.0.md`.** Resumo do que o Victor pediu:
+- personagens modelados de novo e mais realistas, gerados a partir das artes conceituais dele (ChatGPT → Meshy/Tripo → Mixamo);
+- cenário sem formas geométricas;
+- referências de jogos atuais;
+- **mundo contínuo e amplo**, com casas que se entra de verdade, sem sala solta no preto; troca de área só em momentos especiais;
+- abertura ilustrada antes do jogo começar.
+
+Limite de tamanho: **800 MB**. O Victor precisa criar e logar as contas (Meshy ou Tripo, Mixamo, ChatGPT) no navegador do app; o Claude não cria contas nem digita senhas.
