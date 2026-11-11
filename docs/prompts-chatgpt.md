@@ -5,6 +5,8 @@ Pedidos prontos para copiar e colar no ChatGPT. Servem para gerar:
 - os **objetos importantes**;
 - os **quadros da abertura** do jogo.
 
+> **Atualização (2026-11-11):** o ChatGPT do Victor não consegue gerar essas imagens. Os mesmos pedidos funcionam no **Google Gemini** (gratuito com a conta Google), que mantém bem o mesmo personagem entre imagens, e também no **Bing Image Creator** (gratuito com conta Microsoft). Sem nenhum gerador de imagem, ver as opções em `docs/plano-2.0.md`, seção "Se não houver gerador de imagem".
+
 ## Como usar
 
 1. Abra **uma conversa nova** no ChatGPT, só para isso, e mande todos os pedidos **nela, em ordem**. Assim ele mantém o mesmo estilo e o mesmo rosto dos personagens.

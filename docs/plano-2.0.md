@@ -68,6 +68,15 @@ Passo a passo por personagem:
    - registrar no `CREDITOS.md`.
 6. **Testar** com `window.dev` (`talk`, `battle`) e conferir o FPS.
 
+#### Se não houver gerador de imagem
+
+O ChatGPT do Victor não gera essas imagens. Alternativas, da mais rápida à mais personalizada:
+
+1. **Personagens prontos do Mixamo** (grátis, conta Adobe): humanos realistas, já com esqueleto e centenas de animações. Escolho o mais parecido com cada papel (cavaleiro para o Orin, maga para a Lyra, nobre para o Vaelor...) e recolorimos as texturas com as cores das artes. É o caminho mais garantido; a desvantagem é que os rostos não são exclusivos.
+2. **As artes do Victor direto no 3D:** recortar cada personagem da arte do grupo (Ryben, Kael, Lyra e Tob) e mandar a imagem para um gerador de 3D: Meshy, Tripo, ou Hunyuan3D e TRELLIS de graça no Hugging Face, sem conta em alguns casos. A pose da arte não é a ideal, então o resultado varia. Maren, Orin e Vaelor não aparecem nas artes e precisariam de outra fonte.
+3. **Outro gerador de imagem gratuito** (Gemini ou Bing Image Creator) com os mesmos pedidos de `docs/prompts-chatgpt.md`.
+4. **Figma/Weave:** o Figma conectado tem geração de imagem, mas gasta créditos de IA que o plano Starter do Victor praticamente não tem. O Weave (weavy.ai) tem modelos de 3D, mas exige ligar a conta Figma em app.weavy.ai, nas configurações de perfil.
+
 ### Fase 2: mobs e generais
 
 - Animais e monstros: pacotes CC0 da Quaternius (monstros, animais, esqueletos) com animação. Substituem os mobs feitos em `src/render/mobModels.ts`.
