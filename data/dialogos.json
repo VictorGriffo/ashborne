@@ -467,6 +467,7 @@
 
   "lyra-p2": {
     "inicio": [
+      { "se": "selos-ao-menos-4", "naoSe": "lyra-como-era", "no": "como-era" },
       { "se": ["lyra-soube-do-selo", "selos-ao-menos-6"], "no": "quase-la" },
       { "se": ["lyra-soube-do-selo", "selos-ao-menos-3"], "no": "metade" },
       { "se": "lyra-soube-do-selo", "no": "depois-selo" },
@@ -478,6 +479,16 @@
       { "no": "reencontro" }
     ],
     "nos": {
+      "como-era": {
+        "quem": "lyra-adulta",
+        "falas": [
+          "Quatro selos. Sabe o que eu pensei hoje cedo? Que a vila tinha cheiro de pão, antes. Lembra? Da padaria da dona Elda, ao lado da Guarda.",
+          "A gente fugia dos treinos do Orin pra comer pão quente. Você, o Kael, o Tob e eu. Ele sempre pagava, e sempre reclamava.",
+          "Eu estava com raiva de você. Ainda estou, um pouco. Mas hoje me lembrei de quem a gente era. Isso eu quero de volta."
+        ],
+        "marcar": ["lyra-como-era"],
+        "recompensa": { "itens": { "lagrima-de-aether": 2, "sopa-da-resistencia": 1 }, "brasas": 50 }
+      },
       "reencontro": {
         "quem": "lyra-adulta",
         "falas": [
@@ -581,8 +592,34 @@
   },
 
   "tob-p2": {
-    "inicio": [{ "se": "selo-1", "no": "forja-nova" }, { "se": "falou-com-tob-p2", "no": "forja" }, { "no": "reencontro" }],
+    "inicio": [{ "se": "selos-ao-menos-2", "naoSe": "tob-invencao", "no": "invencao" }, { "se": "selo-1", "no": "forja-nova" }, { "se": "falou-com-tob-p2", "no": "forja" }, { "no": "reencontro" }],
     "nos": {
+      "invencao": {
+        "quem": "tob-adulto",
+        "falas": [
+          "Ryben! Chega aqui! Lembra da engenhoca que eu testava na Guarda? A que explodia?",
+          "Pois é. Consegui fazer ela NÃO explodir. Na maior parte do tempo. Quer testar?"
+        ],
+        "escolhas": [
+          { "texto": "Claro! O que pode dar errado?", "ir": "teste" },
+          { "texto": "Prefiro ver de longe.", "ir": "longe" }
+        ]
+      },
+      "teste": {
+        "quem": "tob-adulto",
+        "falas": [
+          "*PUF!* ...Funcionou! Quer dizer, quase. Olha só, ela solta Aether em vez de fogo.",
+          "Fica com as sobras. Chamei de Lágrima do Tob. Não conta pra ninguém que ainda explode um pouquinho."
+        ],
+        "marcar": ["tob-invencao"],
+        "recompensa": { "itens": { "lagrima-de-aether": 3 }, "brasas": 30 }
+      },
+      "longe": {
+        "quem": "tob-adulto",
+        "falas": ["Esperto. A última vez que alguém ficou perto, perdeu as sobrancelhas. Toma, são as sobras seguras."],
+        "marcar": ["tob-invencao"],
+        "recompensa": { "itens": { "lagrima-de-aether": 2 } }
+      },
       "reencontro": {
         "quem": "tob-adulto",
         "falas": [

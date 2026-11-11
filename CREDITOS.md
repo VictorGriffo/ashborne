@@ -30,7 +30,7 @@ Arquivos em `assets/modelos/kaykit-dungeon/`, usados no Salão da Guarda:
 
 ### Gerados no código
 
-A Clareira do Altar e as áreas ao ar livre (árvores, pedras, grama, casas, forja, poço, lampiões, cercas, pilares, o Coração de Aether e os pontos de save), além de todos os mobs (Brotinho, Boneco de Treino, Corvo, Gato, Lobos, Sentinela e Guardião), são feitos com formas simples do Three.js, sem arquivos de terceiros.
+A Clareira do Altar e as áreas ao ar livre, inclusive os sete territórios da Parte 2, a Cidadela e o santuário final (árvores, palmeiras, cactos, cristais de gelo, docas, barcos, ruínas, pedras, grama, casas, forja, poço, lampiões, cercas, pilares, o Coração de Aether e os pontos de save), além de todos os mobs (Brotinho, Boneco de Treino, Corvo, Gato, Lobos, Sentinela e Guardião, e os da Parte 2: Cinzento, Soldado, Espantalho, Javali, Espíritos, Sapo, Escorpião, Caranguejo, Gaivota, Golem, Guardas, Armaduras, Estátua e os sete generais), são feitos com formas simples do Three.js, sem arquivos de terceiros.
 
 ## Bibliotecas
 
@@ -39,3 +39,5 @@ A Clareira do Altar e as áreas ao ar livre (árvores, pedras, grama, casas, for
 | [Three.js](https://threejs.org) | MIT | Renderização 3D |
 | [Vite](https://vite.dev) | MIT | Build e servidor de desenvolvimento |
 | [TypeScript](https://www.typescriptlang.org) | Apache 2.0 | Linguagem |
+
+Os personagens da Parte 2 (Lyra e Tob adultos, Mira, Brum, Orvil, Kael etc.) reaproveitam os mesmos modelos KayKit já listados, com outras cores e acessórios. Nenhum arquivo novo de terceiros entrou nos marcos M5 a M7.

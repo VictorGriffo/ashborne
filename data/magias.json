@@ -68,7 +68,8 @@
     "custo": 8,
     "efeito": "dano",
     "valor": 3.4,
-    "descricao": "A luz do amanhecer, ligada ao sacrifício do final. Dano altíssimo.",
+    "custoVida": 0.25,
+    "descricao": "A luz do amanhecer, ligada ao sacrifício do final. Dano altíssimo, mas cobra 25% da sua vida máxima.",
     "texto": "O mundo clareia por um instante, como se o sol nascesse dentro do campo de batalha."
   }
 }

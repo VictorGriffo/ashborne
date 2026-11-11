@@ -299,8 +299,14 @@ export class BattleState implements GameState {
       this.showText(['Aether insuficiente.'], () => this.playerTurn(false));
       return;
     }
-    this.refreshPlayer();
     const lines = [s.texto];
+    if (s.custoVida) {
+      // O preço do sacrifício: a Luz cobra vida de quem a usa, mas nunca a última gota.
+      const cost = Math.min(Math.round(player.maxHp * s.custoVida), Math.max(0, player.hp - 1));
+      player.hp -= cost;
+      if (cost > 0) lines.push(`A luz cobra ${cost} de vida de você.`);
+    }
+    this.refreshPlayer();
     switch (s.efeito) {
       case 'escudo':
         this.fx.shield = s.valor;

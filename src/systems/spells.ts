@@ -12,6 +12,8 @@ export interface SpellData {
   efeito: SpellEffect;
   valor: number;
   turnos?: number;
+  /** Fração da vida máxima que a magia cobra de quem a usa (nunca mata). */
+  custoVida?: number;
   descricao: string;
   texto: string;
 }
