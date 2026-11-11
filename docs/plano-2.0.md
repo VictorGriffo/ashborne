@@ -147,3 +147,10 @@ O Victor liberou um visual **mais animado e menos humano-realista** para os pers
 - sombreamento de desenho (cel-shading) e contorno no jogo, em vez de textura realista;
 - menos triângulos (10–20 mil por personagem principal) e texturas pequenas.
 O Ryben 24 realista já gerado (`docs/arte/3d/`) fica como referência de forma e serve de teste do pipeline.
+
+## Ryben 24 animado (2026-11-11, tarde)
+
+- Vistas no estilo animado (cel-shaded com contorno), geradas no Gemini: `docs/arte/ryben24-anim-frente.jpg` e `ryben24-anim-costas.jpg`.
+- Malha gerada no Hunyuan3D-2mv (frente + costas, decodificação High): `docs/arte/3d/ryben24-anim-malha.glb` (14,7 MB, bruta) e `ryben24-anim-malha-30k.glb` (30 mil triângulos, 387 KB).
+- **Falta:** cor (UV + projeção das vistas), esqueleto e animações. O Space de textura da Tencent estava fora do ar. Caminhos: (a) Mixamo, com o Victor logado na conta Adobe no Chrome: envia a malha, ele rigga e baixa as animações; (b) esqueleto próprio, reaproveitando o esqueleto e as animações do KayKit (`assets/modelos/kaykit-adventurers`) ajustado à nova malha, com pesos por proximidade. O (b) não precisa de conta, mas é trabalho de engenharia e as proporções realistas deformam mais.
+- Dica do Gemini: às vezes ele escreve a descrição em vez de mostrar a imagem; pedir de novo "Crie e mostre agora a imagem" resolve.
