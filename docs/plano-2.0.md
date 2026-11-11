@@ -128,3 +128,7 @@ O Victor escolheu **Gemini + gerador de 3D** para os personagens principais:
 - **Ryben 24, vista de frente:** gerado com sucesso, na conversa "Criação de Personagem Ryben".
   - **Falta baixar a imagem** (botão de download do Gemini) e salvar como `docs/arte/ryben24-frente.png`.
   - Depois, pedir a vista de lado e a de costas.
+
+## Atualização (2026-11-11, manhã)
+
+As 3 vistas do **Ryben 24** foram geradas no Gemini e estão em `docs/arte/ryben24-frente.jpg`, `ryben24-lado.jpg` e `ryben24-costas.jpg` (1792×2400, pose A, fundo cinza, consistentes entre si). Próximo passo: gerar o 3D (Hunyuan3D com múltiplas vistas no Hugging Face, ou Meshy/Tripo), dar esqueleto e animações no Mixamo, otimizar e integrar.
