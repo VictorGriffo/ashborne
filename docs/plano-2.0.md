@@ -112,3 +112,10 @@ O ChatGPT do Victor não gera essas imagens. Alternativas, da mais rápida à ma
 4. Gerar o 3D (Meshy ou Tripo), dar esqueleto e animações (Mixamo), otimizar e colocar no jogo **só para o Ryben**. Comparar visual e FPS com o modelo antigo.
 5. Se o Victor aprovar, repetir com o grupo principal.
 6. **Em paralelo, sem depender de contas:** começar a Fase 0 pela vila da Parte 1 (mundo contínuo e a casa da Maren com interior de verdade), junto com as Fases 3 e 5.
+
+## Decisão (2026-11-11)
+
+O Victor escolheu **Gemini + gerador de 3D** para os personagens principais:
+1. O Victor gera as imagens no Gemini com os pedidos de `docs/prompts-chatgpt.md` (Pedido 0 com as 4 artes, depois Ryben 24 em três vistas) e salva em `docs/arte/`.
+2. O Claude transforma as imagens em 3D. Primeira tentativa: **Meshy**, que tem imagem para 3D com várias vistas, texturas e esqueleto automático. No plano grátis os modelos saem com licença CC BY, com crédito no `CREDITOS.md`: conferir a licença na hora. Alternativas: Tripo, ou Hunyuan3D e TRELLIS no Hugging Face (grátis).
+3. As animações que faltarem vêm do Mixamo. Os NPCs secundários podem usar personagens prontos do Mixamo.
