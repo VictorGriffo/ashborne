@@ -34,6 +34,9 @@ const TALK_FACING = 0.2;
 /** Quantos Laços o Ryben precisa ter para enfrentar Vaelor "acompanhado" (ajustar nos testes). */
 const LACOS_ALTOS = 12;
 
+/** Quanto o Ryben recua ao bater numa saída fechada. */
+const LOCK_PUSHBACK = 1.2;
+
 /** Na batalha, a câmera mira um pouco à frente do confronto para ele subir na tela. */
 const BATTLE_FOCUS_SHIFT = new THREE.Vector3(0, 0, 1.3);
 /** Velocidade extra quando o Ryben tem a montaria. */
@@ -192,8 +195,16 @@ export class ExploreState implements GameState {
     const exit = exitAt(this.area, this.player.position.x, this.player.position.z);
     if (exit && !this.leaving) {
       if (exit.lock && !check(this.ctx.flags, exit.lock)) {
-        // Saída fechada: avisa e devolve o Ryben para onde estava.
-        this.player.teleport(this.lastSafe.x, this.lastSafe.z);
+        // Saída fechada: avisa e devolve o Ryben um pouco para trás, virado para longe da
+        // saída. Sem esse recuo ele ficava colado na borda, e qualquer passo reabria o aviso.
+        const back = new THREE.Vector3().subVectors(this.lastSafe, this.player.position).setY(0);
+        if (back.lengthSq() < 1e-6) back.set(0, 0, 1);
+        back.normalize();
+        const x = this.lastSafe.x + back.x * LOCK_PUSHBACK;
+        const z = this.lastSafe.z + back.z * LOCK_PUSHBACK;
+        this.player.teleport(x, z);
+        this.player.lookAt(new THREE.Vector3(x + back.x, 0, z + back.z));
+        this.lastSafe.set(x, 0, z);
         this.ctx.states.push(new DialogueState(this.ctx, [exit.lock.mensagem]));
         return;
       }
