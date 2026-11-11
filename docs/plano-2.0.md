@@ -119,3 +119,12 @@ O Victor escolheu **Gemini + gerador de 3D** para os personagens principais:
 1. O Victor gera as imagens no Gemini com os pedidos de `docs/prompts-chatgpt.md` (Pedido 0 com as 4 artes, depois Ryben 24 em três vistas) e salva em `docs/arte/`.
 2. O Claude transforma as imagens em 3D. Primeira tentativa: **Meshy**, que tem imagem para 3D com várias vistas, texturas e esqueleto automático. No plano grátis os modelos saem com licença CC BY, com crédito no `CREDITOS.md`: conferir a licença na hora. Alternativas: Tripo, ou Hunyuan3D e TRELLIS no Hugging Face (grátis).
 3. As animações que faltarem vêm do Mixamo. Os NPCs secundários podem usar personagens prontos do Mixamo.
+
+## Estado (2026-11-11, fim da sessão)
+
+- **Notebook no Gemini:** "Ashborne – Arte do jogo".
+  - Fontes: `docs/arte/referencias/artes-conceituais.png` e `docs/design.md`.
+  - As regras de estilo e da folha de personagem estão nas instruções do notebook.
+- **Ryben 24, vista de frente:** gerado com sucesso, na conversa "Criação de Personagem Ryben".
+  - **Falta baixar a imagem** (botão de download do Gemini) e salvar como `docs/arte/ryben24-frente.png`.
+  - Depois, pedir a vista de lado e a de costas.
