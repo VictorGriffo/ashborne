@@ -115,3 +115,5 @@ O celular deixou de ser prioridade (o Victor não vai lançar para celular); o s
 **Atualização:** Arena da Guarda (NPC `guarda` na vila, 2 selos; duelos contra Guarda Corrompido, Armadura Vazia e Estátua Viva) e o arco da Mira (perdoa com 4 selos; flag `mira-perdoou`) estão feitos. As missões secundárias não aparecem no diário (o diário só mostra a missão principal); são conduzidas por flags em diálogos. Ainda faltam as outras secundárias, o balanceamento e README/CREDITOS.
 
 **Fechamento:** a Luz do Alvorecer cobra 25% da vida máxima (`custoVida` em `magias.json`, nunca mata); as 7 magias foram testadas em batalha; secundárias feitas: Mira, Tob (`tob-invencao`), Lyra (`lyra-como-era`), Maren, Arena da Guarda. Sobram só: provas do Orin, desertores, lembranças da Guarda, ervas, carta de Mira e balanceamento fino (Laços ≥ 12 para os finais, dano, preços).
+
+**Publicado (2026-11-11):** código em https://github.com/VictorGriffo/ashborne (público) e jogo em https://victorgriffo.github.io/ashborne/. Cada push na `main` publica sozinho pelo GitHub Actions (`.github/workflows/deploy.yml`). O `gh` fica em `C:\Program Files\GitHub CLI` e já tem o escopo `workflow`.
