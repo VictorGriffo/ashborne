@@ -139,3 +139,11 @@ As 3 vistas do **Ryben 24** foram geradas no Gemini e estão em `docs/arte/ryben
 - **Textura:** o Space de textura (`tencent/Hunyuan3D-2`) respondeu `Not Found` hoje. Plano: desdobrar a malha em UV (xatlas) e pintar projetando as vistas de frente, costas e lado.
 - **Esqueleto e animações:** Mixamo (conta Adobe do Victor) aceita OBJ/FBX com textura. Alternativa sem conta: auto-rig no Meshy/Tripo.
 - **Cuidado:** a malha vem descentrada e com a escala do gerador (≈1,9 unidade de altura); o Ryben do jogo tem ~1,25.
+
+## Decisão de estilo (2026-11-11)
+
+O Victor liberou um visual **mais animado e menos humano-realista** para os personagens (referências: Zelda BotW/TotK, Genshin Impact). Isso passa a valer para todos:
+- no Gemini, pedir "estilo de jogo anime/cel-shaded, proporções estilizadas (cabeça um pouco maior, traços limpos), mesmas roupas e cores da arte";
+- sombreamento de desenho (cel-shading) e contorno no jogo, em vez de textura realista;
+- menos triângulos (10–20 mil por personagem principal) e texturas pequenas.
+O Ryben 24 realista já gerado (`docs/arte/3d/`) fica como referência de forma e serve de teste do pipeline.
