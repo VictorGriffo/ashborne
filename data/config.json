@@ -10,10 +10,15 @@
     "radius": 0.35
   },
   "camera": {
-    "fov": 38,
-    "offset": [0, 15, 11],
-    "lookHeight": 0.8,
-    "smoothing": 7
+    "fov": 55,
+    "distance": 7.5,
+    "minDistance": 3.2,
+    "maxDistance": 16,
+    "pitch": 26,
+    "minPitch": 6,
+    "maxPitch": 70,
+    "lookHeight": 1.25,
+    "smoothing": 9
   },
   "batalha": {
     "_nota": "Velocidade da brasa em unidades lógicas por segundo; invencibilidade em segundos após um acerto.",

@@ -75,18 +75,28 @@ export class Player {
     this.yaw = this.previousYaw = Math.atan2(point.x - this.position.x, point.z - this.position.z);
   }
 
+  /** Ângulo para onde o Ryben olha (radianos). */
+  get heading(): number {
+    return this.yaw;
+  }
+
   /**
    * @param move direção da entrada: x para a direita, y para cima (para longe da câmera)
+   * @param cameraYaw ângulo da câmera em volta do Ryben: o movimento é relativo a ela
    */
-  update(dt: number, move: Vec2, running: boolean): void {
+  update(dt: number, move: Vec2, running: boolean, cameraYaw = 0): void {
     this.previous.copy(this.position);
     this.previousYaw = this.yaw;
     this.running = running;
 
     const top = (running ? this.config.runSpeed : this.config.walkSpeed) * this.speedScale;
-    // "Para cima" na tela é -Z no mundo, porque a câmera fica do lado +Z.
-    const targetX = move.x * top;
-    const targetZ = -move.y * top;
+    // "Para cima" é para longe da câmera. Com a câmera em yaw 0 (lado +Z), é -Z.
+    const s = Math.sin(cameraYaw);
+    const c = Math.cos(cameraYaw);
+    const worldX = move.x * c - move.y * s;
+    const worldZ = -move.x * s - move.y * c;
+    const targetX = worldX * top;
+    const targetZ = worldZ * top;
     const k = damp(this.config.acceleration, dt);
     this.velocity.x += (targetX - this.velocity.x) * k;
     this.velocity.z += (targetZ - this.velocity.z) * k;
@@ -95,7 +105,7 @@ export class Player {
     this.position.addScaledVector(this.velocity, dt);
 
     if (Math.hypot(move.x, move.y) > 0.1) {
-      const targetYaw = Math.atan2(move.x, -move.y);
+      const targetYaw = Math.atan2(worldX, worldZ);
       this.yaw = lerpAngle(this.yaw, targetYaw, damp(this.config.turnSpeed, dt));
     }
   }

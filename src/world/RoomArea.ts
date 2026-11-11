@@ -75,6 +75,7 @@ export class RoomArea implements Area {
   readonly npcs: Npc[] = [];
   readonly enemies: MapEnemy[] = [];
   readonly interactables: Interactable[] = [];
+  readonly cameraOccluders: THREE.Object3D[];
 
   private readonly flickers: Flicker[] = [];
   private readonly savePoints = new Map<string, SavePointModel>();
@@ -102,6 +103,8 @@ export class RoomArea implements Area {
     const content = new THREE.Group();
     content.scale.setScalar(s);
     this.root.add(content);
+    // Sala fechada: a câmera não atravessa as paredes.
+    this.cameraOccluders = [content];
 
     this.buildLighting();
 

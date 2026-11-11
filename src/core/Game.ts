@@ -36,6 +36,7 @@ export class Game implements GameContext {
     readonly ui: HTMLElement,
   ) {
     this.renderer = new Renderer(canvasHost);
+    this.input.attachLook(this.renderer.gl.domElement);
     this.debug = new DebugHud(ui, import.meta.env.DEV);
     this.toasts = new Toast(ui);
     new TouchControls(this.input, ui);

@@ -105,7 +105,7 @@ export class ExploreState implements GameState {
 
     this.hint = el('div', 'controls-hint');
     this.hint.innerHTML =
-      '<kbd>WASD</kbd> andar · <kbd>Shift</kbd> correr · <kbd>Enter</kbd> interagir · <kbd>M</kbd> mapa · <kbd>I</kbd> bolsa · <kbd>Esc</kbd> pausar';
+      '<kbd>WASD</kbd> andar · <kbd>Shift</kbd> correr · <kbd>Mouse</kbd>/<kbd>Q</kbd><kbd>E</kbd> câmera · <kbd>C</kbd> centralizar · <kbd>Enter</kbd> interagir · <kbd>M</kbd> mapa · <kbd>I</kbd> bolsa · <kbd>Esc</kbd> pausar';
     this.prompt = el('div', 'interact-prompt');
     this.prompt.innerHTML = '<kbd class="only-keys">Enter</kbd><kbd class="only-touch">A</kbd>';
     this.promptText = el('span');
@@ -175,7 +175,11 @@ export class ExploreState implements GameState {
     }
 
     this.refreshNpcs();
-    this.player.update(dt, input.moveVector(), input.down('run'));
+    const look = input.lookVector(dt);
+    this.rig.rotate(look.x, look.y);
+    this.rig.zoomBy(input.takeZoom());
+    if (input.pressed('recenter')) this.rig.recenter(this.player.heading);
+    this.player.update(dt, input.moveVector(), input.down('run'), this.rig.yaw);
     this.area.collision.resolve(this.player.position, this.player.config.radius);
     this.pushOutOfNpcs();
     this.player.afterCollision(dt);
@@ -293,7 +297,9 @@ export class ExploreState implements GameState {
     const spawn = area.spawns[spawnName];
     if (!spawn) throw new Error(`Entrada "${spawnName}" não existe em ${id}`);
     this.player.teleport(spawn.x, spawn.z, spawn.yaw);
-    this.rig.snapTo(this.player.position);
+    // Ao entrar numa área, a câmera fica atrás do Ryben.
+    this.rig.occluders = area.cameraOccluders ?? [];
+    this.rig.snapTo(this.player.position, spawn.yaw + Math.PI);
 
     this.ctx.world.discovered.add(id);
     this.ctx.flags.set(`visitou-${id}`);

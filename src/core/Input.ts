@@ -19,7 +19,10 @@ export type Action =
   | 'pause'
   | 'map'
   | 'inventory'
-  | 'debug';
+  | 'debug'
+  | 'lookLeft'
+  | 'lookRight'
+  | 'recenter';
 
 const KEYMAP: Record<string, Action[]> = {
   KeyW: ['up'],
@@ -43,7 +46,13 @@ const KEYMAP: Record<string, Action[]> = {
   Tab: ['map'],
   KeyI: ['inventory'],
   F3: ['debug'],
+  KeyQ: ['lookLeft'],
+  KeyE: ['lookRight'],
+  KeyC: ['recenter'],
 };
+
+/** Quanto a câmera gira por pixel arrastado (radianos). */
+const DRAG_SENSITIVITY = 0.006;
 
 /** Botões no layout padrão da Gamepad API (Xbox / PlayStation). */
 const PAD_BUTTONS: Array<[number, Action]> = [
@@ -53,6 +62,7 @@ const PAD_BUTTONS: Array<[number, Action]> = [
   [3, 'inventory'], // Y / △
   [8, 'map'], // Back / Share
   [9, 'pause'], // Start / Options
+  [11, 'recenter'], // R3
   [12, 'up'],
   [13, 'down'],
   [14, 'left'],
@@ -83,10 +93,71 @@ export class Input {
   /** Analógico de toque. */
   private touchStick: Vec2 = { x: 0, y: 0 };
 
+  /** Giro da câmera vindo de arrastar o mouse ou o dedo, acumulado até ser lido. */
+  private lookDrag: Vec2 = { x: 0, y: 0 };
+  private zoomDelta = 0;
+  private rightStick: Vec2 = { x: 0, y: 0 };
+  private dragPointer: number | null = null;
+  private dragLast: Vec2 = { x: 0, y: 0 };
+
   constructor(target: Window = window) {
     target.addEventListener('keydown', this.onKeyDown);
     target.addEventListener('keyup', this.onKeyUp);
     target.addEventListener('blur', this.clear);
+  }
+
+  /**
+   * Liga o giro da câmera a um elemento (o canvas do jogo): arrastar com o
+   * mouse gira; no toque, só a metade direita da tela gira (a esquerda é o
+   * analógico de andar). A roda do mouse aproxima e afasta.
+   */
+  attachLook(el: HTMLElement): void {
+    el.addEventListener('pointerdown', (e) => {
+      if (this.dragPointer !== null) return;
+      if (e.pointerType === 'touch' && e.clientX < window.innerWidth / 2) return;
+      this.dragPointer = e.pointerId;
+      this.dragLast = { x: e.clientX, y: e.clientY };
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (e.pointerId !== this.dragPointer) return;
+      this.lookDrag.x += (e.clientX - this.dragLast.x) * DRAG_SENSITIVITY;
+      this.lookDrag.y += (e.clientY - this.dragLast.y) * DRAG_SENSITIVITY;
+      this.dragLast = { x: e.clientX, y: e.clientY };
+    });
+    const end = (e: PointerEvent): void => {
+      if (e.pointerId === this.dragPointer) this.dragPointer = null;
+    };
+    window.addEventListener('pointerup', end);
+    window.addEventListener('pointercancel', end);
+    el.addEventListener(
+      'wheel',
+      (e) => {
+        e.preventDefault();
+        this.zoomDelta += Math.sign(e.deltaY);
+      },
+      { passive: false },
+    );
+  }
+
+  /**
+   * Giro da câmera neste passo: x gira em volta do Ryben, y inclina.
+   * Junta o arrastar (em radianos, já pronto) com teclas e analógico (por segundo).
+   */
+  lookVector(dt: number): Vec2 {
+    let x = this.lookDrag.x;
+    let y = this.lookDrag.y;
+    this.lookDrag = { x: 0, y: 0 };
+    const keys = (this.down('lookRight') ? 1 : 0) - (this.down('lookLeft') ? 1 : 0);
+    x += (keys * 2.4 + this.rightStick.x * 3) * dt;
+    y += this.rightStick.y * 1.6 * dt;
+    return { x, y };
+  }
+
+  /** Passos da roda do mouse desde a última leitura (positivo = afastar). */
+  takeZoom(): number {
+    const z = this.zoomDelta;
+    this.zoomDelta = 0;
+    return z;
   }
 
   /** Chamado no início de cada passo de lógica. */
@@ -198,6 +269,13 @@ export class Input {
         const scaled = Math.min(1, (len - STICK_DEADZONE) / (1 - STICK_DEADZONE));
         this.stick = { x: (sx / len) * scaled, y: (sy / len) * scaled };
       }
+      // Analógico direito: câmera.
+      const rx = pad.axes[2] ?? 0;
+      const ry = pad.axes[3] ?? 0;
+      const rlen = Math.hypot(rx, ry);
+      this.rightStick = rlen > STICK_DEADZONE ? { x: rx, y: ry } : { x: 0, y: 0 };
+    } else {
+      this.rightStick = { x: 0, y: 0 };
     }
 
     for (const a of this.padDown) {

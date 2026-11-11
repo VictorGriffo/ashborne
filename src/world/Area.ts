@@ -39,6 +39,8 @@ export interface Area {
   readonly enemies: MapEnemy[];
   /** NPCs, baús e pontos de save. */
   readonly interactables: Interactable[];
+  /** Objetos que a câmera não atravessa (paredes de salas fechadas). */
+  readonly cameraOccluders?: THREE.Object3D[];
 
   /** Efeito visual de quando o Ryben toca um ponto de save. */
   activateSavePoint?(id: string): void;
