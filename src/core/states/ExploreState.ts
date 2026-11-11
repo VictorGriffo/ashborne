@@ -108,7 +108,7 @@ export class ExploreState implements GameState {
 
     this.hint = el('div', 'controls-hint');
     this.hint.innerHTML =
-      '<kbd>WASD</kbd> andar · <kbd>Shift</kbd> correr · <kbd>Mouse</kbd>/<kbd>Q</kbd><kbd>E</kbd> câmera · <kbd>C</kbd> centralizar · <kbd>Enter</kbd> interagir · <kbd>M</kbd> mapa · <kbd>I</kbd> bolsa · <kbd>Esc</kbd> pausar';
+      '<kbd>WASD</kbd> andar · <kbd>Shift</kbd> correr · <kbd>Mouse</kbd>/<kbd>Q</kbd><kbd>E</kbd> câmera · <kbd>C</kbd> centralizar · <kbd>Enter</kbd>/<kbd>Clique</kbd> interagir · <kbd>M</kbd> mapa · <kbd>I</kbd> bolsa · <kbd>Esc</kbd> pausar';
     this.prompt = el('div', 'interact-prompt');
     this.prompt.innerHTML = '<kbd class="only-keys">Enter</kbd><kbd class="only-touch">A</kbd>';
     this.promptText = el('span');
@@ -172,7 +172,8 @@ export class ExploreState implements GameState {
     if (input.pressed('map')) return this.ctx.states.push(new MapState(this.ctx, this.area.id));
     if (input.pressed('inventory')) return this.ctx.states.push(new InventoryState(this.ctx));
 
-    if (this.target && input.pressed('confirm')) {
+    // Com mouse: clicar na cena interage com o que está perto (NPC, baú, save...).
+    if (this.target && (input.pressed('confirm') || input.pressed('click'))) {
       this.interact(this.target);
       return;
     }

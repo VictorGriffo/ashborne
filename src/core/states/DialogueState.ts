@@ -53,7 +53,8 @@ export class DialogueState implements GameState {
       return;
     }
 
-    if (input.pressed('confirm') || input.pressed('cancel')) {
+    // Clicar em qualquer lugar da cena também avança o texto (as escolhas são botões).
+    if (input.pressed('confirm') || input.pressed('cancel') || input.pressed('click')) {
       if (!this.box.finished) {
         this.box.complete();
       } else if (!this.pendingChoices) {

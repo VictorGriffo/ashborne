@@ -22,7 +22,9 @@ export type Action =
   | 'debug'
   | 'lookLeft'
   | 'lookRight'
-  | 'recenter';
+  | 'recenter'
+  /** Clique curto do mouse (ou toque) na cena, sem arrastar. */
+  | 'click';
 
 const KEYMAP: Record<string, Action[]> = {
   KeyW: ['up'],
@@ -53,6 +55,9 @@ const KEYMAP: Record<string, Action[]> = {
 
 /** Quanto a câmera gira por pixel arrastado (radianos). */
 const DRAG_SENSITIVITY = 0.006;
+/** Um clique só conta se o ponteiro mexeu menos que isso (px) e durou menos que isso (ms). */
+const CLICK_SLOP = 8;
+const CLICK_TIME = 350;
 
 /** Botões no layout padrão da Gamepad API (Xbox / PlayStation). */
 const PAD_BUTTONS: Array<[number, Action]> = [
@@ -99,6 +104,7 @@ export class Input {
   private rightStick: Vec2 = { x: 0, y: 0 };
   private dragPointer: number | null = null;
   private dragLast: Vec2 = { x: 0, y: 0 };
+  private dragStart = { x: 0, y: 0, t: 0, button: 0 };
 
   constructor(target: Window = window) {
     target.addEventListener('keydown', this.onKeyDown);
@@ -117,6 +123,7 @@ export class Input {
       if (e.pointerType === 'touch' && e.clientX < window.innerWidth / 2) return;
       this.dragPointer = e.pointerId;
       this.dragLast = { x: e.clientX, y: e.clientY };
+      this.dragStart = { x: e.clientX, y: e.clientY, t: performance.now(), button: e.button };
     });
     window.addEventListener('pointermove', (e) => {
       if (e.pointerId !== this.dragPointer) return;
@@ -124,11 +131,18 @@ export class Input {
       this.lookDrag.y += (e.clientY - this.dragLast.y) * DRAG_SENSITIVITY;
       this.dragLast = { x: e.clientX, y: e.clientY };
     });
-    const end = (e: PointerEvent): void => {
-      if (e.pointerId === this.dragPointer) this.dragPointer = null;
+    const end = (e: PointerEvent, cancelled: boolean): void => {
+      if (e.pointerId !== this.dragPointer) return;
+      this.dragPointer = null;
+      // Clique curto e parado (botão esquerdo ou toque) = interagir / avançar o texto.
+      const s = this.dragStart;
+      const moved = Math.hypot(e.clientX - s.x, e.clientY - s.y);
+      if (!cancelled && s.button === 0 && moved < CLICK_SLOP && performance.now() - s.t < CLICK_TIME) {
+        this.queued.add('click');
+      }
     };
-    window.addEventListener('pointerup', end);
-    window.addEventListener('pointercancel', end);
+    window.addEventListener('pointerup', (e) => end(e, false));
+    window.addEventListener('pointercancel', (e) => end(e, true));
     el.addEventListener(
       'wheel',
       (e) => {
