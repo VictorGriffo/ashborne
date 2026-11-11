@@ -132,3 +132,10 @@ O Victor escolheu **Gemini + gerador de 3D** para os personagens principais:
 ## Atualização (2026-11-11, manhã)
 
 As 3 vistas do **Ryben 24** foram geradas no Gemini e estão em `docs/arte/ryben24-frente.jpg`, `ryben24-lado.jpg` e `ryben24-costas.jpg` (1792×2400, pose A, fundo cinza, consistentes entre si). Próximo passo: gerar o 3D (Hunyuan3D com múltiplas vistas no Hugging Face, ou Meshy/Tripo), dar esqueleto e animações no Mixamo, otimizar e integrar.
+
+## Ryben 24 em 3D (2026-11-11)
+
+- **Forma gerada** no Space grátis `tencent/Hunyuan3D-2mv` (Hugging Face, sem login), com as 3 vistas e decodificação "High": `docs/arte/3d/ryben24-malha.glb` (844 mil triângulos, 13,8 MB, sem cor e sem UV). Reduzida com `gltf-transform` para `docs/arte/3d/ryben24-malha-30k.glb` (30 mil triângulos, 365 KB). A forma ficou fiel à arte: cabelo cacheado, capa rasgada, cinto, braçadeiras e botas.
+- **Textura:** o Space de textura (`tencent/Hunyuan3D-2`) respondeu `Not Found` hoje. Plano: desdobrar a malha em UV (xatlas) e pintar projetando as vistas de frente, costas e lado.
+- **Esqueleto e animações:** Mixamo (conta Adobe do Victor) aceita OBJ/FBX com textura. Alternativa sem conta: auto-rig no Meshy/Tripo.
+- **Cuidado:** a malha vem descentrada e com a escala do gerador (≈1,9 unidade de altura); o Ryben do jogo tem ~1,25.
