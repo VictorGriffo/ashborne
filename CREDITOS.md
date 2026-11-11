@@ -41,3 +41,11 @@ A Clareira do Altar e as áreas ao ar livre, inclusive os sete territórios da P
 | [TypeScript](https://www.typescriptlang.org) | Apache 2.0 | Linguagem |
 
 Os personagens da Parte 2 (Lyra e Tob adultos, Mira, Brum, Orvil, Kael etc.) reaproveitam os mesmos modelos KayKit já listados, com outras cores e acessórios. Nenhum arquivo novo de terceiros entrou nos marcos M5 a M7.
+
+### Quaternius: Stylized Nature MegaKit (versão Standard, gratuita)
+
+- **Autor:** Quaternius ([quaternius.com](https://quaternius.com))
+- **Licença:** [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) (cópia em `assets/modelos/quaternius-nature/LICENSE.txt`)
+- **Origem:** [quaternius.itch.io/stylized-nature-megakit](https://quaternius.itch.io/stylized-nature-megakit), baixado em 2026-11-11
+
+34 modelos em `assets/modelos/quaternius-nature/` (árvores comuns, pinheiros, retorcidas e mortas, arbustos, grama, flores, cogumelos, pedras e seixos), convertidos de glTF para GLB com texturas reduzidas a 512 px em WebP (`gltf-transform`). Usados na vegetação das áreas ao ar livre (`src/render/nature.ts`).

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { BattleState, type BattleHost, type BattleResult } from '../../battle/BattleState';
 import { mob } from '../../battle/data';
 import { CameraRig } from '../../render/CameraRig';
+import { LightBudget } from '../../render/LightBudget';
 import { CharacterModel } from '../../render/CharacterModel';
 import { check } from '../../systems/conditions';
 import { item } from '../../systems/items';
@@ -63,6 +64,7 @@ export class ExploreState implements GameState {
   private area!: Area;
   private readonly player: Player;
   private readonly rig: CameraRig;
+  private readonly lights: LightBudget;
 
   private readonly hint: HTMLDivElement;
   private readonly prompt: HTMLDivElement;
@@ -102,6 +104,7 @@ export class ExploreState implements GameState {
     this.scene.add(this.player.object);
 
     this.rig = new CameraRig(ctx.config.camera);
+    this.lights = new LightBudget();
 
     this.hint = el('div', 'controls-hint');
     this.hint.innerHTML =
@@ -260,6 +263,7 @@ export class ExploreState implements GameState {
       this.rig.follow(shown, frameDt);
     }
     this.area.animate(frameDt, shown);
+    this.lights.update(frameDt, shown);
     this.ctx.renderer.render(this.scene, this.rig.camera);
     this.placePrompt();
 
@@ -299,6 +303,7 @@ export class ExploreState implements GameState {
     this.player.teleport(spawn.x, spawn.z, spawn.yaw);
     // Ao entrar numa área, a câmera fica atrás do Ryben.
     this.rig.occluders = area.cameraOccluders ?? [];
+    this.lights.collect(this.scene);
     this.rig.snapTo(this.player.position, spawn.yaw + Math.PI);
 
     this.ctx.world.discovered.add(id);

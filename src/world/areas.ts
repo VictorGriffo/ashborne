@@ -1,3 +1,4 @@
+import { natureModels } from '../render/nature';
 import camposDeLinne from '../../data/areas/campos-de-linne.json';
 import costaDeMareAlta from '../../data/areas/costa-de-mare-alta.json';
 import cidadela from '../../data/areas/cidadela.json';
@@ -65,6 +66,7 @@ export function requiredModels(): string[] {
     ...characterModels(PLAYER_CHARACTER),
     ...Object.values(ROOMS).flatMap((room) => RoomArea.requiredModels(room)),
     ...Object.values(OUTDOORS).flatMap((area) => OutdoorArea.requiredModels(area)),
+    ...natureModels(),
   ];
 }
 

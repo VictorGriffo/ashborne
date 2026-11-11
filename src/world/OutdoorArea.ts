@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { createRandom, range } from '../core/random';
 import type { Assets } from '../render/Assets';
 import { distanceToPolyline, glowSprite, merged, paint, vertexMaterial } from '../render/geometry';
+import { NATURE, NatureBatch, windTime, type NatureGroup } from '../render/nature';
+import { Sky } from '../render/Sky';
 import { PART1, PROPS } from '../render/palette';
 import { buildProp, isProp, type PropParams, type PropResult } from '../render/props';
 import { SavePointModel } from '../render/SavePointModel';
@@ -16,6 +18,8 @@ import { MapEnemy } from './MapEnemy';
 import { Npc } from './Npc';
 
 const DEG = Math.PI / 180;
+/** Árvores do kit (≈6 mil triângulos cada) por área; o resto vira árvore leve. */
+const MAX_DETAILED_TREES = 48;
 
 type Vec = number[];
 
@@ -138,6 +142,10 @@ export class OutdoorArea implements Area {
   }> = [];
   private fog: THREE.Color;
   private background: THREE.Color;
+  private readonly sky: Sky;
+  private sceneFog?: THREE.Fog;
+  readonly cameraOccluders: THREE.Object3D[] = [];
+  private eclipse = false;
   private time = 0;
   /** Árvores ficam transparentes durante a batalha, para não esconder ninguém. */
   private readonly fadeMaterials: THREE.MeshStandardMaterial[] = [];
@@ -161,13 +169,25 @@ export class OutdoorArea implements Area {
     this.root.name = data.nome;
     const rand = createRandom(data.vegetacao?.semente ?? 7);
     const amb = data.ambiente;
-    this.background = new THREE.Color(amb.fundo);
-    this.fog = new THREE.Color(amb.fundo);
+    // Céu de fantasia sombria: alto escuro, horizonte tingido pela cor do céu da área.
+    const dark = new THREE.Color(amb.fundo);
+    const horizon = dark.clone().lerp(new THREE.Color(amb.ceu), 0.38);
+    this.background = horizon.clone();
+    this.fog = horizon.clone();
+    this.sky = new Sky({
+      zenith: dark.clone().multiplyScalar(0.55),
+      horizon,
+      clouds: dark.clone().lerp(new THREE.Color(amb.ceu), 0.22),
+      disc: 'lua',
+      glow: amb.lua.cor,
+      mountains: dark.clone().multiplyScalar(0.7),
+    });
+    this.root.add(this.sky.root);
 
     this.hemi = new THREE.HemisphereLight(amb.ceu, amb.chao, amb.luzAmbiente);
     this.moon = new THREE.DirectionalLight(amb.lua.cor, amb.lua.intensidade);
     this.moon.castShadow = true;
-    this.moon.shadow.mapSize.set(2048, 2048);
+    this.moon.shadow.mapSize.set(1024, 1024);
     const cam = this.moon.shadow.camera;
     cam.left = cam.bottom = -16;
     cam.right = cam.top = 16;
@@ -189,7 +209,7 @@ export class OutdoorArea implements Area {
 
     this.buildObjects(assets);
     this.root.add(this.buildGround(rand));
-    this.buildVegetation(rand);
+    this.buildVegetation(rand, assets);
     if (amb.vagalumes) this.buildFireflies(rand, amb.vagalumes);
     if (amb.cinzas) this.buildAsh(rand, amb.cinzas, 0xb0a8b8, 0.25, 0.7);
     if (amb.neve) this.buildAsh(rand, amb.neve, 0xf4f8ff, 0.5, 1.2);
@@ -210,12 +230,16 @@ export class OutdoorArea implements Area {
   applyEnvironment(scene: THREE.Scene): void {
     scene.background = this.background;
     const [near, far] = this.data.ambiente.nevoa;
-    scene.fog = new THREE.Fog(this.fog, near, far);
+    // Névoa mais longa: com a câmera livre, dá para ver longe.
+    this.sceneFog = new THREE.Fog(this.fog, near * 1.3, far * 1.8);
+    scene.fog = this.sceneFog;
   }
 
   animate(dt: number, focus: THREE.Vector3): void {
     this.time += dt;
     const t = this.time;
+    windTime.value += dt;
+    this.sky.update(dt, focus);
     this.moon.position.copy(focus).add(this.moonOffset);
     this.moon.target.position.copy(focus);
 
@@ -277,6 +301,7 @@ export class OutdoorArea implements Area {
       this.moon.intensity = 0.9;
       this.background.set(0x0d0818);
       this.fog.set(0x0d0818);
+      this.setEclipse();
     }
     this.events.get(name)?.();
   }
@@ -291,7 +316,8 @@ export class OutdoorArea implements Area {
     const out = Math.hypot(dx, dz);
     const bumps = Math.sin(x * 0.9) * Math.cos(z * 0.7) * 0.04;
     const rise = Math.max(0, out - 1.5);
-    return bumps + Math.pow(rise, 1.3) * 0.3 * (0.8 + 0.4 * Math.sin(x * 0.4 + z * 0.3));
+    // Colinas baixas e onduladas: com a câmera livre, o horizonte (céu e serras) precisa aparecer.
+    return bumps + Math.pow(rise, 1.1) * 0.12 * (0.7 + 0.6 * Math.sin(x * 0.3 + z * 0.23));
   }
 
   private outside(x: number, z: number): number {
@@ -311,40 +337,66 @@ export class OutdoorArea implements Area {
     return null;
   }
 
+  /** 0 no meio de um caminho ou mancha, subindo até 1 perto da borda (para misturar com a grama). */
+  private groundEdge(x: number, z: number): number {
+    const p = new THREE.Vector2(x, z);
+    let best = 1;
+    for (const c of this.data.caminhos ?? []) {
+      const pts = c.pontos.map((q) => new THREE.Vector2(q[0], q[1]));
+      const d = distanceToPolyline(p, pts) / (c.largura / 2);
+      if (d < 1) best = Math.min(best, d);
+    }
+    for (const m of this.data.manchas ?? []) {
+      const d = Math.hypot(x - m.pos[0], z - m.pos[1]) / m.raio;
+      if (d < 1) best = Math.min(best, d);
+    }
+    return THREE.MathUtils.smoothstep(best, 0.6, 1) * 0.7;
+  }
+
   private buildGround(rand: () => number): THREE.Mesh {
     const { min, max } = this.data.limite;
     const size = Math.max(max[0] - min[0], max[1] - min[1]) + 60;
     const cx = (min[0] + max[0]) / 2;
     const cz = (min[1] + max[1]) / 2;
-    const seg = Math.round(size * 0.75);
-    const indexed = new THREE.PlaneGeometry(size, size, seg, seg);
-    indexed.rotateX(-Math.PI / 2);
-    indexed.translate(cx, 0, cz);
-    const p = indexed.getAttribute('position');
+    // Malha fina e lisa: o chão deixa de ser feito de triângulos chapados.
+    const seg = Math.round(size * 2);
+    const geo = new THREE.PlaneGeometry(size, size, seg, seg);
+    geo.rotateX(-Math.PI / 2);
+    geo.translate(cx, 0, cz);
+    const p = geo.getAttribute('position');
     for (let i = 0; i < p.count; i++) {
-      const x = p.getX(i) + (rand() - 0.5) * 0.45;
-      const z = p.getZ(i) + (rand() - 0.5) * 0.45;
-      p.setXYZ(i, x, this.height(x, z), z);
+      const x = p.getX(i);
+      const z = p.getZ(i);
+      p.setY(i, this.height(x, z));
     }
-    const geo = indexed.toNonIndexed();
-    indexed.dispose();
 
-    const pos = geo.getAttribute('position');
-    const colors = new Float32Array(pos.count * 3);
+    const colors = new Float32Array(p.count * 3);
     const grass = (this.data.ambiente.grama ?? ['#1F4D3A', '#2E7D5B']).map((c) => new THREE.Color(c));
     const tmp = new THREE.Color();
-    for (let i = 0; i < pos.count; i += 3) {
-      const x = (pos.getX(i) + pos.getX(i + 1) + pos.getX(i + 2)) / 3;
-      const z = (pos.getZ(i) + pos.getZ(i + 1) + pos.getZ(i + 2)) / 3;
+    const other = new THREE.Color();
+    // Ruído suave e contínuo (manchas grandes + pequenas), sem salto de um triângulo para outro.
+    const patch = (x: number, z: number) =>
+      0.5 +
+      0.3 * Math.sin(x * 0.21 + Math.cos(z * 0.17) * 2) * Math.cos(z * 0.23 - x * 0.05) +
+      0.2 * Math.sin(x * 0.9 + z * 0.7) * Math.sin(z * 1.1 - x * 0.4);
+    void rand;
+    for (let i = 0; i < p.count; i++) {
+      const x = p.getX(i);
+      const z = p.getZ(i);
+      const n = THREE.MathUtils.clamp(patch(x, z), 0, 1);
       const kind = this.groundKind(x, z);
       if (kind) {
         const [a, b] = GROUND_COLORS[kind];
-        tmp.lerpColors(new THREE.Color(a), new THREE.Color(b), rand());
+        tmp.lerpColors(new THREE.Color(a), new THREE.Color(b), n);
+        // Borda do caminho mistura com a grama.
+        other.lerpColors(grass[0], grass[1], n);
+        const edge = this.groundEdge(x, z);
+        tmp.lerp(other, edge);
       } else {
-        tmp.lerpColors(grass[0], grass[1], rand() * 0.35);
+        tmp.lerpColors(grass[0], grass[1], n);
         tmp.multiplyScalar(1 - THREE.MathUtils.clamp(this.outside(x, z) / 14, 0, 0.55));
       }
-      for (let k = 0; k < 3; k++) tmp.toArray(colors, (i + k) * 3);
+      tmp.toArray(colors, i * 3);
     }
     geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     geo.computeVertexNormals();
@@ -359,9 +411,18 @@ export class OutdoorArea implements Area {
     return !this.exclusions.some((e) => Math.hypot(x - e.x, z - e.z) < e.r + margin);
   }
 
-  private buildVegetation(rand: () => number): void {
+  private buildVegetation(rand: () => number, assets: Assets): void {
     const v = this.data.vegetacao ?? {};
     const { min, max } = this.data.limite;
+    // Tinge as folhas com a paleta da área (floresta, neve, pântano...).
+    const paleta = (v.paleta ?? ['#1F4D3A', '#2E7D5B', '#24584a']).map((c) => new THREE.Color(c));
+    const avg = paleta.reduce((acc, c) => acc.add(c), new THREE.Color(0, 0, 0)).multiplyScalar(1 / paleta.length);
+    const peak = Math.max(avg.r, avg.g, avg.b, 0.001);
+    const tint = new THREE.Color(1, 1, 1).lerp(avg.clone().multiplyScalar(1 / peak), 0.45).multiplyScalar(0.8);
+    const trees = new NatureBatch(assets, { tint });
+    const ground = new NatureBatch(assets, { tint, shadows: false, sway: true });
+    const pick = (group: NatureGroup) => NATURE[group][Math.floor(rand() * NATURE[group].length)];
+    let detailed = 0;
     const foliage: THREE.BufferGeometry[] = [];
     const trunks: THREE.BufferGeometry[] = [];
     const rocks: THREE.BufferGeometry[] = [];
@@ -377,22 +438,33 @@ export class OutdoorArea implements Area {
       const scale = range(rand, 0.85, 1.45);
       const y = this.height(x, z) - 0.1;
       const color = greens[Math.floor(rand() * greens.length)].clone();
+      // Modelos detalhados só perto da área jogável; ao longe, árvores leves (a névoa disfarça).
+      const near = this.outside(x, z) < 4.5 && detailed < MAX_DETAILED_TREES;
+      if (shape !== 'palmeira' && near) {
+        detailed++;
+        // Árvores do kit da Quaternius: lisas, com casca e folhas de verdade.
+        const rotY = rand() * Math.PI * 2;
+        let model: string;
+        let height: number;
+        if (shape === 'seca') {
+          model = rand() < 0.55 ? pick('retorcida') : pick('morta');
+          height = range(rand, 4.2, 6.2);
+        } else if (shape === 'pinheiro' || (shape === 'mista' && rand() < 0.6)) {
+          model = pick('pinheiro');
+          height = range(rand, 5, 8);
+        } else {
+          model = pick('comum');
+          height = range(rand, 4.4, 6.8);
+        }
+        trees.add(model, { x, y, z, height: height * (scale / 1.15), rotY });
+        if (inside) this.collision.addCircle(x, z, 0.4 * scale);
+        placed.push(new THREE.Vector2(x, z));
+        return;
+      }
       const trunk = new THREE.CylinderGeometry(0.16 * scale, 0.24 * scale, 1.1 * scale, 6);
       trunk.translate(x, y + 0.55 * scale, z);
       trunks.push(paint(trunk, trunkColor));
-      if (shape === 'seca') {
-        // Árvore morta: tronco alto e três galhos nus.
-        const tall = new THREE.CylinderGeometry(0.1 * scale, 0.2 * scale, 1.6 * scale, 5);
-        tall.translate(x, y + 1.3 * scale, z);
-        trunks.push(paint(tall, trunkColor));
-        for (let b = 0; b < 3; b++) {
-          const branch = new THREE.CylinderGeometry(0.03 * scale, 0.07 * scale, 0.9 * scale, 4);
-          branch.rotateZ(0.9);
-          branch.rotateY((b / 3) * Math.PI * 2 + rand());
-          branch.translate(x, y + (1.7 + b * 0.25) * scale, z);
-          trunks.push(paint(branch, trunkColor));
-        }
-      } else if (shape === 'palmeira') {
+      if (shape === 'palmeira') {
         const tall = new THREE.CylinderGeometry(0.1 * scale, 0.15 * scale, 2.2 * scale, 5);
         tall.rotateZ(0.12);
         tall.translate(x, y + 1.1 * scale, z);
@@ -404,6 +476,12 @@ export class OutdoorArea implements Area {
           frond.translate(x + 0.2, y + 2.25 * scale, z);
           foliage.push(paint(frond, color));
         }
+      } else if (shape === 'seca') {
+        // Árvore morta ao longe: só um tronco alto e torto.
+        const tall = new THREE.CylinderGeometry(0.08 * scale, 0.2 * scale, 2.6 * scale, 6);
+        tall.rotateZ(range(rand, -0.2, 0.2));
+        tall.translate(x, y + 1.6 * scale, z);
+        trunks.push(paint(tall, trunkColor));
       } else if (shape === 'pinheiro' || (shape === 'mista' && rand() < 0.65)) {
         const layers = rand() < 0.5 ? 3 : 2;
         for (let l = 0; l < layers; l++) {
@@ -447,38 +525,43 @@ export class OutdoorArea implements Area {
       const z = range(rand, min[1] - 6, max[1] + 6);
       if (!this.free(x, z, 0.8)) continue;
       const size = range(rand, 0.18, 0.5);
-      const rock = new THREE.DodecahedronGeometry(size, 0);
-      rock.scale(range(rand, 1, 1.5), range(rand, 0.55, 0.85), range(rand, 1, 1.3));
-      rock.rotateY(rand() * Math.PI);
-      rock.translate(x, this.height(x, z) + size * 0.2, z);
-      const [rockLight, rockDark] = v.pedraCor ?? [`#${PROPS.rock.toString(16)}`, `#${PROPS.rockDark.toString(16)}`];
-      rocks.push(paint(rock, new THREE.Color(rockLight).lerp(new THREE.Color(rockDark), rand())));
+      const y = this.height(x, z) - 0.05;
+      if (size > 0.3) trees.add(pick('pedra'), { x, y, z, height: size * 2.2, rotY: rand() * Math.PI * 2 });
+      else ground.add(pick('seixo'), { x, y, z, height: size * 0.9, rotY: rand() * Math.PI * 2 });
       if (size > 0.35 && this.outside(x, z) === 0) this.collision.addCircle(x, z, size * 1.2);
     }
 
     const glow = (v.flor ?? ['#7fe0d0', '#b9a6ff']).map((c) => new THREE.Color(c));
-    for (let i = 0; i < (v.grama ?? 200); i++) {
+    // Grama alta ao vento, arbustos, flores e cogumelos (o dobro de tufos de antes: agora é barato).
+    const lush = shape !== 'palmeira' && shape !== 'nenhuma';
+    for (let i = 0; i < (v.grama ?? 200) * 1.5; i++) {
       const x = range(rand, min[0] - 4, max[0] + 4);
       const z = range(rand, min[1] - 4, max[1] + 4);
       if (!this.free(x, z, 0)) continue;
-      const y = this.height(x, z);
-      for (let b = 0; b < 3; b++) {
-        const blade = new THREE.ConeGeometry(0.06, range(rand, 0.25, 0.45), 3);
-        blade.rotateZ(range(rand, -0.35, 0.35));
-        blade.rotateY(rand() * Math.PI * 2);
-        blade.translate(x + range(rand, -0.12, 0.12), y + 0.15, z + range(rand, -0.12, 0.12));
-        tufts.push(paint(blade, [0x3a8a64, 0x2e7d5b, 0x45946a][b]));
-      }
-      if (rand() < (v.flores ?? 0.08)) {
-        const bloom = new THREE.OctahedronGeometry(0.07, 0);
-        bloom.translate(x + 0.2, y + 0.28, z);
+      const y = this.height(x, z) - 0.02;
+      const rotY = rand() * Math.PI * 2;
+      const roll = rand();
+      if (lush && roll < 0.06) ground.add(pick('arbusto'), { x, y, z, height: range(rand, 0.6, 1.3), rotY });
+      else if (lush && roll < 0.06 + (v.flores ?? 0.08)) ground.add(pick('flor'), { x, y, z, height: range(rand, 0.3, 0.5), rotY });
+      else if (lush && roll < 0.2 && shape === 'seca') ground.add(pick('cogumelo'), { x, y, z, height: range(rand, 0.25, 0.45), rotY });
+      else ground.add(pick('grama'), { x, y, z, height: range(rand, 0.3, 0.62), rotY });
+      if (rand() < (v.flores ?? 0.08) * 0.5) {
+        // Pontinhos de luz de Aether entre as flores (brilham com o bloom).
+        const bloom = new THREE.OctahedronGeometry(0.05, 1);
+        bloom.translate(x + 0.2, y + 0.3, z);
         flowers.push(paint(bloom, glow[Math.floor(rand() * glow.length)]));
       }
     }
+    void tufts;
+    void rocks;
 
     const leaves = vertexMaterial(0.9);
     const wood = vertexMaterial(1);
-    this.fadeMaterials.push(leaves, wood);
+    this.root.add(trees.build(), ground.build());
+    // A câmera não entra nas árvores: chega mais perto do Ryben.
+    this.cameraOccluders.push(trees.root);
+    // Durante a batalha, árvores e pedras ficam transparentes para não esconder ninguém.
+    this.fadeMaterials.push(leaves, wood, ...trees.materials);
     this.root.add(
       merged(foliage, leaves),
       merged(trunks, wood),
@@ -554,7 +637,28 @@ export class OutdoorArea implements Area {
   }
 
   /** Mostra, esconde e acende objetos conforme as flags (a vila se reconstrói aos poucos). */
+  /** O eclipse de Vaelor: disco negro com aro de fogo, céu avermelhado. */
+  private setEclipse(): void {
+    if (this.eclipse) return;
+    this.eclipse = true;
+    const base = new THREE.Color(this.data.ambiente.fundo);
+    const horizon = base.clone().lerp(new THREE.Color(0x5a1a14), 0.45);
+    this.sky.set({
+      disc: 'eclipse',
+      glow: 0xff5a1e,
+      zenith: base.clone().lerp(new THREE.Color(0x14040a), 0.6).multiplyScalar(0.6),
+      horizon,
+      clouds: base.clone().lerp(new THREE.Color(0x3a1410), 0.5),
+    });
+    // A névoa acompanha o horizonte do eclipse.
+    this.fog.copy(horizon);
+    this.background.copy(horizon);
+    this.sceneFog?.color.copy(horizon);
+  }
+
   refreshFlags(flags: Flags): void {
+    // Depois da catástrofe, o eclipse nunca mais sai do céu (até o último selo).
+    if (flags.has('parte-2') && !flags.has('selo-7')) this.setEclipse();
     for (const c of this.conditional) {
       if (c.cond.se || c.cond.naoSe) {
         const show = check(flags, c.cond);

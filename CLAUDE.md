@@ -117,3 +117,12 @@ O celular deixou de ser prioridade (o Victor não vai lançar para celular); o s
 **Fechamento:** a Luz do Alvorecer cobra 25% da vida máxima (`custoVida` em `magias.json`, nunca mata); as 7 magias foram testadas em batalha; secundárias feitas: Mira, Tob (`tob-invencao`), Lyra (`lyra-como-era`), Maren, Arena da Guarda. Sobram só: provas do Orin, desertores, lembranças da Guarda, ervas, carta de Mira e balanceamento fino (Laços ≥ 12 para os finais, dano, preços).
 
 **Publicado (2026-11-11):** código em https://github.com/VictorGriffo/ashborne (público) e jogo em https://victorgriffo.github.io/ashborne/. Cada push na `main` publica sozinho pelo GitHub Actions (`.github/workflows/deploy.yml`). O `gh` fica em `C:\Program Files\GitHub CLI` e já tem o escopo `workflow`.
+
+## Reformulação visual (2026-11-11)
+
+O Victor pediu para o jogo deixar de ser geométrico e ficar "como um novo Zelda", com câmera livre, e mandou artes conceituais de fantasia sombria (eclipse, castelo gótico, magia azul, ruína em vermelho). Isso substitui a "câmera de cima em ângulo fixo" do design.
+
+- **Câmera:** terceira pessoa (`src/render/CameraRig.ts`): gira 360° com mouse (arrastar), Q/E, analógico direito ou arrastando a metade direita da tela de toque; roda do mouse aproxima; C ou R3 centraliza. O movimento do Ryben é relativo à câmera. Paredes de salas e árvores (`area.cameraOccluders`) puxam a câmera para perto. Valores em `data/config.json` (`camera`).
+- **Visual:** céu em shader com nuvens, lua ou eclipse e serras no horizonte (`src/render/Sky.ts`; o eclipse fica no céu da Parte 2 até o selo 7); bloom (`Renderer`); sombreamento liso com quinas preservadas (`toCreasedNormals` em `geometry.ts`); chão liso com manchas; vegetação da Quaternius em instâncias com vento (`src/render/nature.ts`), só perto da área jogável (máx. 48 árvores detalhadas por área), árvores leves ao longe.
+- **Desempenho (GPU integrada Intel UHD do Victor):** no máximo 4 luzes pontuais acesas, as mais perto do Ryben (`LightBudget`); resolução dinâmica no `Renderer` (baixa até 50% se o quadro passar de 22 ms); sombra 1024 px.
+- **Ainda não reformulado:** a Clareira do Altar (feita em código, `ClearingArea`) não tem o céu novo nem a vegetação nova; os personagens e mobs continuam os mesmos modelos (só com sombreamento liso).

@@ -1,5 +1,8 @@
 import * as THREE from 'three';
-import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { mergeGeometries, toCreasedNormals } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+
+/** Ângulo acima do qual uma aresta fica marcada (quinas de casa); abaixo, a superfície fica lisa. */
+const CREASE = THREE.MathUtils.degToRad(48);
 
 /** Pinta uma geometria inteira com uma cor, sem índice, pronta para juntar com outras. */
 export function paint(geo: THREE.BufferGeometry, color: THREE.ColorRepresentation): THREE.BufferGeometry {
@@ -15,17 +18,30 @@ export function paint(geo: THREE.BufferGeometry, color: THREE.ColorRepresentatio
 
 /** Junta várias geometrias numa só malha: uma chamada de desenho em vez de centenas. */
 export function merged(geos: THREE.BufferGeometry[], material: THREE.Material, shadows = true): THREE.Mesh {
-  const geo = geos.length > 0 ? mergeGeometries(geos, false) : new THREE.BufferGeometry();
+  let geo = geos.length > 0 ? mergeGeometries(geos, false) : new THREE.BufferGeometry();
   for (const g of geos) g.dispose();
+  // Superfícies redondas ficam lisas; quinas fortes (caixas, telhados) continuam marcadas.
+  if (geos.length > 0) {
+    const smooth = toCreasedNormals(geo, CREASE);
+    geo.dispose();
+    geo = smooth;
+  }
   const mesh = new THREE.Mesh(geo, material);
   mesh.castShadow = shadows;
   mesh.receiveShadow = true;
   return mesh;
 }
 
-/** Material padrão do cenário low-poly, com cor por vértice. */
+/** Material padrão do cenário, com cor por vértice e sombreamento liso. */
 export function vertexMaterial(roughness = 0.9): THREE.MeshStandardMaterial {
-  return new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness });
+  return new THREE.MeshStandardMaterial({ vertexColors: true, roughness });
+}
+
+/** Alisa uma geometria solta (sem `merged`), mantendo quinas fortes. */
+export function smoothed(geo: THREE.BufferGeometry): THREE.BufferGeometry {
+  const out = toCreasedNormals(geo, CREASE);
+  geo.dispose();
+  return out;
 }
 
 /** Distância de um ponto a uma linha quebrada (trilhas, cercas). */
