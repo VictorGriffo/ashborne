@@ -112,7 +112,15 @@ export class Sky {
     const dome = new THREE.Mesh(new THREE.SphereGeometry(300, 48, 24), this.material);
     dome.frustumCulled = false;
     dome.renderOrder = -10;
-    this.root.add(dome, this.buildMountains(opts.mountains, opts.horizon));
+    // Chão distante: cobre o vazio além da área e some na névoa até o horizonte.
+    const far = new THREE.Mesh(
+      new THREE.CircleGeometry(260, 48),
+      new THREE.MeshBasicMaterial({ color: new THREE.Color(opts.mountains).multiplyScalar(0.8) }),
+    );
+    far.rotation.x = -Math.PI / 2;
+    far.position.y = -0.4;
+    far.renderOrder = -8;
+    this.root.add(dome, far, this.buildMountains(opts.mountains, opts.horizon));
   }
 
   set(opts: Partial<SkyOptions>): void {

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { createRandom, range } from '../core/random';
 import { distanceToPolyline, glowSprite, merged, paint } from '../render/geometry';
 import { PART1, PROPS } from '../render/palette';
+import { Sky } from '../render/Sky';
 import type { Area, Exit, Spawn } from './Area';
 import { CollisionWorld } from './Collision';
 import type { Interactable } from './Interactable';
@@ -102,6 +103,9 @@ export class ClearingArea implements Area {
   private treeOpacity = 1;
   private battle = false;
 
+  private readonly sky: Sky;
+  private readonly horizon: THREE.Color;
+
   constructor() {
     const rand = createRandom(20261110);
     const scene = this.root;
@@ -121,6 +125,19 @@ export class ClearingArea implements Area {
     this.moon.shadow.bias = -0.0004;
     this.moon.shadow.normalBias = 0.03;
     scene.add(this.moon, this.moon.target);
+
+    // Mesmo céu das áreas ao ar livre: nuvens, lua e serras no horizonte.
+    const night = new THREE.Color(PART1.night);
+    this.horizon = night.clone().lerp(new THREE.Color(0x6f8fc4), 0.38);
+    this.sky = new Sky({
+      zenith: night.clone().multiplyScalar(0.55),
+      horizon: this.horizon,
+      clouds: night.clone().lerp(new THREE.Color(0x6f8fc4), 0.22),
+      disc: 'lua',
+      glow: 0xc4d2ff,
+      mountains: night.clone().multiplyScalar(0.7),
+    });
+    scene.add(this.sky.root);
 
     scene.add(this.buildGround(rand));
     scene.add(this.buildTrees(rand));
@@ -144,8 +161,8 @@ export class ClearingArea implements Area {
   }
 
   applyEnvironment(scene: THREE.Scene): void {
-    scene.background = new THREE.Color(PART1.night);
-    scene.fog = new THREE.Fog(PART1.night, 20, 46);
+    scene.background = this.horizon.clone();
+    scene.fog = new THREE.Fog(this.horizon, 26, 80);
   }
 
   activateSavePoint(): void {
@@ -161,6 +178,7 @@ export class ClearingArea implements Area {
   animate(dt: number, focus: THREE.Vector3): void {
     this.time += dt;
     const t = this.time;
+    this.sky.update(dt, focus);
 
     // A sombra da lua acompanha o jogador para não precisar cobrir o mapa inteiro.
     this.moon.position.copy(focus).add(this.moonOffset);
@@ -256,7 +274,7 @@ export class ClearingArea implements Area {
 
     const mesh = new THREE.Mesh(
       geo,
-      new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 1 }),
+      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1 }),
     );
     mesh.receiveShadow = true;
     mesh.name = 'Chão';
@@ -314,8 +332,8 @@ export class ClearingArea implements Area {
 
     const group = new THREE.Group();
     group.name = 'Árvores';
-    const leaves = new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 0.9 });
-    const wood = new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 1 });
+    const leaves = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9 });
+    const wood = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1 });
     this.treeMaterials.push(leaves, wood);
     group.add(merged(foliage, leaves), merged(trunks, wood));
     return group;
@@ -340,7 +358,7 @@ export class ClearingArea implements Area {
       rocks.push(paint(rock, tone));
       if (size > 0.35 && dist < WALK_RADIUS) this.collision.addCircle(x, z, size * 1.2);
     }
-    return merged(rocks, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true }));
+    return merged(rocks, new THREE.MeshStandardMaterial({ vertexColors: true }));
   }
 
   private buildGrass(rand: () => number): THREE.Group {
@@ -377,7 +395,7 @@ export class ClearingArea implements Area {
 
     const group = new THREE.Group();
     group.name = 'Grama e flores';
-    const tuftMesh = merged(tufts, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true }));
+    const tuftMesh = merged(tufts, new THREE.MeshStandardMaterial({ vertexColors: true }));
     tuftMesh.castShadow = false;
     const flowerMesh = merged(flowers, new THREE.MeshBasicMaterial({ vertexColors: true }));
     flowerMesh.castShadow = false;
@@ -390,13 +408,12 @@ export class ClearingArea implements Area {
     group.name = 'Altar de Aether';
     group.position.set(SHRINE.x, 0, SHRINE.y);
 
-    const stone = new THREE.MeshStandardMaterial({ color: PROPS.stone, flatShading: true, roughness: 0.9 });
-    const stoneDark = new THREE.MeshStandardMaterial({ color: PROPS.stoneDark, flatShading: true });
+    const stone = new THREE.MeshStandardMaterial({ color: PROPS.stone, roughness: 0.9 });
+    const stoneDark = new THREE.MeshStandardMaterial({ color: PROPS.stoneDark });
     const runeMat = new THREE.MeshStandardMaterial({
       color: PART1.aetherLilac,
       emissive: PART1.aetherLilac,
       emissiveIntensity: 1.2,
-      flatShading: true,
     });
 
     const base = new THREE.Mesh(new THREE.CylinderGeometry(1.25, 1.45, 0.35, 8), stoneDark);
@@ -432,7 +449,6 @@ export class ClearingArea implements Area {
         color: PART1.aetherCyan,
         emissive: PART1.aetherCyan,
         emissiveIntensity: 1.6,
-        flatShading: true,
         roughness: 0.2,
       }),
     );
@@ -457,12 +473,11 @@ export class ClearingArea implements Area {
   private buildGate(): THREE.Group {
     const group = new THREE.Group();
     group.name = 'Portal do salão';
-    const stone = new THREE.MeshStandardMaterial({ color: PROPS.stone, flatShading: true });
+    const stone = new THREE.MeshStandardMaterial({ color: PROPS.stone });
     const glass = new THREE.MeshStandardMaterial({
       color: 0xffc27a,
       emissive: 0xffa25a,
       emissiveIntensity: 2,
-      flatShading: true,
     });
     for (const x of [-2.4, 1.3]) {
       const z = 16.6;

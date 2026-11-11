@@ -35,7 +35,7 @@ function mat(color: THREE.ColorRepresentation, emissive?: THREE.ColorRepresentat
   const key = `${new THREE.Color(color).getHexString()}|${emissive === undefined ? '' : new THREE.Color(emissive).getHexString()}|${intensity}`;
   let m = materials.get(key);
   if (!m) {
-    m = new THREE.MeshStandardMaterial({ color, flatShading: true, roughness: 0.85 });
+    m = new THREE.MeshStandardMaterial({ color, roughness: 0.85 });
     if (emissive !== undefined) {
       m.emissive = new THREE.Color(emissive);
       m.emissiveIntensity = intensity;

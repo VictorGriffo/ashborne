@@ -32,7 +32,7 @@ class SproutModel implements MobModel {
 
   constructor() {
     const mat = (color: number, emissive = 0x000000, intensity = 0) =>
-      new THREE.MeshStandardMaterial({ color, emissive, emissiveIntensity: intensity, flatShading: true, roughness: 0.7 });
+      new THREE.MeshStandardMaterial({ color, emissive, emissiveIntensity: intensity, roughness: 0.7 });
 
     this.bodyMat = mat(0x5fbf8a, 0x1f4d3a, 0.4);
     const body = new THREE.Mesh(new THREE.IcosahedronGeometry(0.28, 1), this.bodyMat);
@@ -130,7 +130,7 @@ class SproutModel implements MobModel {
 }
 
 const flatMat = (color: number, emissive = 0x000000, intensity = 0) =>
-  new THREE.MeshStandardMaterial({ color, emissive, emissiveIntensity: intensity, flatShading: true, roughness: 0.8 });
+  new THREE.MeshStandardMaterial({ color, emissive, emissiveIntensity: intensity, roughness: 0.8 });
 
 /**
  * Base para os mobs simples: um "rig" que balança, tremida ao levar golpe
